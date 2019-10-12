@@ -111,15 +111,17 @@ namespace BallzForWindows01.MainGameParts
             }
             ball.Draw(g);
 
+            DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();
             g.Dispose();
-            
         }
         public void Draw(Graphics g)
         {
             //DrawToBuffer();
             g.DrawImage(backbuffer, new PointF(0, 0));
             backbuffer.Dispose();
+
+            
 
         }
 

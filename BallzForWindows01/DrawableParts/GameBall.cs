@@ -41,8 +41,7 @@ namespace BallzForWindows01.DrawableParts
         bool readyForLaunch = false;    // same as setting spin, might need to adjust later
         bool placingSpinRect = false;
         bool ballLaunched = false;
-
-        List<string> dbgStrList = new List<string>();
+        
 
         public GameBall(Size gameScreenSize)
         {
@@ -100,8 +99,8 @@ namespace BallzForWindows01.DrawableParts
         bool startPosSet = false;
         public void Update()
         {
-            dbgStrList.Add($"ballLaunched: {ballLaunched}");
-            
+            DbgFuncs.AddStr($"ballLaunched: {ballLaunched}");
+
             float xfloat = speed * (float)Math.Cos(flightPath.AngleRads());
             float yfloat = speed * (float)Math.Sin(flightPath.AngleRads());
             if (ballLaunched)
@@ -118,9 +117,8 @@ namespace BallzForWindows01.DrawableParts
                     Reset();
                 }
             }
-            dbgStrList.Add($"Angle (degrees): {flightPath.AngleDeg()}");
-            //dbgStrList.Add($"xfloat: {xfloat}");
-            //dbgStrList.Add($"yfloat: {yfloat}");
+            
+            DbgFuncs.AddStr($"Angle (degrees): {flightPath.AngleDeg()}");
         }
         public void SetFlightPath(int x, int y)
         {
@@ -131,7 +129,6 @@ namespace BallzForWindows01.DrawableParts
                 readyForLaunch = true;
             }
         }
-
 
         public bool IsInSpinRect(int x, int y)
         {
@@ -172,19 +169,6 @@ namespace BallzForWindows01.DrawableParts
             ballLaunched = true;
         }
 
-        void DrawDebugInfo(Graphics g)
-        {
-            Point pos = new Point(10, 100);
-            SizeF strSize = new SizeF();
-            for(int i = 0; i < dbgStrList.Count; i++)
-            {
-                strSize = g.MeasureString(dbgStrList[i], font);
-                g.DrawString(dbgStrList[i], font, Brushes.Black, pos);
-                pos.Y += (int)(strSize.Height + 0.49);
-
-            }
-            dbgStrList = new List<string>();
-        }
         
 
         public void Draw(Graphics g)
@@ -197,9 +181,7 @@ namespace BallzForWindows01.DrawableParts
             flightPath.Draw(g);
             g.FillEllipse(sb, x - width / 2, y - height / 2, width, height);
 
-            g.DrawEllipse(Pens.Red, x - width / 2, y - height / 2, width, height);
-
-            DrawDebugInfo(g);
+            g.DrawEllipse(Pens.Red, x - width / 2, y - height / 2, width, height);            
 
             sb.Dispose();
         }
@@ -225,3 +207,20 @@ namespace BallzForWindows01.DrawableParts
 
     }
 }
+
+
+#region DrawDebugInfo - Old logic to draw debug info to game screen.
+//void DrawDebugInfo(Graphics g)
+//{
+//    Point pos = new Point(10, 100);
+//    SizeF strSize = new SizeF();
+//    for(int i = 0; i < dbgStrList.Count; i++)
+//    {
+//        strSize = g.MeasureString(dbgStrList[i], font);
+//        g.DrawString(dbgStrList[i], font, Brushes.Black, pos);
+//        pos.Y += (int)(strSize.Height + 0.49);
+
+//    }
+//    dbgStrList = new List<string>();
+//}
+#endregion DrawDebugInfo - Old logic to draw debug info to game screen.

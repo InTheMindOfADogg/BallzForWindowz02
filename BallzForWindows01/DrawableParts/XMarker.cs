@@ -26,7 +26,6 @@ namespace BallzForWindows01.DrawableParts
 
         Rectangle clickRectangle;
         Point center;
-
         bool placed = false;
         bool showClickRect = false;
 
@@ -79,6 +78,14 @@ namespace BallzForWindows01.DrawableParts
             {
                 return false;
             }
+        }
+        public double AngleFromPoint(Point p)
+        {
+            double angle = 0;
+            double xdiff = p.X - center.X;
+            double ydiff = p.Y - center.Y;
+            angle = Math.Atan2(xdiff, ydiff) * 180 / Math.PI;
+            return angle;
         }
 
 

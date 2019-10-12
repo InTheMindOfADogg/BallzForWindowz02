@@ -48,13 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssistFunctions.cs" />
+    <Compile Include="HelperClasses\AssistFunctions.cs" />
     <Compile Include="BallzForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BallzForm.Designer.cs">
       <DependentUpon>BallzForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\DbgFuncs.cs" />
     <Compile Include="DebugForm\DebugForm01.cs">
       <SubType>Form</SubType>
     </Compile>

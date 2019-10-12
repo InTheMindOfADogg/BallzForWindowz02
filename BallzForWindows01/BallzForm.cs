@@ -21,7 +21,7 @@ namespace BallzForWindows01
         Up,
         Down
     }
-    
+
 
     public class BallzForm : Form
     {
@@ -30,7 +30,7 @@ namespace BallzForWindows01
 
         //Bitmap backBuffer = null;
 
-        
+
         public BallzForm()
         {
             InitializeForm();
@@ -64,7 +64,7 @@ namespace BallzForWindows01
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800,700);
+            this.ClientSize = new System.Drawing.Size(800, 700);
             this.Name = "BallzForm";
             this.Text = "Ballz Game01";
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -82,7 +82,8 @@ namespace BallzForWindows01
             {
                 GameLogic();
                 RenderScene();
-                Application.DoEvents();                
+                FrameCleanUp();
+                Application.DoEvents();
             }
         }
 
@@ -93,21 +94,78 @@ namespace BallzForWindows01
         }
         private void RenderScene()
         {
-
             Graphics g = CreateGraphics();
-
-            ballzGame01.Draw(g);     // currently just drawing back buffer, going with this for now.
-
+            ballzGame01.Draw(g);     // currently just drawing back buffer, going with this for now.            
             g.Dispose();
 
         }
+        private void FrameCleanUp()
+        {
+            DbgFuncs.FrameCleanUp();
+        }
 
-        
-        
 
+        #region Clearing string list test 2019-10-12
+        //private void ClearingListTest()
+        //{
+        //    List<string> list = new List<string>();
+        //    int testcnt = 1;
+        //    int cnt = 50000;
+        //    string[] arr = new string[cnt];
+        //    for (int i = 0; i < arr.Length; i++) { arr[i] = $"Here is test string number {i + 1}"; }
+
+
+        //    Console.WriteLine($"Clear test {testcnt++}: using list.Clear()");
+        //    list.AddRange(arr);
+        //    Console.WriteLine($"list set to {list.Count} elements");
+        //    DbgFuncs.MarkStart();
+        //    list.Clear();
+        //    DbgFuncs.MarkEnd();
+        //    Console.WriteLine($"Elements in list: {list.Count}");
+        //    Console.WriteLine($"Test {testcnt} results: Clear time for a string list with {cnt} elements: {DbgFuncs.ElapsedTime().ToString()}");
+        //    Console.WriteLine("\n");
+
+        //    Console.WriteLine($"Clear test {testcnt++}: using list.RemoveRange()");
+        //    list.AddRange(arr);
+        //    Console.WriteLine($"list set to {list.Count} elements");
+        //    DbgFuncs.MarkStart();
+        //    list.RemoveRange(0, list.Count);
+        //    DbgFuncs.MarkEnd();
+        //    Console.WriteLine($"Elements in list: {list.Count}");
+        //    Console.WriteLine($"Test {testcnt} results: Clear time for a string list with {cnt} elements: {DbgFuncs.ElapsedTime().ToString()}");
+        //    Console.WriteLine("\n");
+
+        //    Console.WriteLine($"Clear test {testcnt++}: using for loop");
+        //    list.AddRange(arr);
+        //    DbgFuncs.MarkStart();
+        //    Console.WriteLine($"list set to {list.Count} elements");
+        //    for (int i = list.Count - 1; i >= 0; i--)
+        //    {
+        //        list.RemoveAt(i);
+        //    }
+        //    DbgFuncs.MarkEnd();
+        //    Console.WriteLine($"Elements in list: {list.Count}");
+        //    Console.WriteLine($"Test {testcnt} results: Clear time for a string list with {cnt} elements: {DbgFuncs.ElapsedTime().ToString()}");
+        //    Console.WriteLine("\n");
+
+        //    // VERY SLOW
+        //    //Console.WriteLine($"Clear test {testcnt++}: using for loop version 2");
+        //    //list.AddRange(arr);
+        //    //DbgFuncs.MarkStart();
+        //    //Console.WriteLine($"list set to {list.Count} elements");
+        //    //for(int i = 0; i < list.Count; i++)
+        //    //{
+        //    //    list.RemoveAt(0);
+        //    //}
+        //    //DbgFuncs.MarkEnd();
+        //    //Console.WriteLine($"Elements in list: {list.Count}");
+        //    //Console.WriteLine($"Test {testcnt} results: Clear time for a string list with {cnt} elements: {DbgFuncs.ElapsedTime().ToString()}");
+        //    //Console.WriteLine("\n");
+        //}
+        #endregion Clearing string list test 2019-10-12
 
     }
-    
+
 }
 
 

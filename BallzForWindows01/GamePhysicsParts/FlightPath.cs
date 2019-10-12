@@ -52,11 +52,11 @@ namespace BallzForWindows01.GamePhysicsParts
             calculateSpin = true;
             int spinX = (startMarker.X + endMarker.X) / 2;
             int spinY = (startMarker.Y + endMarker.Y) / 2;
-            CalculateInitialAngle();
+            CalculateAimMarkerAngle();
             PlaceSpinMarker(spinX, spinY);
         }
 
-        private void CalculateInitialAngle()
+        private void CalculateAimMarkerAngle()
         {
             double xdiff = endMarker.Center.X - startMarker.Center.X;
             double ydiff = endMarker.Center.Y - startMarker.Center.Y;
@@ -64,6 +64,9 @@ namespace BallzForWindows01.GamePhysicsParts
             angle = 90-(float)tempAngle;
 
         }
+
+        
+
 
 
         double adjustedAngle = 0;   // adjusted for spin and aim point
