@@ -9,9 +9,12 @@ using BallzForWindows01.DrawableParts;
 
 namespace BallzForWindows01.GamePhysicsParts
 {
+    using static AssistFunctions;
+
     class FlightPath
     {
-        
+        //public float Angle { get { return (float)(angle * Math.PI / 180); } }
+
         XMarker startMarker;
         XMarker endMarker;
         XMarker spinMarker;
@@ -20,9 +23,12 @@ namespace BallzForWindows01.GamePhysicsParts
         public bool ConnectMarkers { get { return connectMarkers; } }
         public bool CalculatingSpin { get { return calculateSpin; } }
 
-        Point lineStart = new Point();
-        Point lineMiddle = new Point();
-        Point lineEnd = new Point();
+        Color lineColor = Color.FromArgb(255, 255, 0, 0);
+
+        float angle = 0;    // angle in degrees
+        public float AngleDeg() { return angle; }
+        public float AngleRads() { return (float)(angle * Math.PI / 180); }
+        
 
         public FlightPath()
         {
@@ -33,62 +39,71 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Load()
         {
-            
+
         }
         public void PlaceStartMarker(int x, int y)
         {
             startMarker.Place(x, y);
-            lineStart.X = x;
-            lineStart.Y = y;
         }
         public void PlaceEndMarker(int x, int y)
         {
             endMarker.Place(x, y);
-            lineEnd.X = x;
-            lineEnd.Y = y;
             connectMarkers = true;
             calculateSpin = true;
             int spinX = (startMarker.X + endMarker.X) / 2;
             int spinY = (startMarker.Y + endMarker.Y) / 2;
-            lineMiddle.X = spinX;
-            lineMiddle.Y = spinY;
-            
+            CalculateInitialAngle();
             PlaceSpinMarker(spinX, spinY);
         }
-        //int initialSpinX = 0;
-        //int initialSpinY = 0;
-        int startingSpinX = 0;
-        int startingSpinY = 0;
-        int deltaSpinX = 0;
-        int deltaSpinY = 0;
+
+        private void CalculateInitialAngle()
+        {
+            double xdiff = endMarker.Center.X - startMarker.Center.X;
+            double ydiff = endMarker.Center.Y - startMarker.Center.Y;
+            double tempAngle = Math.Atan2(xdiff, ydiff) * 180 / Math.PI;
+            angle = 90-(float)tempAngle;
+
+        }
+
+
+        double adjustedAngle = 0;   // adjusted for spin and aim point
+        private void AddSpin()
+        {
+            double xdiff = spinMarker.Center.X - startMarker.Center.X;
+            double ydiff = spinMarker.Center.Y - startMarker.Center.Y;
+            double tempAngle = Math.Atan2(xdiff, ydiff) * 180 / Math.PI;
+            cwl($"[FilghtPath.AddSpin]: adjusted angle: {tempAngle}");
+            adjustedAngle = (angle + tempAngle) / 2;
+            // I want to adjust the angle of the ball as the ball moves.
+            // At this time the current logic i am thking is to adjust the
+            // angle of the ball based off the spin marker. the aim marker will set the 
+            // initial angle and then the spin marker will factor into the flight of the ball over
+            // the flight time. for instance, if the aim marker and spin marker are at the same angle, the ball 
+            // will go straight. If the spin marker is pulled to the right of the aim marker, I will need to do some calculations to 
+            // and apply a slight "drift" to the ball as it travels.
+
+        }
         private void PlaceSpinMarker(int x, int y)
         {
-            startingSpinX = x;
-            startingSpinY = y;
-            deltaSpinX = 0;
-            deltaSpinY = 0;
             spinMarker.Place(x, y);
             spinMarker.ShowClickRectangle = true;
+            AddSpin();
+
+
         }
-        
+
+        public void AdjustSpinMarker(int x, int y)
+        {
+            spinMarker.AdjustPosition(x, y);
+            AddSpin();
+        }
+
         public bool IsInBoundingRect(int mPosX, int mPosY)
         {
-            if(spinMarker.IsInBoundingRect(mPosX, mPosY))
-            {
-                return true;
-            }
-            else
-                return false;
+            if (spinMarker.IsInBoundingRect(mPosX, mPosY)) { return true; }
+            else { return false; }
         }
-        public void AdjustSpinMarker(int offsetX, int offsetY)
-        {
-            deltaSpinX = offsetX - startingSpinX;
-            deltaSpinY = offsetY - startingSpinY;
-            lineMiddle.X = offsetX;
-            lineMiddle.Y = offsetY;
-            spinMarker.AdjustPosition(offsetX, offsetY);
-        }
-        
+
         public void Draw(Graphics g)
         {
             if (startMarker.IsPlaced && endMarker.IsPlaced)
@@ -96,16 +111,9 @@ namespace BallzForWindows01.GamePhysicsParts
                 startMarker.Draw(g);
                 endMarker.Draw(g);
             }
-            if(connectMarkers)
+            if (connectMarkers)
             {
-                Color lineColor;
-                int a = startMarker.Alpha;
-                int r = startMarker.Red;
-                int grn = startMarker.Green;
-                int b = startMarker.Blue;
-                lineColor = Color.FromArgb(a, r, grn, b);
                 Pen p = new Pen(lineColor, 5);
-                //g.DrawLine(p, startMarker.Center, endMarker.Center);
                 spinMarker.Draw(g);
                 DrawConnectorLine(g, p);
             }
@@ -113,9 +121,9 @@ namespace BallzForWindows01.GamePhysicsParts
 
         private void DrawConnectorLine(Graphics g, Pen p)
         {
-            Point[] pArray = { lineStart, lineMiddle, lineEnd };
+            Point[] pArray = { startMarker.Center, spinMarker.Center, endMarker.Center };
             g.DrawCurve(p, pArray);
-            
+
         }
         public void Reset()
         {

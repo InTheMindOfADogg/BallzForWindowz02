@@ -11,9 +11,20 @@ namespace BallzForWindows01.DrawableParts
 {
     class GameBall : DrawableObject
     {
+
+        #region properties
+        public Size GameScreenSize { get { return gameScreenSize; } set { gameScreenSize = value; } }
+        public bool ReadyForLaunch { get { return readyForLaunch; } }
+        public bool PlacingAim { get { return placingAim; } set { placingAim = value; } }
+        public bool SettingSpin { get { return settingSpin; } }
+        public bool PlacingSpinRect { get { return placingSpinRect; } set { placingSpinRect = value; } }
+        public bool BallLaunched { get { return ballLaunched; } }
+        #endregion
+
+
         Point startPosition;
         Point center;
-        Color color;
+        //Color color;
 
         Font font;
         Color fontColor = Color.Black;
@@ -23,41 +34,29 @@ namespace BallzForWindows01.DrawableParts
         FlightPath flightPath;
         Button01 launchButton;
 
-
         Size gameScreenSize = new Size();
 
         bool placingAim = false;
-
         bool settingSpin = false;
         bool readyForLaunch = false;    // same as setting spin, might need to adjust later
         bool placingSpinRect = false;
         bool ballLaunched = false;
 
-        #region properties
-        public Size GameScreenSize { get { return gameScreenSize; } set { gameScreenSize = value; } }
-        public Color DrawColor { get { return color; } set { color = value; } }
-        public bool ReadyForLaunch { get { return readyForLaunch; } }
-        public bool PlacingAim { get { return placingAim; } set { placingAim = value; } }
-        public bool SettingSpin { get { return settingSpin; } }
-        public bool PlacingSpinRect { get { return placingSpinRect; } set { placingSpinRect = value; } }
+        List<string> dbgStrList = new List<string>();
 
-        public bool BallLaunched { get { return ballLaunched; } }
-        #endregion
-
-        public GameBall()
+        public GameBall(Size gameScreenSize)
         {
+            this.gameScreenSize = gameScreenSize;
             startPosition = new Point(0, 0);
-            x = 0;
-            y = 0;
-            width = 15;
-            height = 15;
-            alpha = 255;
-            red = 0;
-            green = 0;
-            blue = 0;
-            color = Color.FromArgb(alpha, red, green, blue);
+            SetPosition(0, 0);
+            SetSize(15, 15);
+            SetColor(255, 0, 0, 0);
+
+            //color = Color.FromArgb(alpha, red, green, blue);
+
             font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            center = new Point(x - width / 2, y - height / 2);
+
+            //center = new Point(x - width / 2, y - height / 2);
             placingAim = false;
             settingSpin = false;
             readyForLaunch = false;    // same as setting spin, might need to adjust later
@@ -71,16 +70,9 @@ namespace BallzForWindows01.DrawableParts
             flightPath.Load();
             launchButton = new Button01();
         }
-        public void Load(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-            
-            center = new Point(x + width / 2, y + height / 2);
-            startPosition = new Point(x, y);
-            PositionLaunchButton();
-        }
-        public void Load(int x, int y, int width, int height)
+        public void Load(int x, int y) { _Load(x, y, width, height); }
+        public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
+        private void _Load(int x, int y, int width, int height)
         {
             this.x = x;
             this.y = y;
@@ -102,35 +94,33 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
-        float angle = 2;
+        //float angle = 0;
         float speed = 5;
         PointF flightPos = new PointF();
         bool startPosSet = false;
         public void Update()
         {
+            dbgStrList.Add($"ballLaunched: {ballLaunched}");
             
+            float xfloat = speed * (float)Math.Cos(flightPath.AngleRads());
+            float yfloat = speed * (float)Math.Sin(flightPath.AngleRads());
             if (ballLaunched)
             {
-                //y -= (int)(1 * speed);
-                //x = x + (int)(Math.Cos(angle));
-                //y = y + (int)(Math.Sin(angle));
-                float xfloat = speed * (float)Math.Cos(angle);
-                float yfloat = speed * (float)Math.Sin(angle);
-                x = (int)xfloat;
-                y = (int)yfloat;
-                
+                x += (int)xfloat;
+                y += (int)yfloat;
+
                 if (y <= 0)
                 {
-                    //ballLaunched = false;
                     Reset();
                 }
-                if(x <= 0 || x >= gameScreenSize.Width)
+                if (x <= 0 || x >= gameScreenSize.Width)
                 {
                     Reset();
                 }
-
-
             }
+            dbgStrList.Add($"Angle (degrees): {flightPath.AngleDeg()}");
+            //dbgStrList.Add($"xfloat: {xfloat}");
+            //dbgStrList.Add($"yfloat: {yfloat}");
         }
         public void SetFlightPath(int x, int y)
         {
@@ -148,12 +138,12 @@ namespace BallzForWindows01.DrawableParts
             if (flightPath.IsInBoundingRect(x, y))
             {
                 return true;
-            }                
+            }
             else
             {
                 return false;
             }
-                
+
         }
         public bool IsInLaunchButtonRect(int x, int y)
         {
@@ -181,21 +171,46 @@ namespace BallzForWindows01.DrawableParts
         {
             ballLaunched = true;
         }
+
+        void DrawDebugInfo(Graphics g)
+        {
+            Point pos = new Point(10, 100);
+            SizeF strSize = new SizeF();
+            for(int i = 0; i < dbgStrList.Count; i++)
+            {
+                strSize = g.MeasureString(dbgStrList[i], font);
+                g.DrawString(dbgStrList[i], font, Brushes.Black, pos);
+                pos.Y += (int)(strSize.Height + 0.49);
+
+            }
+            dbgStrList = new List<string>();
+        }
+        
+
         public void Draw(Graphics g)
+        {
+            //DrawBallLabel(g);
+
+            SolidBrush sb = new SolidBrush(color);
+
+            launchButton.Draw(g);
+            flightPath.Draw(g);
+            g.FillEllipse(sb, x - width / 2, y - height / 2, width, height);
+
+            g.DrawEllipse(Pens.Red, x - width / 2, y - height / 2, width, height);
+
+            DrawDebugInfo(g);
+
+            sb.Dispose();
+        }
+        void DrawBallLabel(Graphics g)
         {
             string description = "Ball";
             SizeF strSize = g.MeasureString(description, font);
             Point strPos = new Point();
             strPos.X = (int)center.X - (int)strSize.Width / 2;
             strPos.Y = (int)center.Y - (int)strSize.Height / 2;
-            using (SolidBrush sb = new SolidBrush(color))
-            {
-                launchButton.Draw(g);
-                flightPath.Draw(g);
-                g.FillEllipse(sb, x - width / 2, y - height / 2, width, height);
-
-                g.DrawEllipse(Pens.Red, x - width / 2, y - height / 2, width, height);
-            }
+            g.DrawString(description, font, Brushes.Black, strPos);
         }
 
         public void Reset()

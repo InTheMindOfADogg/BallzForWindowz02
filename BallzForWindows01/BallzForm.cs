@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using BallzForWindows01.DrawableParts;
 using BallzForWindows01.DebugForm;
 using BallzForWindows01.MainGameParts;
+using BallzForWindows01.Structs;
 
 namespace BallzForWindows01
 {
@@ -20,154 +21,107 @@ namespace BallzForWindows01
         Up,
         Down
     }
-    public struct MouseControls
-    {
-        public int x;
-        public int y;
-        public UpDownState leftState;
-        public UpDownState rightState;
-        public UpDownState lastLeftState;
-        public UpDownState lastRightState;
-        
-    }
+    
 
-    public partial class BallzForm : Form
+    public class BallzForm : Form
     {
-        public static MouseControls mcontrols = new MouseControls();
+        MouseControls mcontrols = new MouseControls();
         MainGame01 ballzGame01;
 
-        MyTimer timer = new MyTimer();
-        long refreshRate = 0;
+        //Bitmap backBuffer = null;
+
+        
         public BallzForm()
         {
-            InitializeComponent();
-            #region Mouse Controls
+            InitializeForm();
+            #region Mouse Control Events
             MouseMove += BallzForm_MouseMove;
             MouseDown += BallzForm_MouseDown;
             MouseUp += BallzForm_MouseUp;
-            #endregion
-            SetUpForm();
+            #endregion Mouse Control Events
 
+        }
+        #region mouse events
+        private void BallzForm_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) { mcontrols.Update(e, MouseEventType.LeftButtonUp); }
+            if (e.Button == MouseButtons.Right) { mcontrols.Update(e, MouseEventType.RightButtonUp); }
+        }
+        private void BallzForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) { mcontrols.Update(e, MouseEventType.LeftButtonDown); }
+            if (e.Button == MouseButtons.Right) { mcontrols.Update(e, MouseEventType.RightButtonDown); }
+        }
+        private void BallzForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            mcontrols.Update(e, MouseEventType.Move);
+        }
+        #endregion mouse events
+        private void InitializeForm()
+        {
+            // 
+            // BallzForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800,700);
+            this.Name = "BallzForm";
+            this.Text = "Ballz Game01";
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            //backBuffer = new Bitmap(this.Width, this.Height);
         }
         public void LoadGame()
         {
+            ballzGame01 = new MainGame01(this.Width, this.Height);
             ballzGame01.Load();
         }
         public void GameLoop()
         {
-            while(this.Created)
+            while (this.Created)
             {
-                timer.Reset();
                 GameLogic();
                 RenderScene();
-                Application.DoEvents();
-                while (timer.GetTicks() < refreshRate) ;
+                Application.DoEvents();                
             }
         }
-        
+
 
         private void GameLogic()    //Update
         {
-            
-            //UpdateGame();
-            ballzGame01.Update();
-            UpdateMouseControlsLastState();
-            
+            ballzGame01.Update(mcontrols);   // update game and draw to back buffer
         }
         private void RenderScene()
         {
-            #region DrawGame
-            DrawGame();
-            //ballzGame01.Draw(this.CreateGraphics());
-            #endregion DrawGame
-        }
 
+            Graphics g = CreateGraphics();
 
-        private void BallzForm_MouseUp(object sender, MouseEventArgs e)
-        {
-            if(e.Button == MouseButtons.Left)
-            {
-                mcontrols.leftState = UpDownState.Up;
-            }
-            if(e.Button == MouseButtons.Right)
-            {
-                mcontrols.rightState = UpDownState.Up;
-            }
-            ballzGame01.UpdateMouseControls(mcontrols);
-        }
-        private void BallzForm_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                mcontrols.leftState = UpDownState.Down;
-            }
-            if (e.Button == MouseButtons.Right)
-            {
-                mcontrols.rightState = UpDownState.Down;
-            }
-            ballzGame01.UpdateMouseControls(mcontrols);
-        }
-        private void BallzForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            mcontrols.x = e.X;
-            mcontrols.y = e.Y;
-            ballzGame01.UpdateMouseControls(mcontrols);
-        }
+            ballzGame01.Draw(g);     // currently just drawing back buffer, going with this for now.
 
-        private void BallzForm_Loader(object sender, EventArgs e)
-        {
-            ballzGame01 = new MainGame01(this.Width, this.Height);
-            LoadGame();
-        }
-        private void SetUpForm()
-        {
-            this.Width = 800;
-            this.Height = 700;
-            this.StartPosition = FormStartPosition.CenterScreen;
-        }
+            g.Dispose();
 
-        //private void UpdateGame()
-        //{
-        //    ballzGame01.Update();
-        //    UpdateMouseControlsLastState();
-        //}
-
-        private void UpdateMouseControlsLastState()
-        {
-            mcontrols.lastLeftState = mcontrols.leftState;
-            mcontrols.lastRightState = mcontrols.rightState;
-        }
-        private void DrawGame()
-        {
-            ballzGame01.Draw(this.CreateGraphics());
         }
 
         
-    }
+        
 
-    public class MyTimer
-    {
-        private long StartTick = 0;
-        public MyTimer()
-        {
-            Reset();
-        }
-        public long GetTicks()
-        {
-            long currentTick = 0;
-            currentTick = GetTickCount();
-            return currentTick - StartTick;
-        }
-        public void Reset()
-        {
-            StartTick = GetTickCount();
-        }
-        [DllImport("Kernel32.dll")]
-        private static extern long GetTickCount();
+
     }
+    
 }
 
 
+#region MouseControls - moved to own file and changed to class
+//public struct MouseControls
+//{
+//    public int x;
+//    public int y;
+//    public UpDownState leftState;
+//    public UpDownState rightState;
+//    public UpDownState lastLeftState;
+//    public UpDownState lastRightState;
+//}
+#endregion MouseControls - moved to own file and changed to class
 
 #region Old update logic from BallzForm, no longer used, but keeping for reference
 //private void Application_Idle(object sender, EventArgs e)
@@ -195,3 +149,28 @@ namespace BallzForWindows01
 //[DllImport("user32.dll")]
 //private static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
 #endregion Old update logic from BallzForm, no longer used, but keeping for reference
+
+
+
+#region MyTimer - moved to own file 2019-10-05
+//public class MyTimer
+//{
+//    private long StartTick = 0;
+//    public MyTimer()
+//    {
+//        Reset();
+//    }
+//    public long GetTicks()
+//    {
+//        long currentTick = 0;
+//        currentTick = GetTickCount();
+//        return currentTick - StartTick;
+//    }
+//    public void Reset()
+//    {
+//        StartTick = GetTickCount();
+//    }
+//    [DllImport("Kernel32.dll")]
+//    private static extern long GetTickCount();
+//}
+#endregion MyTimer - moved to own file 2019-10-05
