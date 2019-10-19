@@ -13,11 +13,12 @@ namespace BallzForWindows01.GamePhysicsParts
 
     class FlightPath
     {
-        //public float Angle { get { return (float)(angle * Math.PI / 180); } }
-
-        XMarker startMarker;
-        XMarker endMarker;
+        XMarker originMarker;
+        XMarker aimMarker;
         XMarker spinMarker;
+        
+        
+        
         bool connectMarkers = false;
         bool calculateSpin = false;
         public bool ConnectMarkers { get { return connectMarkers; } }
@@ -33,8 +34,8 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public FlightPath()
         {
-            startMarker = new XMarker();
-            endMarker = new XMarker();
+            originMarker = new XMarker();
+            aimMarker = new XMarker();
             spinMarker = new XMarker();
             spinMarker.DrawColor = Color.Green;
         }
@@ -44,15 +45,15 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void PlaceStartMarker(int x, int y)
         {
-            startMarker.Place(x, y);
+            originMarker.Place(x, y);
         }
         public void PlaceEndMarker(int x, int y)
         {
-            endMarker.Place(x, y);
+            aimMarker.Place(x, y);
             //connectMarkers = true;
             calculateSpin = true;
-            int spinX = (startMarker.X + endMarker.X) / 2;
-            int spinY = (startMarker.Y + endMarker.Y) / 2;
+            int spinX = (originMarker.X + aimMarker.X) / 2;
+            int spinY = (originMarker.Y + aimMarker.Y) / 2;
             PlaceSpinMarker(spinX, spinY);
         }
         private void PlaceSpinMarker(int x, int y)
@@ -82,8 +83,8 @@ namespace BallzForWindows01.GamePhysicsParts
         public double Drift { get { return drift; } set { drift = value; } }        
         private void AddSpin()
         {
-            angle = endMarker.AngleFromPoint(startMarker.Center);
-            drift = spinMarker.AngleFromPoint(startMarker.Center);
+            angle = aimMarker.AngleFromPoint(originMarker.Center);
+            drift = spinMarker.AngleFromPoint(originMarker.Center);
              
             // I want to adjust the angle of the ball as the ball moves.
             // At this time the current logic i am thking is to adjust the
@@ -110,11 +111,11 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public void Draw(Graphics g)
         {
-            if (startMarker.IsPlaced && endMarker.IsPlaced)
+            if (originMarker.IsPlaced && aimMarker.IsPlaced)
             {
-                startMarker.Draw(g);
+                originMarker.Draw(g);
                 spinMarker.Draw(g);
-                endMarker.Draw(g);
+                aimMarker.Draw(g);
             }
             if (connectMarkers)
             {
@@ -126,14 +127,14 @@ namespace BallzForWindows01.GamePhysicsParts
 
         private void DrawConnectorLine(Graphics g, Pen p)
         {
-            Point[] pArray = { startMarker.Center, spinMarker.Center, endMarker.Center };
+            Point[] pArray = { originMarker.Center, spinMarker.Center, aimMarker.Center };
             g.DrawCurve(p, pArray);
 
         }
         public void Reset()
         {
-            startMarker.Remove();
-            endMarker.Remove();
+            originMarker.Remove();
+            aimMarker.Remove();
             spinMarker.Remove();
             calculateSpin = false;
             connectMarkers = false;
