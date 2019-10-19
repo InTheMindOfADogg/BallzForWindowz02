@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace BallzForWindows01.HelperClasses
+namespace BallzForWindows01.GamePhysicsParts
 {
     class PointD
     {
-        double X { get { return x; } set { x = value; } }
-        double Y { get { return y; } set { y = value; } }
+        public double X { get { return x; } set { x = value; } }
+        public double Y { get { return y; } set { y = value; } }
         double x, y = 0;
 
         public PointD()

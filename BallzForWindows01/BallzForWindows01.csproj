@@ -70,7 +70,7 @@
     <Compile Include="DrawableParts\GameBall.cs" />
     <Compile Include="DrawableParts\XMarker.cs" />
     <Compile Include="GamePhysicsParts\FlightPath.cs" />
-    <Compile Include="HelperClasses\PointD.cs" />
+    <Compile Include="GamePhysicsParts\PointD.cs" />
     <Compile Include="MainGameParts\GameParts01.cs" />
     <Compile Include="MainGameParts\MainGame01.cs" />
     <Compile Include="Program.cs" />

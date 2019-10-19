@@ -100,7 +100,7 @@ namespace BallzForWindows01.MainGameParts
         {
             backbuffer = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(backbuffer);
-            SolidBrush sb = new SolidBrush(Color.Aqua);
+            SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
             g.FillRectangle(sb, 0, 0, width, height);
             //DrawBlockList(g);
             for (int i = 0; i < blockList.Count; i++)

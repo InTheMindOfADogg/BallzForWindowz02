@@ -8,6 +8,7 @@ using System.Timers;
 
 using BallzForWindows01.GamePhysicsParts;
 
+
 namespace BallzForWindows01.DrawableParts
 {
     class GameBall : DrawableObject
@@ -23,8 +24,13 @@ namespace BallzForWindows01.DrawableParts
         #endregion
 
 
-        Point startPosition;
+        Point startPosition;        
         Point center;
+
+        PointD dstartPosition;
+        PointD dcenter;
+        PointD dcurrentPos;
+        PointD dlastPos;
         //Color color;
 
         Font font;
@@ -34,7 +40,7 @@ namespace BallzForWindows01.DrawableParts
 
         FlightPath flightPath;
         Button01 launchButton;
-        Trajectory traj;
+        //Trajectory traj;
 
         Size gameScreenSize = new Size();
 
@@ -43,6 +49,8 @@ namespace BallzForWindows01.DrawableParts
         bool readyForLaunch = false;    // same as setting spin, might need to adjust later
         bool placingSpinRect = false;
         bool ballLaunched = false;
+
+        double dx, dy = 0;
 
 
         public GameBall(Size gameScreenSize)
@@ -70,19 +78,25 @@ namespace BallzForWindows01.DrawableParts
             flightPath = new FlightPath();
             flightPath.Load();
             launchButton = new Button01();
-            traj = new Trajectory();
+            //traj = new Trajectory();
         }
         public void Load(int x, int y) { _Load(x, y, width, height); }
         public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
         private void _Load(int x, int y, int width, int height)
         {
-            this.x = x;
-            this.y = y;
+
             this.width = width;
             this.height = height;
+
+            dx = x;
+            dy = y;
+            dcenter = new PointD(dx + width / 2, dy + height / 2);
+            dstartPosition = new PointD(dx, dy);
+
+            this.x = x;
+            this.y = y;
             center = new Point(x + width / 2, y + height / 2);
             startPosition = new Point(x, y);
-            traj.Load(x, y);
             PositionLaunchButton();
         }
         private void PositionLaunchButton()     // place in load 
@@ -116,7 +130,140 @@ namespace BallzForWindows01.DrawableParts
         double roundTime = 10;
         double drifthardness = 0.5;
 
-        int lastPosx, lastPosy;
+        //double lastPosx, lastPosy;
+
+        #region Update - origianl version not using trajectory class
+        //public void Update()
+        //{
+        //    DbgFuncs.AddStr($"[GameBall.Update] ballLaunched: {ballLaunched}");
+
+        //    if (!ballLaunched)
+        //    {
+        //        fpAngle = flightPath.Angle;
+        //        fpDrift = flightPath.Drift;
+
+        //        #region adjusting fpAngle to how I want it
+        //        //fpAngle = (fpAngle + (90 * Math.PI / 180)) * -1;
+        //        //fpDrift = (fpDrift + (90 * Math.PI / 180)) * -1;
+
+        //        fpAngle = (fpAngle + (Math.PI / 2)) * -1;
+        //        fpDrift = (fpDrift + (Math.PI / 2)) * -1;
+        //        #endregion adjusting fpAngle to how I want it
+
+        //        driftFactor = (fpAngle - fpDrift) * drifthardness;
+
+
+        //    }
+
+        //    DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {360 + (fpAngle * 180 / Math.PI):N2}");
+        //    DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
+        //    DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
+
+        //    DbgFuncs.AddStr($"[GameBall.Update] speed(of ball): {speed:N2}");
+        //    DbgFuncs.AddStr($"[GameBall.Update] angle(of ball): {(calculatedAngle * 180 / Math.PI) % 360:N2}");
+        //    DbgFuncs.AddStr($"[GameBall.Update] flightTime: {flightTime}");
+        //    DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
+        //    //DbgFuncs.AddStr($"[GameBall.Update] secondsElapsed: {secondsElapsed}");
+        //    //DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(roundTime - secondsElapsed):N2}");
+        //    DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N2}");
+        //    //DbgFuncs.AddStr($"[GameBall.Update] totalMs: {totalMs}");
+        //    DbgFuncs.AddStr($"ball pos: {{ {lastPosx}, {lastPosy} }}");
+        //    DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
+
+
+        //    if (ballLaunched)
+        //    {
+
+        //        flightTime = DateTime.Now - startTime;
+        //        totalMs = flightTime.TotalMilliseconds;
+        //        secondsElapsed = flightTime.TotalSeconds;
+        //        secondsRemaining = roundTime - secondsElapsed;
+        //        timedriftModifier = totalMs / 250;
+
+        //        #region accidently discovered effects
+        //        // up and down on y axis
+        //        //xdub = x + speed * Math.Cos(fpAngle) * 180 / Math.PI;
+        //        //ydub = y + speed * Math.Sin(fpAngle - (driftFactor * ydriftModifier)) * 180 / Math.PI;
+
+        //        #region crazySnake
+        //        //double xFpAngle, yFpAngle;
+        //        //double xFpDrift, yFpDirft;
+        //        //double xDriftFactor, yDriftFactor;
+        //        //driftFactor = (fpAngle - fpDrift) * drifthardness;
+
+        //        //xDriftFactor = Math.Cos(driftFactor);
+        //        //yDriftFactor = Math.Sin(driftFactor);
+
+        //        //xFpAngle = Math.Cos(fpAngle);
+        //        //yFpAngle = Math.Sin(fpAngle);
+
+        //        //xFpDrift = Math.Cos(fpDrift);
+        //        //yFpDirft = Math.Sin(fpDrift);
+        //        //xdub = x + speed * Math.Cos(xFpAngle -(xDriftFactor * timedriftModifier)) * 180 / Math.PI;
+        //        //ydub = y + speed * Math.Sin(yFpDirft - (yDriftFactor * timedriftModifier)) * 180 / Math.PI;
+        //        #endregion crazySnake
+
+        //        #region crazySnake 2
+        //        //double xFpAngle, yFpAngle;
+        //        //double xFpDrift, yFpDirft;
+        //        //double xDriftFactor, yDriftFactor;
+        //        //xDriftFactor = Math.Cos(driftFactor);
+        //        //yDriftFactor = Math.Sin(driftFactor);
+
+        //        //xFpAngle = Math.Cos(fpAngle);
+        //        //yFpAngle = Math.Sin(fpAngle);
+
+        //        //xFpDrift = Math.Cos(fpDrift);
+        //        //yFpDirft = Math.Sin(fpDrift);
+        //        //xdub = x + speed * Math.Cos(xFpAngle - (xDriftFactor * timedriftModifier)) * 180 / Math.PI;
+        //        //ydub = y + speed * Math.Sin(yFpAngle - (yDriftFactor * timedriftModifier)) * 180 / Math.PI;
+        //        #endregion crazySnake 2
+
+        //        #region goes into spiral
+        //        //double driftDegradetion = 0, driftDegradeRate = 0.01;
+        //        //if(driftFactor > 0)
+        //        //{
+        //        //    driftDegradetion += driftDegradeRate;
+        //        //    //driftFactor -= driftDegradeRate;
+        //        //}
+        //        //else if(driftFactor < 0)
+        //        //{
+        //        //    driftDegradetion -= driftDegradeRate;
+        //        //    //driftFactor += driftDegradeRate;
+        //        //}
+        //        //calculatedAngle = fpAngle - ((driftFactor - driftDegradetion) * timedriftModifier);
+        //        #endregion goes into spiral
+
+        //        #endregion accidently discovered effects
+
+        //        // starts looping if angle gets too high
+        //        calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
+
+        //        xdub = x + speed * Math.Cos(calculatedAngle) * 180 / Math.PI;
+        //        ydub = y + speed * Math.Sin(calculatedAngle) * 180 / Math.PI;
+
+        //        x = (int)xdub;
+        //        y = (int)ydub;
+        //        lastPosx = x;
+        //        lastPosy = y;
+        //        if (secondsRemaining <= 0)
+        //        {
+        //            secondsRemaining = 0;
+        //            Reset();
+        //        }
+        //        if (y <= 0 || y >= gameScreenSize.Height)
+        //        {
+        //            Reset();
+        //        }
+        //        if (x <= 0 || x >= gameScreenSize.Width)
+        //        {
+        //            Reset();
+        //        }
+        //    }
+
+        //}
+        #endregion Update - origianl version not using trajectory class
+
         public void Update()
         {
             DbgFuncs.AddStr($"[GameBall.Update] ballLaunched: {ballLaunched}");
@@ -125,37 +272,63 @@ namespace BallzForWindows01.DrawableParts
             {
                 fpAngle = flightPath.Angle;
                 fpDrift = flightPath.Drift;
-
-                #region adjusting fpAngle to how I want it
-                //fpAngle = (fpAngle + (90 * Math.PI / 180)) * -1;
-                //fpDrift = (fpDrift + (90 * Math.PI / 180)) * -1;
-                fpAngle = (fpAngle + (Math.PI / 2)) * -1;
-                fpDrift = (fpDrift + (Math.PI / 2)) * -1;
-                #endregion adjusting fpAngle to how I want it
-
                 driftFactor = (fpAngle - fpDrift) * drifthardness;
-
-
             }
 
-            DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {360 + (fpAngle * 180 / Math.PI):N2}");
+            DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
 
             DbgFuncs.AddStr($"[GameBall.Update] speed(of ball): {speed:N2}");
-            DbgFuncs.AddStr($"[GameBall.Update] angle(of ball): {(calculatedAngle * 180 / Math.PI) % 360:N2}");
+            DbgFuncs.AddStr($"[GameBall.Update] angle(of ball): {(calculatedAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] flightTime: {flightTime}");
             DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
             //DbgFuncs.AddStr($"[GameBall.Update] secondsElapsed: {secondsElapsed}");
             //DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(roundTime - secondsElapsed):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N2}");
             //DbgFuncs.AddStr($"[GameBall.Update] totalMs: {totalMs}");
-            DbgFuncs.AddStr($"ball pos: {{ {lastPosx}, {lastPosy} }}");
+            //DbgFuncs.AddStr($"ball pos: {{ {lastPosx}, {lastPosy} }}");
             DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
 
 
             if (ballLaunched)
             {
+
+
+
+                #region original version using int
+
+                //flightTime = DateTime.Now - startTime;
+                //totalMs = flightTime.TotalMilliseconds;
+                //secondsElapsed = flightTime.TotalSeconds;
+                //secondsRemaining = roundTime - secondsElapsed;
+                //timedriftModifier = totalMs / 250;
+
+                //// starts looping if angle gets too high
+                //calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
+
+                //xdub = x + speed * Math.Cos(calculatedAngle) * 180 / Math.PI;
+                //ydub = y + speed * Math.Sin(calculatedAngle) * 180 / Math.PI;
+
+                //x = (int)xdub;
+                //y = (int)ydub;
+                //lastPosx = x;
+                //lastPosy = y;
+                //if (secondsRemaining <= 0)
+                //{
+                //    secondsRemaining = 0;
+                //    Reset();
+                //}
+                //if (y <= 0 || y >= gameScreenSize.Height)
+                //{
+                //    Reset();
+                //}
+                //if (x <= 0 || x >= gameScreenSize.Width)
+                //{
+                //    Reset();
+                //}
+
+                #endregion original version using int
 
                 flightTime = DateTime.Now - startTime;
                 totalMs = flightTime.TotalMilliseconds;
@@ -163,82 +336,26 @@ namespace BallzForWindows01.DrawableParts
                 secondsRemaining = roundTime - secondsElapsed;
                 timedriftModifier = totalMs / 250;
 
-                #region accidently discovered effects
-                // up and down on y axis
-                //xdub = x + speed * Math.Cos(fpAngle) * 180 / Math.PI;
-                //ydub = y + speed * Math.Sin(fpAngle - (driftFactor * ydriftModifier)) * 180 / Math.PI;
-
-                #region crazySnake
-                //double xFpAngle, yFpAngle;
-                //double xFpDrift, yFpDirft;
-                //double xDriftFactor, yDriftFactor;
-                //driftFactor = (fpAngle - fpDrift) * drifthardness;
-
-                //xDriftFactor = Math.Cos(driftFactor);
-                //yDriftFactor = Math.Sin(driftFactor);
-
-                //xFpAngle = Math.Cos(fpAngle);
-                //yFpAngle = Math.Sin(fpAngle);
-
-                //xFpDrift = Math.Cos(fpDrift);
-                //yFpDirft = Math.Sin(fpDrift);
-                //xdub = x + speed * Math.Cos(xFpAngle -(xDriftFactor * timedriftModifier)) * 180 / Math.PI;
-                //ydub = y + speed * Math.Sin(yFpDirft - (yDriftFactor * timedriftModifier)) * 180 / Math.PI;
-                #endregion crazySnake
-
-                #region crazySnake 2
-                //double xFpAngle, yFpAngle;
-                //double xFpDrift, yFpDirft;
-                //double xDriftFactor, yDriftFactor;
-                //xDriftFactor = Math.Cos(driftFactor);
-                //yDriftFactor = Math.Sin(driftFactor);
-
-                //xFpAngle = Math.Cos(fpAngle);
-                //yFpAngle = Math.Sin(fpAngle);
-
-                //xFpDrift = Math.Cos(fpDrift);
-                //yFpDirft = Math.Sin(fpDrift);
-                //xdub = x + speed * Math.Cos(xFpAngle - (xDriftFactor * timedriftModifier)) * 180 / Math.PI;
-                //ydub = y + speed * Math.Sin(yFpAngle - (yDriftFactor * timedriftModifier)) * 180 / Math.PI;
-                #endregion crazySnake 2
-
-                #region goes into spiral
-                //double driftDegradetion = 0, driftDegradeRate = 0.01;
-                //if(driftFactor > 0)
-                //{
-                //    driftDegradetion += driftDegradeRate;
-                //    //driftFactor -= driftDegradeRate;
-                //}
-                //else if(driftFactor < 0)
-                //{
-                //    driftDegradetion -= driftDegradeRate;
-                //    //driftFactor += driftDegradeRate;
-                //}
-                //calculatedAngle = fpAngle - ((driftFactor - driftDegradetion) * timedriftModifier);
-                #endregion goes into spiral
-
-                #endregion accidently discovered effects
-
                 // starts looping if angle gets too high
                 calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
 
-                xdub = x + speed * Math.Cos(calculatedAngle) * 180 / Math.PI;
-                ydub = y + speed * Math.Sin(calculatedAngle) * 180 / Math.PI;
 
-                x = (int)xdub;
-                y = (int)ydub;
-                lastPosx = x;
-                lastPosy = y;
+                //dx = dx + speed * Math.Cos(calculatedAngle) * 180 / Math.PI;
+                //dy = dy + speed * Math.Sin(calculatedAngle) * 180 / Math.PI;
+
+                dx = dx + speed * Math.Cos(fpAngle) * 180 / Math.PI;
+                dy = dy + speed * Math.Sin(fpAngle) * 180 / Math.PI;
+
                 if (secondsRemaining <= 0)
                 {
                     secondsRemaining = 0;
                     Reset();
                 }
-                if (y <= 0 || y >= gameScreenSize.Height)
+                if (dy <= 0 || dy >= gameScreenSize.Height)
                 {
                     Reset();
                 }
-                if (x <= 0 || x >= gameScreenSize.Width)
+                if (dx <= 0 || dx >= gameScreenSize.Width)
                 {
                     Reset();
                 }
@@ -265,13 +382,11 @@ namespace BallzForWindows01.DrawableParts
 
         public bool IsInSpinRect(int x, int y) { if (flightPath.IsInBoundingRect(x, y)) { return true; } else { return false; } }
         public bool IsInLaunchButtonRect(int x, int y) { if (launchButton.IsInBoundingRect(x, y)) { return true; } else { return false; } }
-        public void AdjustSpinMarker(int x, int y) { flightPath.AdjustSpinMarker(x, y); }
+        public void AdjustSpinMarker(int x, int y) { flightPath.SetSpinMarker(x, y); }
         private void PlaceAimMarker(int endMarkerX, int endMarkerY)
         {
             flightPath.PlaceStartMarker(this.x, this.y);
             flightPath.PlaceEndMarker(endMarkerX, endMarkerY);
-            traj.SetEndPoint(endMarkerX, endMarkerY);
-            //settingSpin = true;
         }
 
 
@@ -285,10 +400,11 @@ namespace BallzForWindows01.DrawableParts
 
             launchButton.Draw(g);
             flightPath.Draw(g);
-            g.FillEllipse(sb, x - width / 2, y - height / 2, width, height);
-            g.DrawEllipse(Pens.Red, x - width / 2, y - height / 2, width, height);
+            //g.FillEllipse(sb, x - (width / 2), y - (height / 2), width, height);
+            //g.DrawEllipse(Pens.Red, x - width / 2, y - height / 2, width, height);
+            g.FillEllipse(sb, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);
+            g.DrawEllipse(Pens.Red, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);
 
-            traj.Draw(g);
 
             sb.Dispose();
         }
@@ -309,6 +425,8 @@ namespace BallzForWindows01.DrawableParts
             readyForLaunch = false;
             x = startPosition.X;
             y = startPosition.Y;
+            dx = dstartPosition.X;
+            dy = dstartPosition.Y;
             flightPath.Reset();
 
         }

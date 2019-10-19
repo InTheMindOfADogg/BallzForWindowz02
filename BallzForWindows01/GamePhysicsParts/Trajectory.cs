@@ -9,8 +9,11 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     class Trajectory
     {
+        public string NameTag { get { return nameTag; } set { nameTag = value; } }
         public bool EndPointSet { get { return endPointSet; } set { endPointSet = value; } }
+        public double RotAngle { get { return rot; } }
 
+        string nameTag = "";
         double x, y;
         double endx, endy;
         double rot;
@@ -20,8 +23,9 @@ namespace BallzForWindows01.GamePhysicsParts
         double oppLen, hypLen, adjLen, anglePreRotation = 0;
         PointF originPos, rightPos, aimPos;
 
-        public Trajectory()
+        public Trajectory(string nameTag = "")
         {
+            this.nameTag = nameTag;
             x = 0;
             y = 0;
             endx = 0;
@@ -35,14 +39,17 @@ namespace BallzForWindows01.GamePhysicsParts
         {
         }
 
-        public void Draw(Graphics g)
+        public void Draw(Graphics g, float dbgTextPosX = 0, float dbgTextPosY = 0)
         {
-            Font f = new Font("Arial", 12, FontStyle.Regular);
-            DebugDraw(g, f);
+            //Font f = new Font("Arial", 12, FontStyle.Regular);
+
+            DebugDraw(g, dbgTextPosX, dbgTextPosY);
+            DrawPointMarkers(g);
             if (endPointSet)
             {
                 g.DrawLine(Pens.Red, (float)x, (float)y, (float)endx, (float)endy);
             }
+            //f.Dispose();
         }
         public void Reset()
         {
@@ -51,21 +58,44 @@ namespace BallzForWindows01.GamePhysicsParts
             endPointSet = false;
         }
 
-        void DebugDraw(Graphics g, Font f)
+        public RectangleF DbgTextBlock { get { return new RectangleF(dbgBlockPos, dbgBlockSize); } }
+        public PointF DbgBlockPos { get { return dbgBlockPos; } }
+        public SizeF DbgBlockSize { get { return dbgBlockSize; } }
+        PointF dbgBlockPos = new PointF();
+        SizeF dbgBlockSize = new SizeF();
+        void DebugDraw(Graphics g, float dbgTextPosX = 0, float dbgTextPosY = 0)
         {
-            PointF fpos = new PointF(450, 20);
-            DrawString(g, f, $"start pos: {{{x:N2}, {y:N2} }}", ref fpos);
-            DrawString(g, f, $"end pos: {{{endx:N2}, {endy:N2} }}", ref fpos);
-            DrawString(g, f, $"distance: {distance:N2}", ref fpos);
-            DrawString(g, f, $"angle: {rot:N2}", ref fpos);
-            DrawTrigStats(g, f, ref fpos);
-            DrawPointMarkers(g);
-            f.Dispose();
+            if (dbgTextPosX != 0 || dbgTextPosY != 0)
+            {
+                Font f = new Font("Arial", 12, FontStyle.Regular);
+                PointF fpos = new PointF(dbgTextPosX, dbgTextPosY);
+                dbgBlockPos = new PointF(dbgTextPosX, dbgTextPosY);
+                DrawString(g, f, $"{nameTag}", ref fpos);
+                DrawString(g, f, $"distance: {distance:N2}", ref fpos);
+                DrawString(g, f, $"o: {{ {oppLen:N2} }} h: {{ {hypLen:N2} }} a: {{ {adjLen:N2} }} ", ref fpos);
+                DrawString(g, f, $"anglePreRotation(degrees): {anglePreRotation * 180 / Math.PI:N2}", ref fpos);
+                DrawString(g, f, $"rot(radians): {rot:N2}", ref fpos);
+                DrawString(g, f, $"rot(degrees): {rot * 180 / Math.PI:N2}", ref fpos);
+                DrawString(g, f, $"originPos: {originPos}", ref fpos);
+                DrawString(g, f, $"aimPos: {aimPos}", ref fpos);
+                DrawString(g, f, $"rghtPos: {rightPos}", ref fpos);
+                f.Dispose();
+            }
+
+
+
         }
         void DrawString(Graphics g, Font f, string str, ref PointF fontPos)
         {
             g.DrawString(str, f, Brushes.Black, fontPos);
-            fontPos.Y += g.MeasureString(str, f).Height;
+            SizeF bsize = g.MeasureString(str, f);
+            fontPos.Y += bsize.Height;
+            dbgBlockSize.Height += bsize.Height;
+            if(bsize.Width > dbgBlockSize.Width)
+            {
+                dbgBlockSize.Width = bsize.Width;
+            }
+
         }
         void DrawPointMarkers(Graphics g)
         {
@@ -83,24 +113,6 @@ namespace BallzForWindows01.GamePhysicsParts
             Pen p = new Pen(Brushes.Black, 3);
             g.DrawLine(p, originPos, new PointF((float)endx, (float)endy));
             p.Dispose();
-        }
-        void DrawTrigStats(Graphics g, Font f, ref PointF fpos)
-        {
-            DrawString(g, f, $"TrigStats:", ref fpos);
-            DrawString(g, f, $"oppLen: {oppLen}", ref fpos);
-            DrawString(g, f, $"hypLen: {hypLen}", ref fpos);
-            DrawString(g, f, $"anglePreRotation(degrees): {anglePreRotation * 180 / Math.PI:N2}", ref fpos);
-            DrawString(g, f, $"rot(radians): {rot}", ref fpos);
-            DrawString(g, f, $"rot(degrees): {rot * 180 / Math.PI:N2}", ref fpos);
-            DrawString(g, f, $"originPos: {originPos}", ref fpos);
-            DrawString(g, f, $"aimPos: {aimPos}", ref fpos);
-            DrawString(g, f, $"rghtPos: {rightPos}", ref fpos);
-
-            double hypCheck = Math.Sqrt((oppLen * oppLen) + (adjLen * adjLen));
-            DrawString(g, f, $"hypCheck: {hypCheck}", ref fpos);
-
-            //DrawString(g, f, $"{((3 * Math.PI) / 2) * 180 / Math.PI}", ref fpos);
-
         }
         
 
@@ -165,6 +177,24 @@ namespace BallzForWindows01.GamePhysicsParts
 
     }
 }
+
+#region DrawTrigStats - moved all these into Debug draw fuction
+//void DrawTrigStats(Graphics g, Font f, ref PointF fpos)
+//{
+//    DrawString(g, f, $"TrigStats:", ref fpos);
+//    DrawString(g, f, $"oppLen: {oppLen}", ref fpos);
+//    DrawString(g, f, $"hypLen: {hypLen}", ref fpos);
+//    DrawString(g, f, $"anglePreRotation(degrees): {anglePreRotation * 180 / Math.PI:N2}", ref fpos);
+//    DrawString(g, f, $"rot(radians): {rot}", ref fpos);
+//    DrawString(g, f, $"rot(degrees): {rot * 180 / Math.PI:N2}", ref fpos);
+//    DrawString(g, f, $"originPos: {originPos}", ref fpos);
+//    DrawString(g, f, $"aimPos: {aimPos}", ref fpos);
+//    DrawString(g, f, $"rghtPos: {rightPos}", ref fpos);
+//    double hypCheck = Math.Sqrt((oppLen * oppLen) + (adjLen * adjLen));
+//    DrawString(g, f, $"hypCheck: {hypCheck}", ref fpos);
+//    //DrawString(g, f, $"{((3 * Math.PI) / 2) * 180 / Math.PI}", ref fpos);
+//}
+#endregion DrawTrigStats - moved all these into Debug draw fuction
 
 #region _SetEndPoint with old logic commented out 2019-10-19
 //void _SetEndPoint(double ex, double ey)
