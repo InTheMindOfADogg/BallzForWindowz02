@@ -138,14 +138,14 @@ namespace BallzForWindows01.DrawableParts
 
             }
 
-            DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {360 + (fpAngle * 180 / Math.PI)}");
-            DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI}");
-            DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI}");
+            DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {360 + (fpAngle * 180 / Math.PI):N2}");
+            DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
+            DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
 
-            DbgFuncs.AddStr($"[GameBall.Update] speed(of ball): {speed}");
-            DbgFuncs.AddStr($"[GameBall.Update] angle(of ball): {(calculatedAngle * 180 / Math.PI) % 360}");
+            DbgFuncs.AddStr($"[GameBall.Update] speed(of ball): {speed:N2}");
+            DbgFuncs.AddStr($"[GameBall.Update] angle(of ball): {(calculatedAngle * 180 / Math.PI) % 360:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] flightTime: {flightTime}");
-            DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier}");
+            DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
             //DbgFuncs.AddStr($"[GameBall.Update] secondsElapsed: {secondsElapsed}");
             //DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(roundTime - secondsElapsed):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N2}");

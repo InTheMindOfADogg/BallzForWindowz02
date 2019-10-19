@@ -49,6 +49,7 @@ namespace BallzForWindows01.MainGameParts
         public void UpdateMouseControls(MouseControls mc)
         {
             #region Setting up the shot
+
             if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball.SettingSpin)
             {
                 if (ball.IsInSpinRect(mc.X, mc.Y))

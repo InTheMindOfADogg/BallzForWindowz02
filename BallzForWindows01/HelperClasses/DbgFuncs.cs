@@ -16,7 +16,7 @@ namespace BallzForWindows01
         public static void MarkEnd() { end = DateTime.Now; }
         public static TimeSpan ElapsedTime() { return (end - start); }
         public static void AddStr(string str) { dbgStrList.Add(str); }
-        static Font CreateFont() { return new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel); }
+        static Font CreateFont() { return new Font("Arial", 12, FontStyle.Regular/*, GraphicsUnit.Pixel*/); }
         public static void DrawDbgStrList(Graphics g)
         {
             if (dbgStrList.Count > 0)
