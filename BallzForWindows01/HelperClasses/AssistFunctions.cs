@@ -10,6 +10,12 @@ namespace BallzForWindows01
     public static class AssistFunctions
     {
         public static void cwl(string str = "") { Console.WriteLine(str); }
+
+        public static SizeF DrawString(Graphics g, Font f, string str, PointF fontPos)
+        {
+            g.DrawString(str, f, Brushes.Black, fontPos);
+            return g.MeasureString(str, f);
+        }
     }
     
 }
