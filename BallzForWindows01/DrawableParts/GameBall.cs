@@ -272,7 +272,6 @@ namespace BallzForWindows01.DrawableParts
                 fpDrift = flightPath.Drift;
                 driftFactor = (fpAngle - fpDrift) * drifthardness;
             }
-
             DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
@@ -281,14 +280,11 @@ namespace BallzForWindows01.DrawableParts
             DbgFuncs.AddStr($"[GameBall.Update] flightTime: {flightTime.ToString(@"mm\:ss\:fff")}");
             DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N3}");
-            DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
+            //DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
 
 
             if (ballLaunched)
             {
-
-
-
                 #region original version using int
 
                 //flightTime = DateTime.Now - startTime;
