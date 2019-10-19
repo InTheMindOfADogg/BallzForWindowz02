@@ -130,8 +130,6 @@ namespace BallzForWindows01.DrawableParts
         double roundTime = 10;
         double drifthardness = 0.5;
 
-        //double lastPosx, lastPosy;
-
         #region Update - origianl version not using trajectory class
         //public void Update()
         //{
@@ -278,16 +276,11 @@ namespace BallzForWindows01.DrawableParts
             DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
-
             DbgFuncs.AddStr($"[GameBall.Update] speed(of ball): {speed:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] angle(of ball degrees): {(calculatedAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] flightTime: {flightTime.ToString(@"mm\:ss\:fff")}");
             DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
-            //DbgFuncs.AddStr($"[GameBall.Update] secondsElapsed: {secondsElapsed}");
-            //DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(roundTime - secondsElapsed):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N3}");
-            //DbgFuncs.AddStr($"[GameBall.Update] totalMs: {totalMs}");
-            //DbgFuncs.AddStr($"ball pos: {{ {lastPosx}, {lastPosy} }}");
             DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
 
 
@@ -338,14 +331,12 @@ namespace BallzForWindows01.DrawableParts
 
                 // starts looping if angle gets too high
                 calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
-                //dx = dx + speed * Math.Cos(calculatedAngle) * 180 / Math.PI;
-                //dy = dy + speed * Math.Sin(calculatedAngle) * 180 / Math.PI;
 
-                //dx = dx + speed * Math.Cos(fpAngle) * 180 / Math.PI;
-                //dy = dy + speed * Math.Sin(fpAngle) * 180 / Math.PI;
+                //dx = dx + speed * Math.Cos(fpAngle);
+                //dy = dy + speed * Math.Sin(fpAngle);
 
-                dx = dx + speed * Math.Cos(fpAngle);
-                dy = dy + speed * Math.Sin(fpAngle);
+                dx = dx + speed * Math.Cos(calculatedAngle);
+                dy = dy + speed * Math.Sin(calculatedAngle);
 
                 if (secondsRemaining <= 0)
                 {
