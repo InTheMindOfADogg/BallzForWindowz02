@@ -68,8 +68,7 @@ namespace BallzForWindows01
             this.Name = "BallzForm";
             this.Text = "Ballz Game01";
             this.StartPosition = FormStartPosition.CenterScreen;
-
-            //backBuffer = new Bitmap(this.Width, this.Height);
+            
         }
         public void LoadGame()
         {
@@ -85,6 +84,8 @@ namespace BallzForWindows01
                 FrameCleanUp();
                 Application.DoEvents();
             }
+            CleanUp();
+
         }
 
 
@@ -104,6 +105,10 @@ namespace BallzForWindows01
             DbgFuncs.FrameCleanUp();
         }
 
+        private void CleanUp()
+        {
+            ballzGame01.CleanUp();
+        }
 
         #region Clearing string list test 2019-10-12
         //private void ClearingListTest()

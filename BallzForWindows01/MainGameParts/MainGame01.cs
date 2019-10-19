@@ -14,7 +14,7 @@ namespace BallzForWindows01.MainGameParts
 {
     using static AssistFunctions;
 
-    class MainGame01 
+    class MainGame01
     {
         int width, height;
         Bitmap backbuffer = null;
@@ -25,22 +25,19 @@ namespace BallzForWindows01.MainGameParts
         {
             width = gameWindowWidth;
             height = gameWindowHeight;
-
             blockList = new List<BasicBlock01>();
             ball = new GameBall(new Size(width, height));
-
         }
         public void Load()
         {
             LoadBlockList();
-
             // Load game ball starting position
             int ballStartX, ballStartY;
             ballStartX = (width / 2) - ball.Width / 2;
             ballStartY = (height - 100);
             ball.Load(ballStartX, ballStartY);
         }
-        
+
         public void Update(MouseControls mc)
         {
             UpdateMouseControls(mc);
@@ -81,8 +78,8 @@ namespace BallzForWindows01.MainGameParts
                 if (ball.IsInLaunchButtonRect(mc.X, mc.Y) && ball.ReadyForLaunch)
                 {
                     ball.LaunchBall();
-                    cwl("Button clicked");
-                    cwl("ball.ReadyForLaunch: " + ball.ReadyForLaunch);
+                    //cwl("Button clicked");
+                    //cwl("ball.ReadyForLaunch: " + ball.ReadyForLaunch);
                 }
                 else if (mc.Y < ball.Y - ball.Height * 2)
                 {
@@ -110,19 +107,14 @@ namespace BallzForWindows01.MainGameParts
                 blockList[i].Draw(g);
             }
             ball.Draw(g);
-
             DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();
             g.Dispose();
         }
         public void Draw(Graphics g)
         {
-            //DrawToBuffer();
             g.DrawImage(backbuffer, new PointF(0, 0));
             backbuffer.Dispose();
-
-            
-
         }
 
         #region BlockList Functions
@@ -132,30 +124,21 @@ namespace BallzForWindows01.MainGameParts
             int x = 0;
             int y = 0;
             a = 255;
-            r = 255;
+            r = 150;
             g = 0;
             b = 0;
             Color c = Color.FromArgb(a, r, g, b);
             for (int i = 0; i < 10; i++)
             {
                 AddBlock(x, y, c);
-                if (x < width)
-                {
-                    x = blockList[blockList.Count - 1].Width * i;
-                }
+                if (x < width) { x = blockList[blockList.Count - 1].Width * i; }
                 else
                 {
                     x = 0;
                     y += blockList[blockList.Count - 1].Height;
                 }
-                if (g + i * 10 < 255)
-                {
-                    g += i * 10;
-                }
-                else
-                {
-                    g = 255;
-                }
+                if (g + i * 10 < 255) { g += i * 10; }
+                else { g = 255; }
                 c = Color.FromArgb(a, r, g, b);
             }
         }
@@ -167,21 +150,14 @@ namespace BallzForWindows01.MainGameParts
             b.SetNumberOfHits(1, 20);
             blockList.Add(b);
         }
-        private void UpdateBlockList()
-        {
-            for (int i = 0; i < blockList.Count; i++)
-            {
-                blockList[i].Update();
-            }
-        }
-        private void DrawBlockList(Graphics g)
-        {
-            for (int i = 0; i < blockList.Count; i++)
-            {
-                blockList[i].Draw(g);
-            }
-        }
+        private void UpdateBlockList() { for (int i = 0; i < blockList.Count; i++) { blockList[i].Update(); } }
+        private void DrawBlockList(Graphics g) { for (int i = 0; i < blockList.Count; i++) { blockList[i].Draw(g); } }
         #endregion BlockList Functions
+
+        public void CleanUp()
+        {
+            ball.CleanUp();
+        }
 
 
     }

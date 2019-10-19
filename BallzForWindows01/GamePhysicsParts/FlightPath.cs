@@ -25,10 +25,11 @@ namespace BallzForWindows01.GamePhysicsParts
 
         Color lineColor = Color.FromArgb(255, 255, 0, 0);
 
-        float angle = 0;    // angle in degrees
-        public float AngleDeg() { return angle; }
-        public float AngleRads() { return (float)(angle * Math.PI / 180); }
-        
+        double angle = 0;    // angle in degrees
+        public double AngleDeg() { return angle; }
+        //public double Angle() { return angle; }
+        public double Angle { get { return angle; } set { angle = value; } }
+
 
         public FlightPath()
         {
@@ -48,35 +49,42 @@ namespace BallzForWindows01.GamePhysicsParts
         public void PlaceEndMarker(int x, int y)
         {
             endMarker.Place(x, y);
-            connectMarkers = true;
+            //connectMarkers = true;
             calculateSpin = true;
             int spinX = (startMarker.X + endMarker.X) / 2;
             int spinY = (startMarker.Y + endMarker.Y) / 2;
-            CalculateAimMarkerAngle();
             PlaceSpinMarker(spinX, spinY);
         }
-
-        private void CalculateAimMarkerAngle()
+        private void PlaceSpinMarker(int x, int y)
         {
-            double xdiff = endMarker.Center.X - startMarker.Center.X;
-            double ydiff = endMarker.Center.Y - startMarker.Center.Y;
-            double tempAngle = Math.Atan2(xdiff, ydiff) * 180 / Math.PI;
-            angle = 90-(float)tempAngle;
-
+            spinMarker.Place(x, y);
+            spinMarker.ShowClickRectangle = true;
+            AddSpin();
         }
-
         
 
 
+        public void AddDebugStrings()
+        {
+            //double endMakerAngleRadians = endMarker.AngleFromPoint(startMarker.Center);
+            //double spinMakerAngleRadians = spinMarker.AngleFromPoint(startMarker.Center);
 
-        double adjustedAngle = 0;   // adjusted for spin and aim point
+            //double endMakerAngleDegrees = endMakerAngleRadians * 180 / Math.PI;
+            //double spinMakerAngleDegrees = spinMakerAngleRadians * 180 / Math.PI;
+
+            //DbgFuncs.AddStr($"[FilghtPath]: End marker angle radians(from start marker): {endMakerAngleRadians}");
+            //DbgFuncs.AddStr($"[FilghtPath]: End marker angle degrees(from start marker): {endMakerAngleDegrees}");
+            //DbgFuncs.AddStr($"[FilghtPath]: Spin marker angle radians(from start marker): {spinMakerAngleRadians}");
+            //DbgFuncs.AddStr($"[FilghtPath]: Spin marker angle degrees(from start marker): {spinMakerAngleDegrees}");            
+            
+        }
+        double drift = 0;
+        public double Drift { get { return drift; } set { drift = value; } }        
         private void AddSpin()
         {
-            double xdiff = spinMarker.Center.X - startMarker.Center.X;
-            double ydiff = spinMarker.Center.Y - startMarker.Center.Y;
-            double tempAngle = Math.Atan2(xdiff, ydiff) * 180 / Math.PI;
-            cwl($"[FilghtPath.AddSpin]: adjusted angle: {tempAngle}");
-            adjustedAngle = (angle + tempAngle) / 2;
+            angle = endMarker.AngleFromPoint(startMarker.Center);
+            drift = spinMarker.AngleFromPoint(startMarker.Center);
+             
             // I want to adjust the angle of the ball as the ball moves.
             // At this time the current logic i am thking is to adjust the
             // angle of the ball based off the spin marker. the aim marker will set the 
@@ -86,14 +94,7 @@ namespace BallzForWindows01.GamePhysicsParts
             // and apply a slight "drift" to the ball as it travels.
 
         }
-        private void PlaceSpinMarker(int x, int y)
-        {
-            spinMarker.Place(x, y);
-            spinMarker.ShowClickRectangle = true;
-            AddSpin();
 
-
-        }
 
         public void AdjustSpinMarker(int x, int y)
         {
@@ -112,12 +113,13 @@ namespace BallzForWindows01.GamePhysicsParts
             if (startMarker.IsPlaced && endMarker.IsPlaced)
             {
                 startMarker.Draw(g);
+                spinMarker.Draw(g);
                 endMarker.Draw(g);
             }
             if (connectMarkers)
             {
                 Pen p = new Pen(lineColor, 5);
-                spinMarker.Draw(g);
+                //spinMarker.Draw(g);
                 DrawConnectorLine(g, p);
             }
         }

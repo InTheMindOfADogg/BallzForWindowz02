@@ -19,10 +19,9 @@ namespace BallzForWindows01
         static Font CreateFont() { return new Font("Arial", 20, FontStyle.Regular, GraphicsUnit.Pixel); }
         public static void DrawDbgStrList(Graphics g)
         {
-
             if (dbgStrList.Count > 0)
             {
-                AddStr($"dbgStrList.Count: {dbgStrList.Count + 1}");  // + 1 to account for the string that is added here.
+                //AddStr($"dbgStrList.Count: {dbgStrList.Count + 1}");  // + 1 to account for the string that is added here.
                 Font f = CreateFont();
                 Point pos = new Point(10, 100);
                 SizeF strSize = new SizeF();
@@ -32,13 +31,11 @@ namespace BallzForWindows01
                     g.DrawString(dbgStrList[i], f, Brushes.Black, pos);
                     pos.Y += (int)(strSize.Height + 0.49);
                 }                
-                //dbgStrList.RemoveRange(0, dbgStrList.Count);  
                 f.Dispose();
             }
         }
         public static void FrameCleanUp()
         {
-            //dbgStrList.RemoveRange(0, dbgStrList.Count);
             if (dbgStrList != null && dbgStrList.Count > 0)
             {
                 dbgStrList.RemoveRange(0, dbgStrList.Count);
