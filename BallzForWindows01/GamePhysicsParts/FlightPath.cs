@@ -20,17 +20,16 @@ namespace BallzForWindows01.GamePhysicsParts
         Trajectory aimTraj;
         Trajectory spinTraj;
 
-        bool connectMarkers = false;
-        bool calculateSpin = false;
-        public bool ConnectMarkers { get { return connectMarkers; } }
-        public bool CalculatingSpin { get { return calculateSpin; } }
-
         Color lineColor = Color.FromArgb(255, 255, 0, 0);
 
-        double angle = 0;    // angle in degrees
-        //public double AngleDeg() { return angle; }
-        public double Angle { get { return angle; } set { angle = value; } }
+        bool connectMarkers = false;
+        bool calculateSpin = false;
+        double angle = 0;
 
+        public bool ConnectMarkers { get { return connectMarkers; } }
+        public bool CalculatingSpin { get { return calculateSpin; } }        
+        public double Angle { get { return angle; } set { angle = value; } }
+        
 
         public FlightPath()
         {
@@ -87,20 +86,8 @@ namespace BallzForWindows01.GamePhysicsParts
         public double Drift { get { return drift; } set { drift = value; } }
         private void AddSpin()
         {
-            //angle = aimMarker.AngleFromPoint(originMarker.Center);
-            //drift = spinMarker.AngleFromPoint(originMarker.Center);
-
             angle = aimTraj.RotAngle;
             drift = spinTraj.RotAngle;
-
-            // I want to adjust the angle of the ball as the ball moves.
-            // At this time the current logic i am thking is to adjust the
-            // angle of the ball based off the spin marker. the aim marker will set the 
-            // initial angle and then the spin marker will factor into the flight of the ball over
-            // the flight time. for instance, if the aim marker and spin marker are at the same angle, the ball 
-            // will go straight. If the spin marker is pulled to the right of the aim marker, I will need to do some calculations to 
-            // and apply a slight "drift" to the ball as it travels.
-
         }
 
 
@@ -114,8 +101,7 @@ namespace BallzForWindows01.GamePhysicsParts
             {
                 originMarker.Draw(g);
                 spinMarker.Draw(g);
-                aimMarker.Draw(g);
-                                
+                aimMarker.Draw(g);                                
                 spinTraj.Draw(g);
                 aimTraj.Draw(g,450,20);
             }

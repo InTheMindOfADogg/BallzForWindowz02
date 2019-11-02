@@ -9,22 +9,13 @@ namespace BallzForWindows01.DrawableParts
 {
     class DrawableObject
     {
-        public int X { get { return x; } /*set { x = value; }*/ }
-        public int Y { get { return y; } /*set { y = value; }*/ }
-        public int Width { get { return width; } }
-        public int Height { get { return height; } }
         public bool Visible { get { return visible; } set { visible = value; } }
 
-        public int Alpha { get { return alpha; } }
-        public int Red { get { return red; } }
-        public int Green { get { return green; } }
-        public int Blue { get { return blue; } }
-        public Color Color { get { return color; } }
-
-        protected int x;
-        protected int y;
-        protected int width;
-        protected int height;
+        //public int Alpha { get { return alpha; } }
+        //public int Red { get { return red; } }
+        //public int Green { get { return green; } }
+        //public int Blue { get { return blue; } }
+        //public Color Color { get { return color; } }        
 
         protected int alpha;
         protected int red;
@@ -33,20 +24,29 @@ namespace BallzForWindows01.DrawableParts
         protected Color color;
 
         protected bool visible = true;
-
-        protected void SetPosition(int x, int y) { this.x = x; this.y = y; }
-        protected void SetSize(int width, int height) { this.width = width; this.height = height; }
-        protected void SetColor(int a, int r, int g, int b)
+        
+        protected void SetColor(int alpha, int red, int green, int blue)
         {
-            this.alpha = a;
-            this.red = r;
-            this.green = g;
-            this.blue = b;
+            this.alpha = alpha;
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
             this.color = Color.FromArgb(alpha, red, green, blue);
         }
 
-
-
-
     }
 }
+
+
+#region 2019-10-26 removed the position and size storage from here so that I can use different data type for position and size depending on function
+//public int X { get { return x; } /*set { x = value; }*/ }
+//public int Y { get { return y; } /*set { y = value; }*/ }
+//public int Width { get { return width; } }
+//public int Height { get { return height; } }
+//protected int x;
+//protected int y;
+//protected int width;
+//protected int height;
+//protected void SetPosition(int x, int y) { this.x = x; this.y = y; }
+//protected void SetSize(int width, int height) { this.width = width; this.height = height; }
+#endregion 2019-10-26 removed the position and size storage from here so that I can use different data type for position and size depending on function

@@ -11,12 +11,6 @@ namespace BallzForWindows01.DrawableParts
     class XMarker : DrawableObject
     {
 
-        public Rectangle ClickRectangle { get { return clickRectangle; } }
-        public Point Center { get { return center; } }
-        public Color DrawColor { get { return color; } set { color = value; } }
-        public bool IsPlaced { get { return placed; } }
-        public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
-
         #region font settings
         Font font;
         Color fontColor = Color.Black;
@@ -24,10 +18,24 @@ namespace BallzForWindows01.DrawableParts
         string fontFamily = "Arial";
         #endregion font settings
 
+        public Rectangle ClickRectangle { get { return clickRectangle; } }
+        public Point Center { get { return center; } }
+        public Color DrawColor { get { return color; } set { color = value; } }
+        public bool IsPlaced { get { return placed; } }
+        public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
+
+        public int X { get { return x; } /*set { x = value; }*/ }
+        public int Y { get { return y; } /*set { y = value; }*/ }
+        public int Width { get { return width; } }
+        public int Height { get { return height; } }
+
+
         Rectangle clickRectangle;
         Point center;
         bool placed = false;
         bool showClickRect = false;
+
+        int x, y, width, height;
 
         public XMarker()
         {
@@ -41,6 +49,7 @@ namespace BallzForWindows01.DrawableParts
         public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
         private void _Load(int x, int y, int width, int height)
         {
+
             SetPosition(x, y);
             SetSize(width, height);
             center = new Point(x + width / 2, y + height / 2);
@@ -140,5 +149,8 @@ namespace BallzForWindows01.DrawableParts
             visible = false;
             placed = false;
         }
+
+        protected void SetPosition(int x, int y) { this.x = x; this.y = y; }
+        protected void SetSize(int width, int height) { this.width = width; this.height = height; }
     }
 }

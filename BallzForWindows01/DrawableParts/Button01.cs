@@ -10,28 +10,34 @@ namespace BallzForWindows01.DrawableParts
     class Button01 : DrawableObject
     {
 
-        Rectangle clickRectangle;
-        public Rectangle ClickRectangle { get { return clickRectangle; } }
-        Point center;
-        public Point Center { get { return center; } }
-
-        Color color;
-        public Color DrawColor { get { return color; } set { color = value; } }
-
-        #region font properties
+        #region Font settings
         Font font;
         Color fontColor;// = Color.Black;
         public Color FontColor { get { return fontColor; } set { fontColor = value; } }
         int fontSize = 20;
         string fontFamily = "Arial";
-        #endregion font properties
+        void ConfigureFont()
+        {
+            font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            fontColor = Color.Black;
+        }
+        #endregion Font settings
 
+        int x, y, width, height;
+        Rectangle clickRectangle;
+        Point center;
         string text;
-
         bool placed = false;
-        public bool IsPlaced { get { return placed; } }
-
         bool showClickRect = false;
+
+        public int X { get { return x; } /*set { x = value; }*/ }
+        public int Y { get { return y; } /*set { y = value; }*/ }
+        public int Width { get { return width; } }
+        public int Height { get { return height; } }
+        public Rectangle ClickRectangle { get { return clickRectangle; } }
+        public Point Center { get { return center; } }
+        public Color DrawColor { get { return color; } set { color = value; } }
+        public bool IsPlaced { get { return placed; } }
         public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
 
         public Button01()
@@ -44,85 +50,132 @@ namespace BallzForWindows01.DrawableParts
             red = 255;
             green = 0;
             blue = 0;
-            color = Color.FromArgb(alpha, red, green, blue);
-            font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            fontColor = Color.Black;
+            SetColor(alpha, red, green, blue);
             center = new Point(x + width / 2, y + height / 2);
             clickRectangle = new Rectangle(x, y, width, height);
             visible = true;
-            text = "Button";
+            ConfigureFont();
         }
+        public void Load(int x, int y) { _Load(x, y, width, height); }
+        public void Load(int x, int y, string buttonText) { _Load(x, y, 0, 0, buttonText); }
 
-
-        public void Load(int x, int y)
+        public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
+        public void Load(int x, int y, int width, int height, string buttonText) { _Load(x, y, width, height, buttonText); }
+        void _Load(int x, int y, int width, int height, string buttonText = "")
         {
             this.x = x;
             this.y = y;
-            center = new Point(x + width / 2, y + height / 2);
-            clickRectangle = new Rectangle(x, y, width, height);
-        }
-        public void Load(int x, int y, int width, int height)
-        {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            center = new Point(x + width / 2, y + height / 2);
-            clickRectangle = new Rectangle(x, y, width, height);
-        }
-        public void Load(int x, int y, int width, int height, string buttonText)
-        {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
+            if((width == 0 || height == 0) && (!string.IsNullOrWhiteSpace(buttonText)) )
+            {
+                SetSizeFromText(buttonText);
+            }
+            else
+            {
+                this.width = width;
+                this.height = height;
+            }
+            
             center = new Point(x + width / 2, y + height / 2);
             clickRectangle = new Rectangle(x, y, width, height);
             text = buttonText;
         }
 
-
+        void SetSizeFromText(string btnText)
+        {
+            Bitmap bmp = new Bitmap(100, 100);
+            Graphics g = Graphics.FromImage(bmp);
+            SizeF strSize = g.MeasureString(btnText, font);
+            width = (int)(strSize.Width + 1.5);
+            height = (int)(strSize.Height + 1.5);
+            g.Dispose();            
+            bmp.Dispose();
+        }
+        
         public void Update()
         {
 
         }
         public void Draw(Graphics g)
         {
-            using (SolidBrush sb = new SolidBrush(fontColor))
+            SolidBrush sb = new SolidBrush(fontColor);
+            Pen p = new Pen(color, 5);
+            PointF txtPos = new PointF();
+            txtPos.X = center.X - g.MeasureString(text, font).Width / 2;
+            txtPos.Y = center.Y - g.MeasureString(text, font).Height / 2;
+            if (visible)
             {
-                Pen p = new Pen(color, 5);
-                
-                PointF txtPos = new PointF();
-                txtPos.X = center.X - g.MeasureString(text, font).Width / 2;
-                txtPos.Y = center.Y - g.MeasureString(text, font).Height / 2;
-                if (visible)
-                {
-                    g.DrawRectangle(p, x, y, width, height);
-                    g.DrawString(text, font, sb, txtPos);
-                }
+                g.DrawRectangle(p, x, y, width, height);
+                g.DrawString(text, font, sb, txtPos);
             }
+            p.Dispose();
+            sb.Dispose();
         }
+        public void CleanUp() { if (font != null) { font.Dispose(); } }
 
-        private void SetClickRectangle(int x, int y)
+        
+        public bool IsInBoundingRect(int posx, int posy)
         {
-            clickRectangle = new Rectangle();
-            clickRectangle.X = x - width / 2;
-            clickRectangle.Y = y - height / 2;
-            clickRectangle.Width = width;
-            clickRectangle.Height = height;
-        }
-        public bool IsInBoundingRect(int mPosX, int mPosY)
-        {
-
-            if (mPosX > clickRectangle.X &&
-                mPosX < clickRectangle.X + clickRectangle.Width &&
-                mPosY > clickRectangle.Y &&
-                mPosY < clickRectangle.Y + clickRectangle.Height)
+            if (posx > clickRectangle.X && posx < clickRectangle.X + clickRectangle.Width
+                && posy > clickRectangle.Y && posy < clickRectangle.Y + clickRectangle.Height)
             {
                 return true;
             }
             else
                 return false;
         }
+
     }
 }
+
+#region setting click rectangle, 0 refs as of 2019-10-26.
+//private void SetClickRectangle(int x, int y) // 0 refs as of 2019-10-26
+//{
+//    //clickRectangle = new Rectangle();
+//    clickRectangle.X = x - width / 2;
+//    clickRectangle.Y = y - height / 2;
+//    //clickRectangle.Width = width;
+//    //clickRectangle.Height = height;
+//} 
+#endregion setting click rectangle, 0 refs as of 2019-10-26.
+
+#region old Loads - reworked 2019-10-26
+//public void Load(int x, int y, int width, int height)
+//{
+//    this.x = x;
+//    this.y = y;
+//    this.width = width;
+//    this.height = height;
+//    center = new Point(x + width / 2, y + height / 2);
+//    clickRectangle = new Rectangle(x, y, width, height);
+//}
+//public void Load(int x, int y, int width, int height, string buttonText)
+//{
+//    this.x = x;
+//    this.y = y;
+//    this.width = width;
+//    this.height = height;
+//    center = new Point(x + width / 2, y + height / 2);
+//    clickRectangle = new Rectangle(x, y, width, height);
+//    text = buttonText;
+//}
+#endregion old Loads - reworked 2019-10-26
+
+#region old draw - reworked 2019-10-26
+//public void Draw(Graphics g)
+//{
+//    using (SolidBrush sb = new SolidBrush(fontColor))
+//    {
+//        Pen p = new Pen(color, 5);
+
+//        PointF txtPos = new PointF();
+//        txtPos.X = center.X - g.MeasureString(text, font).Width / 2;
+//        txtPos.Y = center.Y - g.MeasureString(text, font).Height / 2;
+//        if (visible)
+//        {
+//            g.DrawRectangle(p, x, y, width, height);
+//            g.DrawString(text, font, sb, txtPos);
+//        }
+//        p.Dispose();
+//    }
+//}
+#endregion old draw - reworked 2019-10-26

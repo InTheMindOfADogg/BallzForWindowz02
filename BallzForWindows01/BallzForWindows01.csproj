@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawableParts\CollisionLine.cs" />
+    <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="GamePhysicsParts\Trajectory.cs" />
     <Compile Include="HelperClasses\AssistFunctions.cs" />
     <Compile Include="BallzForm.cs">
@@ -66,7 +68,6 @@
     <Compile Include="DrawableParts\BasicBlock01.cs" />
     <Compile Include="DrawableParts\Button01.cs" />
     <Compile Include="DrawableParts\DrawableObject.cs" />
-    <Compile Include="DrawableParts\DrawableObjectV02.cs" />
     <Compile Include="DrawableParts\GameBall.cs" />
     <Compile Include="DrawableParts\XMarker.cs" />
     <Compile Include="GamePhysicsParts\FlightPath.cs" />
@@ -105,7 +106,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Deprecated\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

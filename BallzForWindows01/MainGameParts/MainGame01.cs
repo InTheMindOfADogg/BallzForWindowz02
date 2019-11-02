@@ -21,12 +21,15 @@ namespace BallzForWindows01.MainGameParts
 
         List<BasicBlock01> blockList;
         GameBall ball;
+
+        CollisionLine collisionLine;// = new CollisionLine();
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
             width = gameWindowWidth;
             height = gameWindowHeight;
             blockList = new List<BasicBlock01>();
             ball = new GameBall(new Size(width, height));
+            collisionLine = new CollisionLine();
         }
         public void Load()
         {
@@ -36,12 +39,20 @@ namespace BallzForWindows01.MainGameParts
             ballStartX = (width / 2) - ball.Width / 2;
             ballStartY = (height - 100);
             ball.Load(ballStartX, ballStartY);
+
+            //collisionLine.Load(220, 440, 250, 0, 2);
+            collisionLine.Load(370, 570, 250, 0, 2);
         }
 
         public void Update(MouseControls mc)
         {
             UpdateMouseControls(mc);
             ball.Update();
+
+            collisionLine.Update(0);
+
+            collisionLine.CheckCollision(ball.X, ball.Y);
+
             DrawToBuffer();
         }
 
@@ -102,12 +113,9 @@ namespace BallzForWindows01.MainGameParts
             Graphics g = Graphics.FromImage(backbuffer);
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
             g.FillRectangle(sb, 0, 0, width, height);
-            //DrawBlockList(g);
-            for (int i = 0; i < blockList.Count; i++)
-            {
-                blockList[i].Draw(g);
-            }
+            DrawBlockList(g);
             ball.Draw(g);
+            collisionLine.Draw(g);
             DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();
             g.Dispose();
@@ -153,11 +161,18 @@ namespace BallzForWindows01.MainGameParts
         }
         private void UpdateBlockList() { for (int i = 0; i < blockList.Count; i++) { blockList[i].Update(); } }
         private void DrawBlockList(Graphics g) { for (int i = 0; i < blockList.Count; i++) { blockList[i].Draw(g); } }
+        private void CleanUpBlockList()
+        {
+            for (int i = 0; i < blockList.Count; i++) { blockList[i].CleanUp(); }
+            blockList.RemoveRange(0, blockList.Count);
+        }
         #endregion BlockList Functions
 
         public void CleanUp()
         {
             ball.CleanUp();
+            CleanUpBlockList();
+            
         }
 
 

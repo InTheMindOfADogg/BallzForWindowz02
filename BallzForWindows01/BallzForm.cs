@@ -28,9 +28,6 @@ namespace BallzForWindows01
         MouseControls mcontrols = new MouseControls();
         MainGame01 ballzGame01;
 
-        //Bitmap backBuffer = null;
-
-
         public BallzForm()
         {
             InitializeForm();

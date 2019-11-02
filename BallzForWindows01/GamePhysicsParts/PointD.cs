@@ -11,17 +11,12 @@ namespace BallzForWindows01.GamePhysicsParts
     {
         public double X { get { return x; } set { x = value; } }
         public double Y { get { return y; } set { y = value; } }
+        public float fX { get { return (float)x; } /*set { x = value; }*/ }
+        public float fY { get { return (float)y; } /*set { y = value; }*/ }
         double x, y = 0;
 
-        public PointD()
-        {
-            x = y = 0;
-        }
-        public PointD(double x, double y)
-        {
-            this.x = x;
-            this.y = y;
-        }
+        public PointD() { x = y = 0; }
+        public PointD(double x, double y) { this.x = x; this.y = y; }
         public PointF ToPointF() { return new PointF((float)x, (float)y); }
         public Point ToPoint() { return new Point((int)x, (int)y); }
         public double DistanceTo(PointD toPoint)
