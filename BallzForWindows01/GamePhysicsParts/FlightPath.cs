@@ -34,9 +34,11 @@ namespace BallzForWindows01.GamePhysicsParts
         public FlightPath()
         {
             originMarker = new XMarker();
+            originMarker.DrawColor = Color.FromArgb(125, Color.Red);
             aimMarker = new XMarker();
+            aimMarker.DrawColor = Color.FromArgb(125, Color.Red);
             spinMarker = new XMarker();
-            spinMarker.DrawColor = Color.Green;
+            spinMarker.DrawColor = Color.FromArgb(125, Color.Green);
             aimTraj = new Trajectory("aimTraj");
             spinTraj = new Trajectory("spinTraj");
         }

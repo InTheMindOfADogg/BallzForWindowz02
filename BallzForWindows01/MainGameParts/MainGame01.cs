@@ -23,6 +23,8 @@ namespace BallzForWindows01.MainGameParts
         GameBall ball;
 
         CollisionLine collisionLine;// = new CollisionLine();
+
+        CollisionPoint cp;
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
             width = gameWindowWidth;
@@ -30,18 +32,21 @@ namespace BallzForWindows01.MainGameParts
             blockList = new List<BasicBlock01>();
             ball = new GameBall(new Size(width, height));
             collisionLine = new CollisionLine();
+            cp = new CollisionPoint();
         }
         public void Load()
         {
             LoadBlockList();
             // Load game ball starting position
             int ballStartX, ballStartY;
-            ballStartX = (width / 2) - ball.Width / 2;
+            ballStartX = (width / 2) - (ball.Width / 2);
             ballStartY = (height - 100);
             ball.Load(ballStartX, ballStartY);
 
             //collisionLine.Load(220, 440, 250, 0, 2);
             collisionLine.Load(370, 570, 250, 0, 2);
+
+            cp.Load(300, 570);
         }
 
         public void Update(MouseControls mc)
@@ -52,6 +57,8 @@ namespace BallzForWindows01.MainGameParts
             collisionLine.Update(0);
 
             collisionLine.CheckCollision(ball.X, ball.Y);
+
+            cp.CheckForCollision(ball.X, ball.Y);
 
             DrawToBuffer();
         }
@@ -116,6 +123,7 @@ namespace BallzForWindows01.MainGameParts
             DrawBlockList(g);
             ball.Draw(g);
             collisionLine.Draw(g);
+            cp.Draw(g);
             DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();
             g.Dispose();

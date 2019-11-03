@@ -16,10 +16,13 @@ namespace BallzForWindows01.DrawableParts
         double rot = 0;
         double length = 0;
         int thickness = 3;
+        bool collision = false;
 
         CollisionPoint cp1;
         CollisionPoint cp2;
         List<CollisionPoint> cpList = new List<CollisionPoint>();
+
+        public bool Collision { get { return collision; } }
 
         public CollisionLine()
         {
@@ -61,6 +64,7 @@ namespace BallzForWindows01.DrawableParts
                 SetEndPoint();
             }
             DbgFuncs.AddStr($"CollisionLine.rot(deg): {(angleDegrees * 180 / Math.PI):N2}");
+
         }
 
         public void Draw(Graphics g)
@@ -77,7 +81,8 @@ namespace BallzForWindows01.DrawableParts
         {
             for (int i = 0; i < cpList.Count; i++)
             {
-                cpList[i].CheckForCollision(px, py);
+                collision = cpList[i].CheckForCollision(px, py);
+                //DbgFuncs.AddStr($"CollisionLine.CollisionPoint[{i}] collision: {cpList[i].Collision}");
             }
         }
 

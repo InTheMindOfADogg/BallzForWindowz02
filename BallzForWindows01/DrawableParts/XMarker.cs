@@ -23,6 +23,7 @@ namespace BallzForWindows01.DrawableParts
         public Color DrawColor { get { return color; } set { color = value; } }
         public bool IsPlaced { get { return placed; } }
         public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
+        public bool ShowXMarker { get { return showXMarker; } set { showXMarker = value; } }
 
         public int X { get { return x; } /*set { x = value; }*/ }
         public int Y { get { return y; } /*set { y = value; }*/ }
@@ -34,8 +35,11 @@ namespace BallzForWindows01.DrawableParts
         Point center;
         bool placed = false;
         bool showClickRect = false;
+        bool showXMarker = true;
 
         int x, y, width, height;
+
+        int penWidth = 2;
 
         public XMarker()
         {
@@ -46,10 +50,10 @@ namespace BallzForWindows01.DrawableParts
         }
 
         public void Load(int x, int y) { _Load(x, y, width, height); }
+        public void Load(int x, int y, int sideLength) { _Load(x, y, sideLength, sideLength); }
         public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
         private void _Load(int x, int y, int width, int height)
         {
-
             SetPosition(x, y);
             SetSize(width, height);
             center = new Point(x + width / 2, y + height / 2);
@@ -70,10 +74,7 @@ namespace BallzForWindows01.DrawableParts
             placed = true;
         }
 
-        public void AdjustPosition(int x, int y)
-        {
-            SetPosition(x, y);
-        }
+        public void AdjustPosition(int x, int y) { SetPosition(x, y); }
         public bool IsInBoundingRect(int mPosX, int mPosY)
         {
             if (mPosX > clickRectangle.X &&
@@ -99,18 +100,15 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
-        public void Update()
-        {
-
-        }
+        public void Update() { }
         public void Draw(Graphics g)
         {
-            Pen p = new Pen(color, 5);
+            Pen p = new Pen(color, penWidth);
             if (visible)
             {
-                DrawX(g, p);
-                if (showClickRect)
-                    DrawClickRectangle(g);
+                if (showXMarker) { DrawX(g, p); }
+                if (showClickRect) { DrawClickRectangle(g); }
+
             }
 
         }
@@ -135,14 +133,8 @@ namespace BallzForWindows01.DrawableParts
         {
             g.DrawRectangle(Pens.Black, clickRectangle);
         }
-        public void Remove()
-        {
-            _Reset();
-        }
-        public void Reset()
-        {
-            _Reset();
-        }
+        public void Remove() { _Reset(); }
+        public void Reset() { _Reset(); }
         void _Reset()
         {
             SetPosition(0, 0);

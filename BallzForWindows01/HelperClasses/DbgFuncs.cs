@@ -10,6 +10,7 @@ namespace BallzForWindows01
     public static class DbgFuncs
     {
         static List<string> dbgStrList = new List<string>();
+
         static DateTime start, end;
 
         public static void MarkStart() { start = DateTime.Now; }

@@ -31,6 +31,8 @@ namespace BallzForWindows01.DrawableParts
         PointD dstartPosition;
         PointD dcenter;
 
+        CircleD circle;
+
         int x = 0;
         int y = 0;
         int width = 0;
@@ -69,10 +71,7 @@ namespace BallzForWindows01.DrawableParts
         public bool SettingSpin { get { return settingSpin; } }
         public bool PlacingSpinRect { get { return placingSpinRect; } set { placingSpinRect = value; } }
         public bool BallLaunched { get { return ballLaunched; } }
-
-
-
-
+        
         public double X { get { return dx; } }
         public double Y { get { return dy; } }
         public int Width { get { return width; } }
@@ -94,10 +93,13 @@ namespace BallzForWindows01.DrawableParts
             readyForLaunch = false;    // same as setting spin, might need to adjust later
             placingSpinRect = false;
             ballLaunched = false;
+
+            
             InitAndLoadBallParts();
         }
         private void InitAndLoadBallParts()
         {
+            circle = new CircleD();
             flightPath = new FlightPath();
             flightPath.Load();
             launchButton = new Button01();
@@ -113,6 +115,10 @@ namespace BallzForWindows01.DrawableParts
             dy = y;
             dcenter = new PointD(dx + width / 2, dy + height / 2);
             dstartPosition = new PointD(dx, dy);
+
+            // -50 on x is so that it appears beside the actual ball for testing. radius is 3rd param. This is for testing
+            //circle.Load(dx-50, dy, (width/2), 0);     
+            circle.Load(dx, dy, (width/2), 0);     
 
             this.x = x;
             this.y = y;
@@ -140,7 +146,10 @@ namespace BallzForWindows01.DrawableParts
                 fpAngle = flightPath.Angle;
                 fpDrift = flightPath.Drift;
                 driftFactor = (fpAngle - fpDrift) * drifthardness;
+                calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
             }
+
+            
             DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
@@ -163,9 +172,6 @@ namespace BallzForWindows01.DrawableParts
                 // starts looping if angle gets too high
                 calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
 
-                //dx = dx + speed * Math.Cos(fpAngle);
-                //dy = dy + speed * Math.Sin(fpAngle);
-
                 dx = dx + speed * Math.Cos(calculatedAngle);
                 dy = dy + speed * Math.Sin(calculatedAngle);
 
@@ -183,6 +189,8 @@ namespace BallzForWindows01.DrawableParts
                     Reset();
                 }
             }
+            
+            circle.Update(dx, dy, width/2, calculatedAngle);
 
         }
         public void LaunchBall()
@@ -223,8 +231,13 @@ namespace BallzForWindows01.DrawableParts
 
             launchButton.Draw(g);
             flightPath.Draw(g);
-            g.FillEllipse(sb, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);
-            g.DrawEllipse(Pens.Red, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);
+            
+            // commented out and just drawing circle. I might make circle the actual ball.
+            //g.FillEllipse(sb, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);      // drawing ball inner color
+            //g.DrawEllipse(Pens.Red, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);    // drawing boarder around ball
+
+            //g.DrawRectangle(Pens.Green, (float)dx, (float)dy, 2, 2);    // marker on center of ball for testing
+            circle.Draw(g);
 
             sb.Dispose();
         }
@@ -248,6 +261,7 @@ namespace BallzForWindows01.DrawableParts
             dx = dstartPosition.X;
             dy = dstartPosition.Y;
             flightPath.Reset();
+            timedriftModifier = 0;
 
         }
 
