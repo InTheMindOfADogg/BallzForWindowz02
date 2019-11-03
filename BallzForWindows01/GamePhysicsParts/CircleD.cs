@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
@@ -8,8 +7,11 @@ using System.Drawing;
 
 namespace BallzForWindows01.GamePhysicsParts
 {
+    
     using DrawableParts;
 
+    // NOTE: This class is here for reference and in case I need to revert back to this version for some reason.
+    // Use CircleDV2.
     class CircleD
     {
         PointD center;
@@ -72,6 +74,11 @@ namespace BallzForWindows01.GamePhysicsParts
 
     }
 }
+#region Notes
+// 2019-11-03 
+// Removed collision point from here and put collision points in CollisionCircleD
+//           
+#endregion Notes
 
 #region CircleD first version - backup - working 2019-11-03
 //using DrawableParts;

@@ -11,8 +11,10 @@ namespace BallzForWindows01.GamePhysicsParts
     class CollisionCircleD : CircleDV2
     {
         public List<CollisionPoint> CollisionPointList { get { return cplist; } }
+
         List<CollisionPoint> cplist;
         int cpCount = 1;
+        protected double cpBoxSize = 2;
 
         public CollisionCircleD() : base() { _Init(); }
         public CollisionCircleD(double x, double y, double radius, double rotation = 0) : base(x, y, radius, rotation) { _Init(); }
