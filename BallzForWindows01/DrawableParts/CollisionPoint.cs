@@ -21,7 +21,7 @@ namespace BallzForWindows01.DrawableParts
         public PointD Pos { get { return pos; } }
         public bool Collision { get { return collision; } }
 
-        public CollisionPoint() { _Init(0,0,0,0,Color.FromArgb(255,255,0,200));  }
+        public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
         public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight)
         {
             _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50));
@@ -32,8 +32,8 @@ namespace BallzForWindows01.DrawableParts
         }
         void _Init(double x, double y, double cboxWidth, double cboxHeight, Color c)
         {
-            
-            pos = new PointD(x,y);
+
+            pos = new PointD(x, y);
             boxSize = new SizeD(cboxWidth, cboxHeight);
             cbox = new RectangleD();
             this.color = c;
@@ -54,18 +54,12 @@ namespace BallzForWindows01.DrawableParts
             boxSize.Set(cboxWidth, cboxHeight);
             SetCollisionBox();
         }
-        public void Update(double x, double y)
-        {
-
-        }
-
+        public void Update(double x, double y) { }
         public void Draw(Graphics g)
         {
             Pen p = new Pen(color, 1);
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
-
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-
             if (collision) { g.FillRectangle(Brushes.Red, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
             p.Dispose();
         }
@@ -74,8 +68,6 @@ namespace BallzForWindows01.DrawableParts
         void SetCollisionBox()
         {
             cbox.Set(pos.X - (boxSize.Width / 2), pos.Y - (boxSize.Height / 2), boxSize.Width, boxSize.Height);
-            //if (cbox == null) { cbox = new RectangleD(pos.X - (boxSize.Width / 2), pos.Y - (boxSize.Height / 2), boxSize.Width, boxSize.Height); }
-            //else { cbox.Set(pos.X - (boxSize.Width / 2), pos.Y - (boxSize.Height / 2), boxSize.Width, boxSize.Height); }
         }
     }
 }

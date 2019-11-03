@@ -10,22 +10,22 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     using DrawableParts;
 
-    class CircleD
+    class CircleDV2
     {
         PointD center;
         double radius = 0;
         double rot = 0;
-        
+
         CollisionPoint maincp;
         double cpBoxSize = 2;
 
 
-        public CircleD() { _Init(0, 0, 0, 0); }
-        public CircleD(double x, double y, double radius, double rotation = 0) { _Init(x, y, radius, rotation); }
+        public CircleDV2() { _Init(0, 0, 0, 0); }
+        public CircleDV2(double x, double y, double radius, double rotation = 0) { _Init(x, y, radius, rotation); }
         void _Init(double x, double y, double radius, double rotation)
         {
-            center = new PointD(x,y);
-            maincp = new CollisionPoint(x,y,cpBoxSize,cpBoxSize, Color.Red);
+            center = new PointD(x, y);
+            maincp = new CollisionPoint(x, y, cpBoxSize, cpBoxSize, Color.Red);
         }
         public void Load(double x, double y, double radius, double rotation = 0)
         {
@@ -46,7 +46,7 @@ namespace BallzForWindows01.GamePhysicsParts
             maincp.Set(cppos.X, cppos.Y, cpBoxSize, cpBoxSize);
         }
         public void Update(double x, double y, double radius, double rotation)
-        {            
+        {
             center.Set(x, y);
             UpdateCollisionPoint(center.X, center.Y, radius, rotation);
         }
@@ -64,7 +64,7 @@ namespace BallzForWindows01.GamePhysicsParts
             g.FillRectangle(Brushes.Red, center.fX - (len / 2), center.fY - (len / 2), len, len);   // draw center marker for testing            
             g.DrawEllipse(Pens.Green, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
             maincp.Draw(g);
-            
+
         }
 
 

@@ -32,6 +32,7 @@ namespace BallzForWindows01.DrawableParts
         PointD dcenter;
 
         CircleD circle;
+        CollisionCircleD circ2;
 
         int x = 0;
         int y = 0;
@@ -100,6 +101,8 @@ namespace BallzForWindows01.DrawableParts
         private void InitAndLoadBallParts()
         {
             circle = new CircleD();
+            circ2 = new CollisionCircleD();
+
             flightPath = new FlightPath();
             flightPath.Load();
             launchButton = new Button01();
@@ -118,7 +121,8 @@ namespace BallzForWindows01.DrawableParts
 
             // -50 on x is so that it appears beside the actual ball for testing. radius is 3rd param. This is for testing
             //circle.Load(dx-50, dy, (width/2), 0);     
-            circle.Load(dx, dy, (width/2), 0);     
+            circle.Load(dx, dy, (width/2), 0);
+            circ2.Load(dx, dy, (width / 2), 0);
 
             this.x = x;
             this.y = y;
@@ -191,6 +195,7 @@ namespace BallzForWindows01.DrawableParts
             }
             
             circle.Update(dx, dy, width/2, calculatedAngle);
+            circ2.Update(dx, dy, width / 2, calculatedAngle);
 
         }
         public void LaunchBall()
@@ -237,7 +242,8 @@ namespace BallzForWindows01.DrawableParts
             //g.DrawEllipse(Pens.Red, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);    // drawing boarder around ball
 
             //g.DrawRectangle(Pens.Green, (float)dx, (float)dy, 2, 2);    // marker on center of ball for testing
-            circle.Draw(g);
+            //circle.Draw(g);
+            circ2.Draw(g);
 
             sb.Dispose();
         }
