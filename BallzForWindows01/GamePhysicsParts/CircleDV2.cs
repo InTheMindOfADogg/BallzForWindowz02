@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
@@ -12,12 +11,12 @@ namespace BallzForWindows01.GamePhysicsParts
 
     class CircleDV2
     {
-        PointD center;
-        double radius = 0;
-        double rot = 0;
+        protected PointD center;
+        protected double radius = 0;
+        protected double rot = 0;
 
-        CollisionPoint maincp;
-        double cpBoxSize = 2;
+        protected CollisionPoint maincp;
+        protected double cpBoxSize = 2;
 
 
         public CircleDV2() { _Init(0, 0, 0, 0); }
@@ -27,10 +26,7 @@ namespace BallzForWindows01.GamePhysicsParts
             center = new PointD(x, y);
             maincp = new CollisionPoint(x, y, cpBoxSize, cpBoxSize, Color.Red);
         }
-        public void Load(double x, double y, double radius, double rotation = 0)
-        {
-            _Load(x, y, radius, rotation);
-        }
+        public void Load(double x, double y, double radius, double rotation) { _Load(x, y, radius, rotation); }
         void _Load(double x, double y, double radius, double rotation)
         {
             center.Set(x, y);
@@ -47,6 +43,12 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Update(double x, double y, double radius, double rotation)
         {
+            _Update(x, y, radius, rotation);
+            //center.Set(x, y);
+            //UpdateCollisionPoint(center.X, center.Y, radius, rotation);
+        }
+        protected virtual void _Update(double x, double y, double radius, double rotation)
+        {
             center.Set(x, y);
             UpdateCollisionPoint(center.X, center.Y, radius, rotation);
         }
@@ -60,11 +62,19 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public void Draw(Graphics g)
         {
+            _Draw(g);
+            //float len = 4;      // length of sides for center marker
+            //g.FillRectangle(Brushes.Red, center.fX - (len / 2), center.fY - (len / 2), len, len);   // draw center marker for testing            
+            //g.DrawEllipse(Pens.Green, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
+            //maincp.Draw(g);
+
+        }
+        protected virtual void _Draw(Graphics g)
+        {
             float len = 4;      // length of sides for center marker
             g.FillRectangle(Brushes.Red, center.fX - (len / 2), center.fY - (len / 2), len, len);   // draw center marker for testing            
             g.DrawEllipse(Pens.Green, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
             maincp.Draw(g);
-
         }
 
 

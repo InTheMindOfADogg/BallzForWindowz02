@@ -31,8 +31,10 @@ namespace BallzForWindows01.DrawableParts
         PointD dstartPosition;
         PointD dcenter;
 
-        CircleD circle;
+        //CircleD circle;
         CollisionCircleD circ2;
+
+        public List<CollisionPoint> CollisionPointsList { get { return circ2.CollisionPointList; } }
 
         int x = 0;
         int y = 0;
@@ -40,7 +42,8 @@ namespace BallzForWindows01.DrawableParts
         int height = 0;
         double dx = 0;
         double dy = 0;
-        double speed = 0.5;
+        double speed = 1.0;// 0.5;
+        
         DateTime startTime;
         DateTime endTime;
         TimeSpan flightTime = TimeSpan.Zero;
@@ -72,7 +75,7 @@ namespace BallzForWindows01.DrawableParts
         public bool SettingSpin { get { return settingSpin; } }
         public bool PlacingSpinRect { get { return placingSpinRect; } set { placingSpinRect = value; } }
         public bool BallLaunched { get { return ballLaunched; } }
-        
+
         public double X { get { return dx; } }
         public double Y { get { return dy; } }
         public int Width { get { return width; } }
@@ -95,12 +98,12 @@ namespace BallzForWindows01.DrawableParts
             placingSpinRect = false;
             ballLaunched = false;
 
-            
+
             InitAndLoadBallParts();
         }
         private void InitAndLoadBallParts()
         {
-            circle = new CircleD();
+            //circle = new CircleD();
             circ2 = new CollisionCircleD();
 
             flightPath = new FlightPath();
@@ -121,8 +124,8 @@ namespace BallzForWindows01.DrawableParts
 
             // -50 on x is so that it appears beside the actual ball for testing. radius is 3rd param. This is for testing
             //circle.Load(dx-50, dy, (width/2), 0);     
-            circle.Load(dx, dy, (width/2), 0);
-            circ2.Load(dx, dy, (width / 2), 0);
+            //circle.Load(dx, dy, (width / 2), 0);
+            circ2.Load(dx, dy, (width / 2), 0, 5);
 
             this.x = x;
             this.y = y;
@@ -153,7 +156,7 @@ namespace BallzForWindows01.DrawableParts
                 calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
             }
 
-            
+
             DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
@@ -193,8 +196,8 @@ namespace BallzForWindows01.DrawableParts
                     Reset();
                 }
             }
-            
-            circle.Update(dx, dy, width/2, calculatedAngle);
+
+            //circle.Update(dx, dy, width / 2, calculatedAngle);
             circ2.Update(dx, dy, width / 2, calculatedAngle);
 
         }
@@ -236,7 +239,7 @@ namespace BallzForWindows01.DrawableParts
 
             launchButton.Draw(g);
             flightPath.Draw(g);
-            
+
             // commented out and just drawing circle. I might make circle the actual ball.
             //g.FillEllipse(sb, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);      // drawing ball inner color
             //g.DrawEllipse(Pens.Red, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);    // drawing boarder around ball

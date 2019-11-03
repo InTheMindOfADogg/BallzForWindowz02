@@ -17,19 +17,18 @@ namespace BallzForWindows01.DrawableParts
         RectangleD cbox;    // collision box
         bool collision = false;
 
+        bool pointHit = false;
+        public bool PointHit { get { return pointHit; } set { pointHit = value; } }
+
 
         public PointD Pos { get { return pos; } }
         public bool Collision { get { return collision; } }
 
         public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
-        public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight)
-        {
-            _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50));
-        }
-        public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight, Color c)
-        {
-            _Init(x, y, cboxWidth, cboxHeight, c);
-        }
+        public CollisionPoint(double x, double y, double cbSideLength) { _Init(x, y, cbSideLength, cbSideLength, Color.FromArgb(255, 175, 30, 50)); }
+        public CollisionPoint(double x, double y, double cbSideLength, Color c) { _Init(x, y, cbSideLength, cbSideLength, c); }
+        public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight) { _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50)); }
+        public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight, Color c) { _Init(x, y, cboxWidth, cboxHeight, c); }
         void _Init(double x, double y, double cboxWidth, double cboxHeight, Color c)
         {
 
@@ -40,6 +39,7 @@ namespace BallzForWindows01.DrawableParts
             SetCollisionBox();
         }
         public void Load(double x, double y) { _Load(x, y, 25, 25); } // just using 25 as default for now, might change later
+        public void Load(double x, double y, double cboxSideLength) { _Load(x, y, cboxSideLength, cboxSideLength); }
         public void Load(double x, double y, double cboxWidth, double cboxHeight) { _Load(x, y, cboxWidth, cboxHeight); }
         void _Load(double x, double y, double cboxWidth, double cboxHeight)
         {
@@ -48,7 +48,8 @@ namespace BallzForWindows01.DrawableParts
             SetCollisionBox();
         }
 
-        public void Set(double x, double y, double cboxWidth, double cboxHeight)
+        public void Set(double x, double y, double cboxWidth, double cboxHeight) { _Set(x, y, cboxWidth, cboxHeight); }
+        void _Set(double x, double y, double cboxWidth, double cboxHeight)
         {
             pos.Set(x, y);
             boxSize.Set(cboxWidth, cboxHeight);
@@ -60,6 +61,7 @@ namespace BallzForWindows01.DrawableParts
             Pen p = new Pen(color, 1);
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+            if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }
             if (collision) { g.FillRectangle(Brushes.Red, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
             p.Dispose();
         }

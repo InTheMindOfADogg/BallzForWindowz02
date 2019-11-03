@@ -46,7 +46,7 @@ namespace BallzForWindows01.MainGameParts
             //collisionLine.Load(220, 440, 250, 0, 2);
             collisionLine.Load(370, 570, 250, 0, 2);
 
-            cp.Load(300, 570);
+            cp.Load(300, 570);  // defaut box size is 25x25
         }
 
         public void Update(MouseControls mc)
@@ -58,9 +58,26 @@ namespace BallzForWindows01.MainGameParts
 
             collisionLine.CheckCollision(ball.X, ball.Y);
 
-            cp.CheckForCollision(ball.X, ball.Y);
+            //cp.CheckForCollision(ball.X, ball.Y);
+            CheckForCollision();
 
             DrawToBuffer();
+        }
+
+        private void CheckForCollision()
+        {
+            CollisionPoint tempcp;
+            for(int i = 0; i < ball.CollisionPointsList.Count; i++)
+            {
+                tempcp = ball.CollisionPointsList[i];
+                if (cp.CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
+                {
+                    //ball.CollisionPointsList[i].PointHit = true;
+                    tempcp.PointHit = true;
+                    break;
+                }
+                tempcp.PointHit = false;
+            }
         }
 
         int mStartX, mStartY, deltaX, deltaY;
