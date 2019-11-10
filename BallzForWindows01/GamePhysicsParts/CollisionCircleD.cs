@@ -62,19 +62,21 @@ namespace BallzForWindows01.GamePhysicsParts
 
         protected override void _Draw(Graphics g)
         {
-            //DbgFuncs.AddStr($"Collision points: {cplist.Count}");
             base._Draw(g);
             DrawCollisionPointList(g);
         }
         
         void DrawCollisionPointList(Graphics g)
-        {
-            //DbgFuncs.AddStr($"Collision points: {cplist.Count}");
+        {            
             for (int i = 0; i < cplist.Count; i++)
             {
-                //DbgFuncs.AddStr($"Collision point[{i}]: {cplist[i].Pos.ToString()}");
                 cplist[i].Draw(g);
             }
+        }
+        public int CollisionPointHit()
+        {
+            for (int i = 0; i < cplist.Count; i++) { if (cplist[i].PointHit) { return i; } }
+            return -1;
         }
         CollisionPoint CreateCollisionPoint(double x, double y, double radius, double rotation)
         {

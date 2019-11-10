@@ -108,11 +108,9 @@ namespace BallzForWindows01.DrawableParts
             {
                 if (showXMarker) { DrawX(g, p); }
                 if (showClickRect) { DrawClickRectangle(g); }
-
             }
 
         }
-
         private void DrawX(Graphics g, Pen p)
         {
             Point tl = new Point(x - (width / 2), y - (height / 2));
@@ -124,7 +122,6 @@ namespace BallzForWindows01.DrawableParts
             center.Y = tl.Y + height / 2;
             g.DrawLine(p, tl, br);
             g.DrawLine(p, tr, bl);
-
             clickRectangle.X = tl.X;
             clickRectangle.Y = tl.Y;
         }

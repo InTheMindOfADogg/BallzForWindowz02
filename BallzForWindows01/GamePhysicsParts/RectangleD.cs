@@ -36,6 +36,7 @@ namespace BallzForWindows01.GamePhysicsParts
             this.x = x; this.y = y; this.width = width; this.height = height;
         }
         public bool InBox(double dx, double dy) { return (dx > x && dx < x + width && dy > y && dy < y + height) ? true : false; }
+        //public bool HitBox(double dx, double dy) { return (dx >= x && dx <= x + width && dy >= y && dy <= y + height) ? true : false; }
 
         public override string ToString() { return $"{{X={x}, Y={y}, Width={width}, Height={height}}}"; }
         public Rectangle ToRectangle() { return new Rectangle((int)x, (int)y, (int)width, (int)height); }

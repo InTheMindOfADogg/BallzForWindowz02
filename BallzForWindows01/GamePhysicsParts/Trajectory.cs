@@ -20,6 +20,8 @@ namespace BallzForWindows01.GamePhysicsParts
         double distance;
         bool endPointSet = false;
 
+
+
         double oppLen, hypLen, adjLen, anglePreRotation = 0;
         PointF originPos, rightPos, aimPos;
 
@@ -40,16 +42,10 @@ namespace BallzForWindows01.GamePhysicsParts
         }
 
         public void Draw(Graphics g, float dbgTextPosX = 0, float dbgTextPosY = 0)
-        {
-            //Font f = new Font("Arial", 12, FontStyle.Regular);
-
+        {            
             DebugDraw(g, dbgTextPosX, dbgTextPosY);
-            DrawPointMarkers(g);
-            if (endPointSet)
-            {
-                g.DrawLine(Pens.Red, (float)x, (float)y, (float)endx, (float)endy);
-            }
-            //f.Dispose();
+            if (showDebugLines) { DrawPointMarkers(g); }
+            if (endPointSet) { g.DrawLine(Pens.Red, (float)x, (float)y, (float)endx, (float)endy); }         
         }
         public void Reset()
         {
@@ -57,6 +53,15 @@ namespace BallzForWindows01.GamePhysicsParts
             endy = 0;
             endPointSet = false;
         }
+
+        #region debug configure info
+        bool showDebugLines = false;
+        public bool ShowDebugLine { get { return showDebugLines; } set { showDebugLines = value; } }
+        public void DebugConfigure(bool debugValue = false)
+        {
+            showDebugLines = debugValue;
+        }
+        #endregion debug configure info
 
         public RectangleF DbgTextBlock { get { return new RectangleF(dbgBlockPos, dbgBlockSize); } }
         public PointF DbgBlockPos { get { return dbgBlockPos; } }
@@ -81,9 +86,6 @@ namespace BallzForWindows01.GamePhysicsParts
                 DrawString(g, f, $"rghtPos: {rightPos}", ref fpos);
                 f.Dispose();
             }
-
-
-
         }
         void DrawString(Graphics g, Font f, string str, ref PointF fontPos)
         {
@@ -91,7 +93,7 @@ namespace BallzForWindows01.GamePhysicsParts
             SizeF bsize = g.MeasureString(str, f);
             fontPos.Y += bsize.Height;
             dbgBlockSize.Height += bsize.Height;
-            if(bsize.Width > dbgBlockSize.Width)
+            if (bsize.Width > dbgBlockSize.Width)
             {
                 dbgBlockSize.Width = bsize.Width;
             }
@@ -114,7 +116,7 @@ namespace BallzForWindows01.GamePhysicsParts
             g.DrawLine(p, originPos, new PointF((float)endx, (float)endy));
             p.Dispose();
         }
-        
+
 
         double CalcDistance(double sx, double sy, double ex, double ey)
         {
@@ -156,7 +158,7 @@ namespace BallzForWindows01.GamePhysicsParts
             endy = y + distance * Math.Sin(rot);
             endPointSet = true;
         }
-        
+
 
         #region pending removal
 

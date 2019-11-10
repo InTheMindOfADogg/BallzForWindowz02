@@ -24,9 +24,10 @@ namespace BallzForWindows01.GamePhysicsParts
 
         bool connectMarkers = false;
         bool calculateSpin = false;
+
         double angle = 0;
 
-        public bool ConnectMarkers { get { return connectMarkers; } }
+        public bool ConnectMarkers { get { return connectMarkers; } set { connectMarkers = value; } }
         public bool CalculatingSpin { get { return calculateSpin; } }        
         public double Angle { get { return angle; } set { angle = value; } }
         
@@ -51,13 +52,11 @@ namespace BallzForWindows01.GamePhysicsParts
             originMarker.Place(x, y);
             aimTraj.Load(x, y);
             spinTraj.Load(x, y);
-
         }
         public void PlaceEndMarker(int x, int y)
         {
             aimMarker.Place(x, y);
             aimTraj.SetEndPoint(x, y);
-            //connectMarkers = true;
             calculateSpin = true;
             int spinX = (originMarker.X + aimMarker.X) / 2;
             int spinY = (originMarker.Y + aimMarker.Y) / 2;
@@ -79,10 +78,18 @@ namespace BallzForWindows01.GamePhysicsParts
             }
             AddSpin();
         }
-
-        public void AddDebugStrings()
+        public void DebugConfigure(bool debugValue = false)
         {
-
+            connectMarkers = debugValue;
+            aimTraj.DebugConfigure(debugValue);
+            spinTraj.DebugConfigure(debugValue);
+            //spinMarker.ShowXMarker = false;
+            
+            //aimTraj.ShowDebugLine = debugValue;
+            //spinTraj.ShowDebugLine = debugValue;
+            
+            //aimMarker.ShowClickRectangle = debugValue;
+            //spinMarker.ShowClickRectangle = debugValue;
         }
         double drift = 0;
         public double Drift { get { return drift; } set { drift = value; } }
@@ -91,10 +98,6 @@ namespace BallzForWindows01.GamePhysicsParts
             angle = aimTraj.RotAngle;
             drift = spinTraj.RotAngle;
         }
-
-
-
-
         public bool IsInBoundingRect(int mPosX, int mPosY) { if (spinMarker.IsInBoundingRect(mPosX, mPosY)) { return true; } else { return false; } }
 
         public void Draw(Graphics g)

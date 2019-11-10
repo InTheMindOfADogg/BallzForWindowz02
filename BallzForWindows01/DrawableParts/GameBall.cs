@@ -25,25 +25,20 @@ namespace BallzForWindows01.DrawableParts
         FlightPath flightPath;
         Button01 launchButton;
 
-        Point startPosition;
-        Point center;
-
         PointD dstartPosition;
         PointD dcenter;
 
-        //CircleD circle;
         CollisionCircleD circ2;
 
-        public List<CollisionPoint> CollisionPointsList { get { return circ2.CollisionPointList; } }
+        bool collided = false;
 
-        int x = 0;
-        int y = 0;
         int width = 0;
         int height = 0;
         double dx = 0;
         double dy = 0;
+        double startingSpeed = 1.0;
         double speed = 1.0;// 0.5;
-        
+
         DateTime startTime;
         DateTime endTime;
         TimeSpan flightTime = TimeSpan.Zero;
@@ -68,6 +63,16 @@ namespace BallzForWindows01.DrawableParts
         bool placingSpinRect = false;
         bool ballLaunched = false;
 
+        bool pause = false;
+
+        // used in Bounce functions (ex Bounce[X])
+        #region used in bounce function
+        double calculatedBounceAngle = 0;
+        double outerAngle = 0;
+        int bounceCount = 0;
+        int cpHitIdx = -1;
+        #endregion used in bounce function
+
         #region properties
         public Size GameScreenSize { get { return gameScreenSize; } set { gameScreenSize = value; } }
         public bool ReadyForLaunch { get { return readyForLaunch; } }
@@ -80,32 +85,43 @@ namespace BallzForWindows01.DrawableParts
         public double Y { get { return dy; } }
         public int Width { get { return width; } }
         public int Height { get { return height; } }
+
+        public List<CollisionPoint> CollisionPointList { get { return circ2.CollisionPointList; } }
+
+        public bool Collide { get { return collided; } set { collided = value; } }
+        public double Speed { get { return speed; } set { speed = value; } }
+
+        public bool Pause { get { return pause; } set { pause = value; } }
         #endregion
+
+
 
         public GameBall(Size gameScreenSize)
         {
             this.gameScreenSize = gameScreenSize;
-            startPosition = new Point(0, 0);
+            dstartPosition = new PointD(0, 0);
             SetPosition(0, 0);
             SetSize(15, 15);
             SetColor(255, 0, 0, 0);
-
             font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-
             placingAim = false;
             settingSpin = false;
             readyForLaunch = false;    // same as setting spin, might need to adjust later
             placingSpinRect = false;
             ballLaunched = false;
 
-
             InitAndLoadBallParts();
+
+            DebugConfigure(false);
+        }
+        private void DebugConfigure(bool debugValue = false)
+        {
+            //flightPath.ConnectMarkers = debugValue;
+            flightPath.DebugConfigure(debugValue);
         }
         private void InitAndLoadBallParts()
         {
-            //circle = new CircleD();
             circ2 = new CollisionCircleD();
-
             flightPath = new FlightPath();
             flightPath.Load();
             launchButton = new Button01();
@@ -116,21 +132,11 @@ namespace BallzForWindows01.DrawableParts
         {
             this.width = width;
             this.height = height;
-
             dx = x;
             dy = y;
             dcenter = new PointD(dx + width / 2, dy + height / 2);
             dstartPosition = new PointD(dx, dy);
-
-            // -50 on x is so that it appears beside the actual ball for testing. radius is 3rd param. This is for testing
-            //circle.Load(dx-50, dy, (width/2), 0);     
-            //circle.Load(dx, dy, (width / 2), 0);
             circ2.Load(dx, dy, (width / 2), 0, 5);
-
-            this.x = x;
-            this.y = y;
-            center = new Point(x + width / 2, y + height / 2);
-            startPosition = new Point(x, y);
             PositionLaunchButton();
         }
         private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
@@ -143,11 +149,10 @@ namespace BallzForWindows01.DrawableParts
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
             launchButton.Load(position.X, position.Y, size.Width, size.Height, "Launch");
         }
-
+        
         public void Update()
         {
-            DbgFuncs.AddStr($"[GameBall.Update] ballLaunched: {ballLaunched}");
-
+            string fnId = $"[GameBall.Update]: ";
             if (!ballLaunched)
             {
                 fpAngle = flightPath.Angle;
@@ -155,8 +160,79 @@ namespace BallzForWindows01.DrawableParts
                 driftFactor = (fpAngle - fpDrift) * drifthardness;
                 calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
             }
+            //AddUpdateDebugMsgs();
 
+            if (ballLaunched && !pause)
+            {
+                flightTime = DateTime.Now - startTime;
+                totalMs = flightTime.TotalMilliseconds;
+                secondsElapsed = flightTime.TotalSeconds;
+                secondsRemaining = roundTime - secondsElapsed;
+                timedriftModifier = totalMs / 250;
 
+                if (collided)
+                {
+                    //Bounce();
+                    Bounce2();                    
+                    collided = false;
+                }
+                // starts looping if angle gets too high
+                calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
+                
+
+                dx = dx + speed * Math.Cos(calculatedAngle);
+                dy = dy + speed * Math.Sin(calculatedAngle);
+
+                if (secondsRemaining <= 0) { secondsRemaining = 0; Reset(); }
+                if (dy <= 0 || dy >= gameScreenSize.Height) { Reset(); }
+                if (dx <= 0 || dx >= gameScreenSize.Width) { Reset(); }
+            }
+
+            DbgFuncs.AddStr($"{fnId} collisionPointHit (index): {cpHitIdx}");
+            DbgFuncs.AddStr($"{fnId} outerAngle: {(outerAngle * 180 / Math.PI):N2}");
+            DbgFuncs.AddStr($"{fnId} calculatedBouneAngle: {(calculatedBounceAngle * 180 / Math.PI):N2}");
+            circ2.Update(dx, dy, width / 2, calculatedAngle);
+        }
+        
+        void Bounce()
+        {
+            string fnId = $"[GameBall.Bounce]";
+            bounceCount++;
+            cpHitIdx = circ2.CollisionPointHit();
+            if (fpAngle > Math.PI && fpAngle < ((3 * Math.PI) / 2))
+            {
+                outerAngle = fpAngle - Math.PI;
+            }
+            calculatedBounceAngle = fpAngle + (((Math.PI / 2) - outerAngle) * 2);
+            fpAngle = calculatedBounceAngle;
+        }
+        void Bounce2()
+        {
+            string fnId = $"[GameBall.Bounce]";
+            bounceCount++;
+            cpHitIdx = circ2.CollisionPointHit();
+
+            if (cpHitIdx < CollisionPointList.Count / 2)
+            {
+                outerAngle = fpAngle - Math.PI;
+                calculatedBounceAngle = fpAngle + (((Math.PI / 2) - outerAngle) * 2);
+                goto SetfpAngle;
+            }
+            if (cpHitIdx > CollisionPointList.Count / 2)
+            {
+                outerAngle = fpAngle - (Math.PI);
+                //calculatedBounceAngle = fpAngle - (((Math.PI / 2) - outerAngle) * 2);
+                calculatedBounceAngle = fpAngle - ((outerAngle * 2));
+                goto SetfpAngle;
+            }
+            SetfpAngle:
+            fpAngle = calculatedBounceAngle;
+        }
+
+        
+        void AddUpdateDebugMsgs()
+        {
+            DbgFuncs.AddStr($"[GameBall.Update] ballLaunched: {ballLaunched}");
             DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] driftFactor(degrees): {driftFactor * 180 / Math.PI:N2}");
@@ -166,40 +242,6 @@ namespace BallzForWindows01.DrawableParts
             DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N3}");
             //DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
-
-
-            if (ballLaunched)
-            {
-                flightTime = DateTime.Now - startTime;
-                totalMs = flightTime.TotalMilliseconds;
-                secondsElapsed = flightTime.TotalSeconds;
-                secondsRemaining = roundTime - secondsElapsed;
-                timedriftModifier = totalMs / 250;
-
-                // starts looping if angle gets too high
-                calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
-
-                dx = dx + speed * Math.Cos(calculatedAngle);
-                dy = dy + speed * Math.Sin(calculatedAngle);
-
-                if (secondsRemaining <= 0)
-                {
-                    secondsRemaining = 0;
-                    Reset();
-                }
-                if (dy <= 0 || dy >= gameScreenSize.Height)
-                {
-                    Reset();
-                }
-                if (dx <= 0 || dx >= gameScreenSize.Width)
-                {
-                    Reset();
-                }
-            }
-
-            //circle.Update(dx, dy, width / 2, calculatedAngle);
-            circ2.Update(dx, dy, width / 2, calculatedAngle);
-
         }
         public void LaunchBall()
         {
@@ -221,56 +263,62 @@ namespace BallzForWindows01.DrawableParts
 
         public bool IsInSpinRect(int x, int y) { if (flightPath.IsInBoundingRect(x, y)) { return true; } else { return false; } }
         public bool IsInLaunchButtonRect(int x, int y) { if (launchButton.IsInBoundingRect(x, y)) { return true; } else { return false; } }
-        public void AdjustSpinMarker(int x, int y)
-        {
-            flightPath.SetSpinMarker(x, y);
-        }
+        public void AdjustSpinMarker(int x, int y) { flightPath.SetSpinMarker(x, y); }
         private void PlaceAimMarker(int endMarkerX, int endMarkerY)
         {
-            flightPath.PlaceStartMarker(this.x, this.y);
+            flightPath.PlaceStartMarker((int)dx, (int)dy);
             flightPath.PlaceEndMarker(endMarkerX, endMarkerY);
         }
-
         public void Draw(Graphics g)
         {
-            //DrawBallLabel(g);
-
             SolidBrush sb = new SolidBrush(color);
-
             launchButton.Draw(g);
             flightPath.Draw(g);
-
-            // commented out and just drawing circle. I might make circle the actual ball.
-            //g.FillEllipse(sb, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);      // drawing ball inner color
-            //g.DrawEllipse(Pens.Red, (float)dx - (width / 2), (float)dy - (height / 2), (float)width, (float)height);    // drawing boarder around ball
-
-            //g.DrawRectangle(Pens.Green, (float)dx, (float)dy, 2, 2);    // marker on center of ball for testing
-            //circle.Draw(g);
             circ2.Draw(g);
 
+            //dbgDrawBounceAngle(g);
             sb.Dispose();
         }
+
+        void dbgDrawBounceAngle(Graphics g)
+        {
+            PointD bncEndPt = new PointD();
+            bncEndPt.X = dx + 20 * Math.Cos(calculatedBounceAngle);
+            bncEndPt.Y = dy + 20 * Math.Sin(calculatedBounceAngle);
+            g.DrawLine(Pens.Red, (float)dx, (float)dy, bncEndPt.fX, bncEndPt.fY);
+        }
+
         void DrawBallLabel(Graphics g) // 0 refs as of 2019-10-26, might use later
         {
+            //string description = "Ball";
+            //SizeF strSize = g.MeasureString(description, font);
+            //Point strPos = new Point();
+            //strPos.X = (int)center.X - (int)strSize.Width / 2;
+            //strPos.Y = (int)center.Y - (int)strSize.Height / 2;
+            //g.DrawString(description, font, Brushes.Black, strPos);
+
             string description = "Ball";
             SizeF strSize = g.MeasureString(description, font);
-            Point strPos = new Point();
-            strPos.X = (int)center.X - (int)strSize.Width / 2;
-            strPos.Y = (int)center.Y - (int)strSize.Height / 2;
+            PointF strPos = new Point();
+            strPos.X = (int)dcenter.X - (int)strSize.Width / 2;
+            strPos.Y = (int)dcenter.Y - (int)strSize.Height / 2;
             g.DrawString(description, font, Brushes.Black, strPos);
         }
 
         public void Reset()
         {
             ballLaunched = false;
+            pause = false;
             endTime = DateTime.Now; // not using at the moment, but might use later 2019-10-12.
             readyForLaunch = false;
-            x = startPosition.X;
-            y = startPosition.Y;
             dx = dstartPosition.X;
             dy = dstartPosition.Y;
             flightPath.Reset();
             timedriftModifier = 0;
+            speed = startingSpeed;
+            bounceCount = 0;
+            calculatedBounceAngle = 0;
+            collided = false;
 
         }
 
@@ -282,8 +330,8 @@ namespace BallzForWindows01.DrawableParts
             //timer.Close();
             //timer.Dispose();
         }
-
-        protected void SetPosition(int x, int y) { this.x = x; this.y = y; }
+        
+        protected void SetPosition(double x, double y) { dx = x; dy = y; }
         protected void SetSize(int width, int height) { this.width = width; this.height = height; }
 
     }
