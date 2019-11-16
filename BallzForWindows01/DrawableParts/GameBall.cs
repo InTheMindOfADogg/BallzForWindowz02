@@ -89,12 +89,12 @@ namespace BallzForWindows01.DrawableParts
         public List<CollisionPoint> CollisionPointList { get { return circ2.CollisionPointList; } }
 
         public bool Collide { get { return collided; } set { collided = value; } }
-        public double Speed { get { return speed; } set { speed = value; } }
+        //public double Speed { get { return speed; } set { speed = value; } }
 
         public bool Pause { get { return pause; } set { pause = value; } }
         #endregion
 
-
+        double east, south, west, north, fullCircle;
 
         public GameBall(Size gameScreenSize)
         {
@@ -111,6 +111,12 @@ namespace BallzForWindows01.DrawableParts
             ballLaunched = false;
 
             InitAndLoadBallParts();
+
+            east = 0;
+            south = east + Math.PI / 2;
+            west = south + Math.PI / 2;
+            north = west + Math.PI / 2;
+            fullCircle = 2 * Math.PI;
 
             DebugConfigure(false);
         }
@@ -149,9 +155,10 @@ namespace BallzForWindows01.DrawableParts
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
             launchButton.Load(position.X, position.Y, size.Width, size.Height, "Launch");
         }
-        
+
         public void Update()
         {
+
             string fnId = $"[GameBall.Update]: ";
             if (!ballLaunched)
             {
@@ -170,15 +177,12 @@ namespace BallzForWindows01.DrawableParts
                 secondsRemaining = roundTime - secondsElapsed;
                 timedriftModifier = totalMs / 250;
 
-                if (collided)
-                {
-                    //Bounce();
-                    Bounce2();                    
-                    collided = false;
-                }
+                // bounce logic
+                if (collided) { Bounce3(); collided = false; }
+
                 // starts looping if angle gets too high
                 calculatedAngle = fpAngle - (driftFactor * timedriftModifier);
-                
+
 
                 dx = dx + speed * Math.Cos(calculatedAngle);
                 dy = dy + speed * Math.Sin(calculatedAngle);
@@ -191,9 +195,24 @@ namespace BallzForWindows01.DrawableParts
             DbgFuncs.AddStr($"{fnId} collisionPointHit (index): {cpHitIdx}");
             DbgFuncs.AddStr($"{fnId} outerAngle: {(outerAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"{fnId} calculatedBouneAngle: {(calculatedBounceAngle * 180 / Math.PI):N2}");
+            DbgFuncs.AddStr($"{fnId} middle cp hit idx: {circ2.MiddleCPIdx}");
             circ2.Update(dx, dy, width / 2, calculatedAngle);
+
+            #region testing logic for bounce
+            DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+            DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+            DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+            DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+            DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+            DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+
+            // attempting to build formula for toNext90 and toPrev90
+            //Bounce3();
+
+            #endregion testing logic for bounce
+
         }
-        
+
         void Bounce()
         {
             string fnId = $"[GameBall.Bounce]";
@@ -225,13 +244,94 @@ namespace BallzForWindows01.DrawableParts
                 calculatedBounceAngle = fpAngle - ((outerAngle * 2));
                 goto SetfpAngle;
             }
-            SetfpAngle:
+        SetfpAngle:
             fpAngle = calculatedBounceAngle;
         }
 
-        
+
+        int timesIn90 = 0;
+        double toNext90 = 0;
+        double toPrev90 = 0;
+        double bounceAngle = 0;
+        double angleAfterBounce = 0;
+        void Bounce3()
+        {
+            string fnId = $"[GameBall.Bounce]";
+            bounceCount++;
+            
+            cpHitIdx = circ2.CollisionPointHit();
+            //fpAngle = (320 * Math.PI / 180);
+            timesIn90 = (int)(fpAngle / south);
+            toPrev90 = fpAngle - (timesIn90 * south);
+            toNext90 = ((timesIn90 + 1) * south) - fpAngle;
+            bounceAngle = 0;
+            angleAfterBounce = 0;
+
+            if (fpAngle > east && fpAngle < south)
+            {
+                bounceAngle = toPrev90 * 2;
+                angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+            }
+            if (fpAngle > south && fpAngle < west)
+            {
+                if (cpHitIdx < circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toNext90 * 2;
+                    //angleAfterBounce = fpAngle + bounceAngle;
+                    angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+                }
+                if (cpHitIdx > circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toPrev90 * 2;
+                    //angleAfterBounce = fpAngle + bounceAngle;
+                    angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+                }
+            }
+            if (fpAngle > west && fpAngle < north)
+            {
+                if (cpHitIdx < circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toNext90 * 2;
+                    //angleAfterBounce = fpAngle + bounceAngle;
+                    angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+                }
+                if (cpHitIdx > circ2.MiddleCPIdx)
+                {
+                    bounceAngle = (toPrev90 * 2);
+                    //angleAfterBounce = fpAngle - bounceAngle;
+                    angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+                }
+            }
+            if (fpAngle > north && fpAngle < fullCircle)
+            {
+                if(cpHitIdx < circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toNext90 * 2;
+                    angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+                }
+                if (cpHitIdx > circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toPrev90 * 2;
+                    angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+                }
+               
+            }
+
+            //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+            //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+
+            fpAngle = angleAfterBounce;
+            
+        }
+
+
         void AddUpdateDebugMsgs()
         {
+            //DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
             DbgFuncs.AddStr($"[GameBall.Update] ballLaunched: {ballLaunched}");
             DbgFuncs.AddStr($"[GameBall.Update] angle(degrees) from flightpath: {(fpAngle * 180 / Math.PI):N2}");
             DbgFuncs.AddStr($"[GameBall.Update] drift(degrees) from flightpath: {fpDrift * 180 / Math.PI:N2}");
@@ -241,7 +341,10 @@ namespace BallzForWindows01.DrawableParts
             DbgFuncs.AddStr($"[GameBall.Update] flightTime: {flightTime.ToString(@"mm\:ss\:fff")}");
             DbgFuncs.AddStr($"[GameBall.Update] ydriftModifier: {timedriftModifier:N2}");
             DbgFuncs.AddStr($"[GameBall.Update] secondsRemaining: {(secondsRemaining):N3}");
-            //DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
+            //DbgFuncs.AddStr($"east: {east:N3} ({(east * 180 / Math.PI)})");
+            //DbgFuncs.AddStr($"south: {south:N3} ({(south * 180 / Math.PI)})");
+            //DbgFuncs.AddStr($"west: {west:N3} ({(west * 180 / Math.PI)})");
+            //DbgFuncs.AddStr($"north: {north:N3} ({(north * 180 / Math.PI)})");
         }
         public void LaunchBall()
         {
@@ -330,12 +433,36 @@ namespace BallzForWindows01.DrawableParts
             //timer.Close();
             //timer.Dispose();
         }
-        
+
         protected void SetPosition(double x, double y) { dx = x; dy = y; }
         protected void SetSize(int width, int height) { this.width = width; this.height = height; }
 
     }
 }
+
+#region snippit - first version of calculating degress from previous 90 and to next 90
+//// building for calculating bounce angle
+//if (fpAngle > east && fpAngle < south)
+//{
+//    toNext90 = south - fpAngle;
+//    toPrev90 = fpAngle;
+//}
+//if (fpAngle > south && fpAngle < west)
+//{
+//    toNext90 = west - fpAngle;
+//    toPrev90 = fpAngle - south;
+//}
+//if (fpAngle > west && fpAngle < north)
+//{
+//    toNext90 = north - fpAngle;
+//    toPrev90 = fpAngle - west;
+//}
+//if (fpAngle > north && fpAngle < 2 * Math.PI)
+//{
+//    toNext90 = (2 * Math.PI) - fpAngle;
+//    toPrev90 = fpAngle - north;
+//}
+#endregion snippit - first version of calculating degress from previous 90 and to next 90
 
 #region original version using int
 

@@ -22,7 +22,7 @@ namespace BallzForWindows01.MainGameParts
         List<BasicBlock01> blockList;
         GameBall ball;
 
-        CollisionLine collisionLine;// = new CollisionLine();
+        //CollisionLine collisionLine;// = new CollisionLine();
         //bool pause = false;
 
         
@@ -33,7 +33,7 @@ namespace BallzForWindows01.MainGameParts
             height = gameWindowHeight;
             blockList = new List<BasicBlock01>();
             ball = new GameBall(new Size(width, height));
-            collisionLine = new CollisionLine();
+            //collisionLine = new CollisionLine();
         }
         public void Load()
         {
@@ -44,12 +44,14 @@ namespace BallzForWindows01.MainGameParts
             ballStartY = (height - 100);
             ball.Load(ballStartX, ballStartY);
             
-            collisionLine.Load(370, 570, 250, 0, 2);
+            //collisionLine.Load(370, 570, 250, 0, 2);
 
             //cp.Load(300, 570);  // defaut box size is 25x25
             AddCollisionPoint(300, 570, 25);
             AddCollisionPoint(300, 370, 25);
             AddCollisionPoint(400, 500, 25);
+            AddCollisionPoint(450, 550, 25);
+            AddCollisionPoint(333, 500, 25);
         }
         void AddCollisionPoint(double x, double y, double sideLength)
         {
@@ -63,9 +65,9 @@ namespace BallzForWindows01.MainGameParts
             UpdateMouseControls(mc);
             ball.Update();
 
-            collisionLine.Update(0);
+            //collisionLine.Update(0);
 
-            collisionLine.CheckCollision(ball.X, ball.Y);
+            //collisionLine.CheckCollision(ball.X, ball.Y);
             
             //CheckForCollision();
             UpdateCollisionPointList();
@@ -174,7 +176,7 @@ namespace BallzForWindows01.MainGameParts
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
             ball.Draw(g);
-            collisionLine.Draw(g);
+            //collisionLine.Draw(g);
             //cp.Draw(g);
             DrawCollisionPointList(g);
             DbgFuncs.DrawDbgStrList(g);
