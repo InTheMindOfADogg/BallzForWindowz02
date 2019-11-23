@@ -9,7 +9,12 @@ namespace BallzForWindows01.DrawableParts
 {
     class DrawableObject
     {
+        public string ClsName { get { return clsName; } }
+        public bool DrawDbgTxt { get { return drawDbgTxt; } set { drawDbgTxt = value; } }
         public bool Visible { get { return visible; } set { visible = value; } }
+
+        
+        
 
         //public int Alpha { get { return alpha; } }
         //public int Red { get { return red; } }
@@ -17,6 +22,8 @@ namespace BallzForWindows01.DrawableParts
         //public int Blue { get { return blue; } }
         //public Color Color { get { return color; } }        
 
+        protected string clsName = "DrawableObject";
+        bool drawDbgTxt = true;
         protected int alpha;
         protected int red;
         protected int green;
@@ -24,8 +31,10 @@ namespace BallzForWindows01.DrawableParts
         protected Color color;
 
         protected bool visible = true;
-        
-        protected void SetColor(int alpha, int red, int green, int blue)
+
+        protected void SetColor(Color c) { _SetColor(c.A, c.R, c.G, c.B); }
+        protected void SetColor(int alpha, int red, int green, int blue){_SetColor(alpha, red, green, blue);}
+        private void _SetColor(int alpha, int red, int green, int blue)
         {
             this.alpha = alpha;
             this.red = red;

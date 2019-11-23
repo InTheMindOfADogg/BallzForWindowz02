@@ -43,6 +43,7 @@ namespace BallzForWindows01.DrawableParts
 
         public XMarker()
         {
+            clsName = "XMarker";
             _Load(0, 0, 20, 20);
             SetColor(255, 255, 0, 0);
             font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);

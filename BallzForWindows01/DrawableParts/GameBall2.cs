@@ -11,10 +11,9 @@ using BallzForWindows01.GamePhysicsParts;
 
 namespace BallzForWindows01.DrawableParts
 {
-    class GameBall : DrawableObject
+    class GameBall2 : DrawableObject
     {
 
-        
 
         #region local drawing font settings
         Font font;
@@ -100,9 +99,9 @@ namespace BallzForWindows01.DrawableParts
 
         double east, south, west, north, fullCircle;
 
-        public GameBall(Size gameScreenSize)
+        public GameBall2(Size gameScreenSize)
         {
-            this.clsName = "GameBall";
+            this.clsName = "GameBall2";
             this.gameScreenSize = gameScreenSize;
             dstartPosition = new PointD(0, 0);
             SetPosition(0, 0);
@@ -129,20 +128,19 @@ namespace BallzForWindows01.DrawableParts
         {
             //flightPath.ConnectMarkers = debugValue;
             flightPath.DebugConfigure(debugValue);
-
             circ2.DrawDbgTxt = DrawDbgTxt;
         }
         private void InitBallParts()
         {
-            circ2 = new CollisionCircleD();
+            circ2 = new CollisionCircleD();            
             flightPath = new FlightPath();
-            flightPath.Load();
             launchButton = new Button01();
         }
         public void Load(int x, int y) { _Load(x, y, width, height); }
         public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
         private void _Load(int x, int y, int width, int height)
         {
+            flightPath.Load();
             DebugConfigure(false);
             this.width = width;
             this.height = height;
@@ -228,10 +226,10 @@ namespace BallzForWindows01.DrawableParts
             circ2.Update(dx, dy, width / 2, calculatedAngle);
 
             #region testing logic for bounce
-            if (DrawDbgTxt)
+            if(DrawDbgTxt)
             {
                 DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
-                DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+                DbgFuncs.AddStr($"{fnId}timeIn90: {timesIn90}");
                 DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
                 DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
                 DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
@@ -239,8 +237,6 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} dbgInfoCpIdxHit: {dbgtxtCpIdxHit}");
             }
             
-
-
             #endregion testing logic for bounce
 
         }
@@ -249,14 +245,14 @@ namespace BallzForWindows01.DrawableParts
         void SetInfoCpIdxHit(List<int> cpIdxHitList)
         {
             dbgtxtCpIdxHit = "";
-            for(int i = 0; i < cpIdxHitList.Count; i++)
+            for (int i = 0; i < cpIdxHitList.Count; i++)
             {
                 dbgtxtCpIdxHit += $"{cpIdxHitList[i]}";
-                if(i < cpIdxHitList.Count - 1) { dbgtxtCpIdxHit += ","; }
+                if (i < cpIdxHitList.Count - 1) { dbgtxtCpIdxHit += ","; }
             }
-            
+
         }
-        
+
         int timesIn90 = 0;  // this is gpAngle / 90. used to "normalize" the angle so that i can work with it as if it were 0-90 degrees
         double toNext90 = 0;
         double toPrev90 = 0;
@@ -332,16 +328,12 @@ namespace BallzForWindows01.DrawableParts
 
             }
 
-            if (DrawDbgTxt)
-            {
-                //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
-                //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
-                //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
-                //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
-                //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
-                //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
-            }
-
+            //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+            //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+            //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
 
             fpAngle = angleAfterBounce;
 
@@ -431,7 +423,7 @@ namespace BallzForWindows01.DrawableParts
         void AddUpdateDebugMsgs()
         {
             string fnId = $"[{clsName}.AddUpdateDebugMsgs]";
-            if (DrawDbgTxt)
+            if(DrawDbgTxt)
             {
                 //DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
                 DbgFuncs.AddStr($"{fnId} ballLaunched: {ballLaunched}");
@@ -448,6 +440,7 @@ namespace BallzForWindows01.DrawableParts
                 //DbgFuncs.AddStr($"west: {west:N3} ({(west * 180 / Math.PI)})");
                 //DbgFuncs.AddStr($"north: {north:N3} ({(north * 180 / Math.PI)})");
             }
+
         }
         public void LaunchBall()
         {
@@ -536,6 +529,8 @@ namespace BallzForWindows01.DrawableParts
             //timer.Close();
             //timer.Dispose();
         }
+
+        public void SetCircleColor(Color c) { }
 
         protected void SetPosition(double x, double y) { dx = x; dy = y; }
         protected void SetSize(int width, int height) { this.width = width; this.height = height; }

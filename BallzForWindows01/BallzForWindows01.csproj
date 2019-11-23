@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
+    <Compile Include="DrawableParts\GameBall2.cs" />
     <Compile Include="GamePhysicsParts\CircleD.cs" />
     <Compile Include="GamePhysicsParts\CircleDV2.cs" />
     <Compile Include="GamePhysicsParts\CollisionCircleD.cs" />

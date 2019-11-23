@@ -9,7 +9,7 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     using DrawableParts;
     // Removed CollisionPoint from here. This is just base class to draw circle.
-    class CircleDV2
+    class CircleDV2: DrawableObject
     {
         protected PointD center;
         protected double radius = 0;
@@ -20,6 +20,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public CircleDV2(double x, double y, double radius, double rotation = 0) { _Init(x, y, radius, rotation); }
         void _Init(double x, double y, double radius, double rotation)
         {
+            clsName = "CircleDV2";
             center = new PointD(x, y);
         }
         public void Load(double x, double y, double radius, double rotation) { _Load(x, y, radius, rotation); }
@@ -39,8 +40,11 @@ namespace BallzForWindows01.GamePhysicsParts
         protected virtual void _Draw(Graphics g)
         {
             float len = 4;      // length of sides for center marker
+            Pen p = new Pen(color);
             g.FillRectangle(Brushes.Red, center.fX - (len / 2), center.fY - (len / 2), len, len);   // draw center marker for testing            
-            g.DrawEllipse(Pens.Green, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
+            //g.DrawEllipse(Pens.Green, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
+            g.DrawEllipse(p, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
+            p.Dispose();
         }
 
 

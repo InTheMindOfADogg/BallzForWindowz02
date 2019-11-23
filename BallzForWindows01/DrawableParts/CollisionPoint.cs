@@ -31,6 +31,7 @@ namespace BallzForWindows01.DrawableParts
         public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight, Color c) { _Init(x, y, cboxWidth, cboxHeight, c); }
         void _Init(double x, double y, double cboxWidth, double cboxHeight, Color c)
         {
+            clsName = "CollisionPoint";
             pos = new PointD(x, y);
             boxSize = new SizeD(cboxWidth, cboxHeight);
             cbox = new RectangleD();
@@ -57,13 +58,22 @@ namespace BallzForWindows01.DrawableParts
         public void Update(double x, double y) { }
         public void Draw(Graphics g)
         {
+            
             Pen p = new Pen(color, 1);
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
             //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
             if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
-            if (collision) { g.FillRectangle(Brushes.Red, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+            //if (collision) { g.FillRectangle(Brushes.Red, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+            if (collision)
+            {
+                SolidBrush collisionBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
+                g.FillRectangle(collisionBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+                collisionBrush.Dispose();
+            }
+            
             p.Dispose();
+
         }
 
         public bool CheckForCollision(double px, double py) { return (collision = cbox.InBox(px, py)); }

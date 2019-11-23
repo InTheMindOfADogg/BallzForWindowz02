@@ -100,8 +100,9 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public bool IsInBoundingRect(int mPosX, int mPosY) { if (spinMarker.IsInBoundingRect(mPosX, mPosY)) { return true; } else { return false; } }
 
-        public void Draw(Graphics g)
+        public void Draw(Graphics g, bool render = true)
         {
+            if (!render) return;
             if (originMarker.IsPlaced && aimMarker.IsPlaced)
             {
                 //originMarker.Draw(g);
