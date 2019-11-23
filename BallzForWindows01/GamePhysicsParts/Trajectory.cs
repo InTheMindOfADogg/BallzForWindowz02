@@ -20,8 +20,6 @@ namespace BallzForWindows01.GamePhysicsParts
         double distance;
         bool endPointSet = false;
 
-
-
         double oppLen, hypLen, adjLen, anglePreRotation = 0;
         PointF originPos, rightPos, aimPos;
 
@@ -36,16 +34,32 @@ namespace BallzForWindows01.GamePhysicsParts
             distance = 100;
         }
         public void Load(float startx, float starty) { x = startx; y = starty; }
+
         public void SetEndPoint(double ex, double ey) { _SetEndPoint(ex, ey); }
+        void _SetEndPoint(double ex, double ey)
+        {
+            originPos = new PointF((float)(x), (float)(y));
+            rightPos = new PointF((float)(ex), (float)(y));
+            aimPos = new PointF((float)(ex), (float)(ey));
+            oppLen = CalcDistance(aimPos.X, aimPos.Y, rightPos.X, rightPos.Y);
+            hypLen = CalcDistance(originPos.X, originPos.Y, aimPos.X, aimPos.Y);
+            adjLen = CalcDistance(originPos.X, originPos.Y, rightPos.X, rightPos.Y);
+            distance = hypLen;
+            SetRotation();
+            endx = x + distance * Math.Cos(rot);
+            endy = y + distance * Math.Sin(rot);
+            endPointSet = true;
+        }
+
         public void Update()
         {
         }
 
         public void Draw(Graphics g, float dbgTextPosX = 0, float dbgTextPosY = 0)
-        {            
+        {
             DebugDraw(g, dbgTextPosX, dbgTextPosY);
             if (showDebugLines) { DrawPointMarkers(g); }
-            if (endPointSet) { g.DrawLine(Pens.Red, (float)x, (float)y, (float)endx, (float)endy); }         
+            if (endPointSet) { g.DrawLine(Pens.Red, (float)x, (float)y, (float)endx, (float)endy); }
         }
         public void Reset()
         {
@@ -78,6 +92,8 @@ namespace BallzForWindows01.GamePhysicsParts
                 DrawString(g, f, $"{nameTag}", ref fpos);
                 DrawString(g, f, $"distance: {distance:N2}", ref fpos);
                 DrawString(g, f, $"o: {{ {oppLen:N2} }} h: {{ {hypLen:N2} }} a: {{ {adjLen:N2} }} ", ref fpos);
+                DrawString(g, f, $"north: {north}", ref fpos);
+                DrawString(g, f, $"south: {south}", ref fpos);
                 DrawString(g, f, $"anglePreRotation(degrees): {anglePreRotation * 180 / Math.PI:N2}", ref fpos);
                 DrawString(g, f, $"rot(radians): {rot:N2}", ref fpos);
                 DrawString(g, f, $"rot(degrees): {rot * 180 / Math.PI:N2}", ref fpos);
@@ -125,39 +141,35 @@ namespace BallzForWindows01.GamePhysicsParts
             double sumSqrs = (xdiff * xdiff) + (ydiff * ydiff);
             return Math.Sqrt(sumSqrs);
         }
+
+        
+        bool north = false, south = false;
         void SetRotation()
         {
-            if (aimPos.X == originPos.X && aimPos.Y < originPos.Y)
-            {
-                rot = (3 * Math.PI) / 2;
-                return;
-            }
+            north = south = false;
+            if (aimPos.Y < originPos.Y) { north = true; }
+            if (aimPos.Y > originPos.Y) { south = true; }
             anglePreRotation = Math.Asin(oppLen / hypLen);
-            if (aimPos.X > originPos.X && aimPos.Y < originPos.Y)
-            {
-                rot = Math.PI * 2 - anglePreRotation;
-                return;
-            }
-            if (aimPos.X < originPos.X && aimPos.Y < originPos.Y)
-            {
-                rot = Math.PI + anglePreRotation;
-                return;
-            }
+            // north
+            if (aimPos.X == originPos.X && north){rot = (3 * Math.PI) / 2;return;}
+            // south
+            if (aimPos.X == originPos.X && south){rot = (Math.PI) / 2;return;}
+            // east
+            if (aimPos.X > originPos.X && aimPos.Y == originPos.Y){rot = 0;return;}
+            // west
+            if (aimPos.X < originPos.X && aimPos.Y == originPos.Y){rot = Math.PI;return;}
+            // northwest
+            if (aimPos.X > originPos.X && north){rot = Math.PI * 2 - anglePreRotation;return;}
+            //northeast
+            if (aimPos.X < originPos.X && north){rot = Math.PI + anglePreRotation;return;}
+            // southwest
+            if (aimPos.X > originPos.X && south){rot = anglePreRotation;return;}
+            // southeast
+            if (aimPos.X < originPos.X && south){rot = Math.PI - anglePreRotation;return;}
+
+
         }
-        void _SetEndPoint(double ex, double ey)
-        {
-            originPos = new PointF((float)(x), (float)(y));
-            rightPos = new PointF((float)(ex), (float)(y));
-            aimPos = new PointF((float)(ex), (float)(ey));
-            oppLen = CalcDistance(aimPos.X, aimPos.Y, rightPos.X, rightPos.Y);
-            hypLen = CalcDistance(originPos.X, originPos.Y, aimPos.X, aimPos.Y);
-            adjLen = CalcDistance(originPos.X, originPos.Y, rightPos.X, rightPos.Y);
-            distance = hypLen;
-            SetRotation();
-            endx = x + distance * Math.Cos(rot);
-            endy = y + distance * Math.Sin(rot);
-            endPointSet = true;
-        }
+
 
 
         #region pending removal
@@ -179,6 +191,36 @@ namespace BallzForWindows01.GamePhysicsParts
 
     }
 }
+
+#region old rotation function, replaced 2019-11-16
+//void SetRotation()
+//{
+//    anglePreRotation = Math.Asin(oppLen / hypLen);
+//    // north
+//    if (aimPos.X == originPos.X && aimPos.Y < originPos.Y)
+//    {
+//        rot = (3 * Math.PI) / 2;
+//        return;
+//    }
+//    if (aimPos.X == originPos.X && aimPos.Y < originPos.Y)
+//    {
+//        rot = (3 * Math.PI) / 2;
+//        return;
+//    }
+//    // northwest
+//    if (aimPos.X > originPos.X && aimPos.Y < originPos.Y)
+//    {
+//        rot = Math.PI * 2 - anglePreRotation;
+//        return;
+//    }
+//    //northeast
+//    if (aimPos.X < originPos.X && aimPos.Y < originPos.Y)
+//    {
+//        rot = Math.PI + anglePreRotation;
+//        return;
+//    }
+//}
+#endregion old rotation function, replaced 2019-11-16
 
 #region DrawTrigStats - moved all these into Debug draw fuction
 //void DrawTrigStats(Graphics g, Font f, ref PointF fpos)

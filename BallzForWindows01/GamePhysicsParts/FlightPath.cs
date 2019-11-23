@@ -104,7 +104,7 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             if (originMarker.IsPlaced && aimMarker.IsPlaced)
             {
-                originMarker.Draw(g);
+                //originMarker.Draw(g);
                 spinMarker.Draw(g);
                 aimMarker.Draw(g);                                
                 spinTraj.Draw(g);

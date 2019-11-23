@@ -21,8 +21,7 @@ namespace BallzForWindows01.MainGameParts
 
         List<BasicBlock01> blockList;
         GameBall ball;
-
-        //CollisionLine collisionLine;// = new CollisionLine();
+        
         //bool pause = false;
 
         
@@ -33,20 +32,18 @@ namespace BallzForWindows01.MainGameParts
             height = gameWindowHeight;
             blockList = new List<BasicBlock01>();
             ball = new GameBall(new Size(width, height));
-            //collisionLine = new CollisionLine();
         }
         public void Load()
         {
             LoadBlockList();
             // Load game ball starting position
             int ballStartX, ballStartY;
-            ballStartX = (width / 2) - (ball.Width / 2);
-            ballStartY = (height - 100);
-            ball.Load(ballStartX, ballStartY);
-            
-            //collisionLine.Load(370, 570, 250, 0, 2);
 
-            //cp.Load(300, 570);  // defaut box size is 25x25
+
+            //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
+            ballStartX = 300;
+            ballStartY = height / 2 + 50;
+            ball.Load(ballStartX, ballStartY);
             AddCollisionPoint(300, 570, 25);
             AddCollisionPoint(300, 370, 25);
             AddCollisionPoint(400, 500, 25);
@@ -64,37 +61,13 @@ namespace BallzForWindows01.MainGameParts
         {
             UpdateMouseControls(mc);
             ball.Update();
-
-            //collisionLine.Update(0);
-
-            //collisionLine.CheckCollision(ball.X, ball.Y);
-            
-            //CheckForCollision();
             UpdateCollisionPointList();
-
             DrawToBuffer();
         }
-
-        //private void CheckForCollision()
-        //{
-        //    CollisionPoint tempcp;
-        //    for (int i = 0; i < ball.CollisionPointList.Count; i++)
-        //    {
-        //        tempcp = ball.CollisionPointList[i];
-        //        if (cp.CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
-        //        {
-
-        //            tempcp.PointHit = true;
-        //            ball.Collide = true;
-        //            break;
-        //        }
-        //        tempcp.PointHit = false;
-        //    }
-        //}
+        
         void UpdateCollisionPointList()
         {
             CollisionPoint tempcp;
-            //bool collisionDetected = false;
             for (int i = 0; i < cplist.Count; i++)
             {
                 for(int j = 0; j < ball.CollisionPointList.Count; j++)
@@ -104,13 +77,10 @@ namespace BallzForWindows01.MainGameParts
                     {
                         tempcp.PointHit = true;
                         ball.Collide = true;
-                        //collisionDetected = true;
-                        return;
-                        //break;
+                        return;                        
                     }
                     tempcp.PointHit = false;
                 }
-
             }
         }
 
@@ -150,19 +120,15 @@ namespace BallzForWindows01.MainGameParts
                 if (ball.IsInLaunchButtonRect(mc.X, mc.Y) && ball.ReadyForLaunch)
                 {
                     ball.LaunchBall();
-                    
-                    //cwl("Button clicked");
-                    //cwl("ball.ReadyForLaunch: " + ball.ReadyForLaunch);
                 }
-                else if (mc.Y < ball.Y - ball.Height * 2)
+                else //if (mc.Y < ball.Y - ball.Height * 2) // uncomment if here to restrict aim to only north side of the ball
                 {
                     ball.SetFlightPath(mc.X, mc.Y);
                 }
-                // launch ball(s)
-
             }
             #endregion launch the ball
 
+            // Reset
             if (mc.RightButtonState == UpDownState.Down && mc.LastRightButtonState == UpDownState.Up)
             {
                 ball.Reset();
@@ -176,8 +142,6 @@ namespace BallzForWindows01.MainGameParts
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
             ball.Draw(g);
-            //collisionLine.Draw(g);
-            //cp.Draw(g);
             DrawCollisionPointList(g);
             DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();

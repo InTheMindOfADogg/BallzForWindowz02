@@ -29,6 +29,7 @@ namespace BallzForWindows01.DrawableParts
         PointD dcenter;
 
         CollisionCircleD circ2;
+        int collisionPointCount = 5;
 
         bool collided = false;
 
@@ -142,7 +143,7 @@ namespace BallzForWindows01.DrawableParts
             dy = y;
             dcenter = new PointD(dx + width / 2, dy + height / 2);
             dstartPosition = new PointD(dx, dy);
-            circ2.Load(dx, dy, (width / 2), 0, 5);
+            circ2.Load(dx, dy, (width / 2), 0, collisionPointCount);
             PositionLaunchButton();
         }
         private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
@@ -213,41 +214,7 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
-        void Bounce()
-        {
-            string fnId = $"[GameBall.Bounce]";
-            bounceCount++;
-            cpHitIdx = circ2.CollisionPointHit();
-            if (fpAngle > Math.PI && fpAngle < ((3 * Math.PI) / 2))
-            {
-                outerAngle = fpAngle - Math.PI;
-            }
-            calculatedBounceAngle = fpAngle + (((Math.PI / 2) - outerAngle) * 2);
-            fpAngle = calculatedBounceAngle;
-        }
-        void Bounce2()
-        {
-            string fnId = $"[GameBall.Bounce]";
-            bounceCount++;
-            cpHitIdx = circ2.CollisionPointHit();
-
-            if (cpHitIdx < CollisionPointList.Count / 2)
-            {
-                outerAngle = fpAngle - Math.PI;
-                calculatedBounceAngle = fpAngle + (((Math.PI / 2) - outerAngle) * 2);
-                goto SetfpAngle;
-            }
-            if (cpHitIdx > CollisionPointList.Count / 2)
-            {
-                outerAngle = fpAngle - (Math.PI);
-                //calculatedBounceAngle = fpAngle - (((Math.PI / 2) - outerAngle) * 2);
-                calculatedBounceAngle = fpAngle - ((outerAngle * 2));
-                goto SetfpAngle;
-            }
-        SetfpAngle:
-            fpAngle = calculatedBounceAngle;
-        }
-
+        
 
         int timesIn90 = 0;
         double toNext90 = 0;
@@ -269,21 +236,28 @@ namespace BallzForWindows01.DrawableParts
 
             if (fpAngle > east && fpAngle < south)
             {
-                bounceAngle = toPrev90 * 2;
-                angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+                if(cpHitIdx < circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toPrev90 * 2;
+                    angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+                }
+                if(cpHitIdx > circ2.MiddleCPIdx)
+                {
+                    bounceAngle = toPrev90 * 2;
+                    angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+                }
             }
             if (fpAngle > south && fpAngle < west)
             {
                 if (cpHitIdx < circ2.MiddleCPIdx)
                 {
                     bounceAngle = toNext90 * 2;
-                    //angleAfterBounce = fpAngle + bounceAngle;
+                 
                     angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
                 }
                 if (cpHitIdx > circ2.MiddleCPIdx)
                 {
                     bounceAngle = toPrev90 * 2;
-                    //angleAfterBounce = fpAngle + bounceAngle;
                     angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
                 }
             }
@@ -292,13 +266,11 @@ namespace BallzForWindows01.DrawableParts
                 if (cpHitIdx < circ2.MiddleCPIdx)
                 {
                     bounceAngle = toNext90 * 2;
-                    //angleAfterBounce = fpAngle + bounceAngle;
                     angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
                 }
                 if (cpHitIdx > circ2.MiddleCPIdx)
                 {
-                    bounceAngle = (toPrev90 * 2);
-                    //angleAfterBounce = fpAngle - bounceAngle;
+                    bounceAngle = (toPrev90 * 2);                    
                     angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
                 }
             }
@@ -439,6 +411,43 @@ namespace BallzForWindows01.DrawableParts
 
     }
 }
+
+#region previous bounce attempts
+//void Bounce()
+//{
+//    string fnId = $"[GameBall.Bounce]";
+//    bounceCount++;
+//    cpHitIdx = circ2.CollisionPointHit();
+//    if (fpAngle > Math.PI && fpAngle < ((3 * Math.PI) / 2))
+//    {
+//        outerAngle = fpAngle - Math.PI;
+//    }
+//    calculatedBounceAngle = fpAngle + (((Math.PI / 2) - outerAngle) * 2);
+//    fpAngle = calculatedBounceAngle;
+//}
+//void Bounce2()
+//{
+//    string fnId = $"[GameBall.Bounce]";
+//    bounceCount++;
+//    cpHitIdx = circ2.CollisionPointHit();
+
+//    if (cpHitIdx < CollisionPointList.Count / 2)
+//    {
+//        outerAngle = fpAngle - Math.PI;
+//        calculatedBounceAngle = fpAngle + (((Math.PI / 2) - outerAngle) * 2);
+//        goto SetfpAngle;
+//    }
+//    if (cpHitIdx > CollisionPointList.Count / 2)
+//    {
+//        outerAngle = fpAngle - (Math.PI);
+//        //calculatedBounceAngle = fpAngle - (((Math.PI / 2) - outerAngle) * 2);
+//        calculatedBounceAngle = fpAngle - ((outerAngle * 2));
+//        goto SetfpAngle;
+//    }
+//SetfpAngle:
+//    fpAngle = calculatedBounceAngle;
+//}
+#endregion previous bounce attempts
 
 #region snippit - first version of calculating degress from previous 90 and to next 90
 //// building for calculating bounce angle
