@@ -51,12 +51,17 @@
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="DrawableParts\GameBall2.cs" />
+    <Compile Include="DrawableParts\GameBall3.cs" />
     <Compile Include="GamePhysicsParts\CircleD.cs" />
     <Compile Include="GamePhysicsParts\CircleDV2.cs" />
+    <Compile Include="GamePhysicsParts\CircleDV3.cs" />
     <Compile Include="GamePhysicsParts\CollisionCircleD.cs" />
+    <Compile Include="GamePhysicsParts\CollisionCircleDV2.cs" />
+    <Compile Include="GamePhysicsParts\FlightPath2.cs" />
     <Compile Include="GamePhysicsParts\RectangleD.cs" />
     <Compile Include="GamePhysicsParts\SizeD.cs" />
     <Compile Include="GamePhysicsParts\Trajectory.cs" />
+    <Compile Include="GamePhysicsParts\Trajectory2.cs" />
     <Compile Include="HelperClasses\AssistFunctions.cs" />
     <Compile Include="BallzForm.cs">
       <SubType>Form</SubType>

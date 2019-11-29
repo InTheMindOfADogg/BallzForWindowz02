@@ -13,14 +13,10 @@ namespace BallzForWindows01.DrawableParts
         #region Font settings
         Font font;
         Color fontColor;// = Color.Black;
-        public Color FontColor { get { return fontColor; } set { fontColor = value; } }
+
         int fontSize = 20;
         string fontFamily = "Arial";
-        void ConfigureFont()
-        {
-            font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            fontColor = Color.Black;
-        }
+
         #endregion Font settings
 
         int x, y, width, height;
@@ -37,10 +33,35 @@ namespace BallzForWindows01.DrawableParts
         public Rectangle ClickRectangle { get { return clickRectangle; } }
         public Point Center { get { return center; } }
         public Color DrawColor { get { return color; } set { color = value; } }
+        public Color FontColor { get { return fontColor; } set { fontColor = value; } }
         public bool IsPlaced { get { return placed; } }
         public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
 
         public Button01()
+        {
+            _Init();
+        }
+        
+        public void Load(int x, int y, string buttonText) { _Load(x, y, 0, 0, buttonText); }
+        public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
+        public void Load(int x, int y, int width, int height, string buttonText) { _Load(x, y, width, height, buttonText); }
+
+        public void Update() { }
+
+        public void Draw(Graphics g)
+        {
+            _Draw(g);
+        }
+
+        public void CleanUp() { if (font != null) { font.Dispose(); } }
+
+        public bool IsInBoundingRect(int posx, int posy)
+        {
+            return (posx > clickRectangle.X && posx < clickRectangle.X + clickRectangle.Width
+                    && posy > clickRectangle.Y && posy < clickRectangle.Y + clickRectangle.Height);
+        }
+
+        void _Init()
         {
             x = 300;
             y = 300;
@@ -56,16 +77,12 @@ namespace BallzForWindows01.DrawableParts
             visible = true;
             ConfigureFont();
         }
-        public void Load(int x, int y) { _Load(x, y, width, height); }
-        public void Load(int x, int y, string buttonText) { _Load(x, y, 0, 0, buttonText); }
 
-        public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
-        public void Load(int x, int y, int width, int height, string buttonText) { _Load(x, y, width, height, buttonText); }
         void _Load(int x, int y, int width, int height, string buttonText = "")
         {
             this.x = x;
             this.y = y;
-            if((width == 0 || height == 0) && (!string.IsNullOrWhiteSpace(buttonText)) )
+            if ((width == 0 || height == 0) && (!string.IsNullOrWhiteSpace(buttonText)))
             {
                 SetSizeFromText(buttonText);
             }
@@ -74,28 +91,13 @@ namespace BallzForWindows01.DrawableParts
                 this.width = width;
                 this.height = height;
             }
-            
+
             center = new Point(x + width / 2, y + height / 2);
             clickRectangle = new Rectangle(x, y, width, height);
             text = buttonText;
         }
 
-        void SetSizeFromText(string btnText)
-        {
-            Bitmap bmp = new Bitmap(100, 100);
-            Graphics g = Graphics.FromImage(bmp);
-            SizeF strSize = g.MeasureString(btnText, font);
-            width = (int)(strSize.Width + 1.5);
-            height = (int)(strSize.Height + 1.5);
-            g.Dispose();            
-            bmp.Dispose();
-        }
-        
-        public void Update()
-        {
-
-        }
-        public void Draw(Graphics g)
+        void _Draw(Graphics g)
         {
             SolidBrush sb = new SolidBrush(fontColor);
             Pen p = new Pen(color, 5);
@@ -110,18 +112,22 @@ namespace BallzForWindows01.DrawableParts
             p.Dispose();
             sb.Dispose();
         }
-        public void CleanUp() { if (font != null) { font.Dispose(); } }
 
-        
-        public bool IsInBoundingRect(int posx, int posy)
+        void ConfigureFont()
         {
-            if (posx > clickRectangle.X && posx < clickRectangle.X + clickRectangle.Width
-                && posy > clickRectangle.Y && posy < clickRectangle.Y + clickRectangle.Height)
-            {
-                return true;
-            }
-            else
-                return false;
+            font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            fontColor = Color.Black;
+        }
+
+        void SetSizeFromText(string btnText)
+        {
+            Bitmap bmp = new Bitmap(100, 100);
+            Graphics g = Graphics.FromImage(bmp);
+            SizeF strSize = g.MeasureString(btnText, font);
+            width = (int)(strSize.Width + 1.5);
+            height = (int)(strSize.Height + 1.5);
+            g.Dispose();
+            bmp.Dispose();
         }
 
     }

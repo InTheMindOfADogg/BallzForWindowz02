@@ -22,6 +22,8 @@ namespace BallzForWindows01.MainGameParts
         List<BasicBlock01> blockList;
         GameBall ball;
         GameBall2 ball2;
+
+        GameBall3 ball3;
         
         //bool pause = false;
 
@@ -35,9 +37,11 @@ namespace BallzForWindows01.MainGameParts
 
             ball = new GameBall(new Size(width, height));
             ball2 = new GameBall2(new Size(width, height));
+            ball3 = new GameBall3(new Size(width, height));
 
             ball.DrawDbgTxt = false;
-            ball2.DrawDbgTxt = true;
+            ball2.DrawDbgTxt = false;
+            ball3.DrawDbgTxt = true;
 
         }
         public void Load()
@@ -52,6 +56,8 @@ namespace BallzForWindows01.MainGameParts
 
             ball.Load(ballStartX, ballStartY);
             ball2.Load(ballStartX, ballStartY);
+            ball3.Load(ballStartX, ballStartY, 2, 15, 0, 5);
+            ball3.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
 
             AddCollisionPoint(300, 570, 25);
             AddCollisionPoint(300, 370, 25);
@@ -69,15 +75,20 @@ namespace BallzForWindows01.MainGameParts
         public void Update(MouseControls mc)
         {
             UpdateMouseControls(mc);
-
+            
             ball.Update();
             ball2.Update();
+            ball3.Update();
 
             UpdateCollisionPointList();
-            UpdateCollisionPointList2(ref ball2);
+            UpdateCollisionPointList2();
+
+            
+
             DrawToBuffer();
         }
-        
+        #region UpdateCollisionPointList functions
+        // UpdateCollisionPointList for ball 
         void UpdateCollisionPointList()
         {
             CollisionPoint tempcp;
@@ -96,25 +107,50 @@ namespace BallzForWindows01.MainGameParts
                 }
             }
         }
-
-        void UpdateCollisionPointList2(ref GameBall2 b)
+        // UpdateCollisionPointList2 for ball2
+        void UpdateCollisionPointList2()
         {
             CollisionPoint tempcp;
             for (int i = 0; i < cplist.Count; i++)
             {
-                for (int j = 0; j < b.CollisionPointList.Count; j++)
+                for (int j = 0; j < ball2.CollisionPointList.Count; j++)
                 {
-                    tempcp = b.CollisionPointList[j];
+                    tempcp = ball2.CollisionPointList[j];
                     if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
                     {
                         tempcp.PointHit = true;
-                        b.Collide = true;
-                        //return;
+                        ball2.Collide = true;
+                        ball2.PublicHitIdxList.Add(i);
+                        return;
+                        //continue;
                     }
                     tempcp.PointHit = false;
                 }
             }
         }
+
+        // UpdateCollisionPointList3 for ball 3
+        void UpdateCollisionPointList3()
+        {
+            CollisionPoint tempcp;
+            for (int i = 0; i < cplist.Count; i++)
+            {
+                for (int j = 0; j < ball3.CollisionPointList.Count; j++)
+                {
+                    tempcp = ball3.CollisionPointList[j];
+                    if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
+                    {
+                        tempcp.PointHit = true;
+                        //ball3.Collide = true;
+                        //ball3.PublicHitIdxList.Add(i);
+                        return;
+                        //continue;
+                    }
+                    tempcp.PointHit = false;
+                }
+            }
+        }
+        #endregion UpdateCollisionPointList functions
 
         int mStartX, mStartY, deltaX, deltaY;
         #region UpdateMouseControls versions
@@ -228,6 +264,62 @@ namespace BallzForWindows01.MainGameParts
                 ball2.Reset();
             }
             #endregion ball2
+
+            #region ball version 3
+            //// Setting aim and spin
+            //if (!ball3.BallLaunched)
+            //{
+            //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball3.SettingSpin)
+            //    {
+            //        if (ball3.IsInSpinRect(mc.X, mc.Y))
+            //        {
+            //            mStartX = mc.X;
+            //            mStartY = mc.Y;
+            //            deltaX = 0;
+            //            deltaY = 0;
+            //            ball3.PlacingSpinRect = true;
+            //        }
+            //    }
+            //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Down && ball3.PlacingSpinRect)
+            //    {
+            //        deltaX = mc.X - mStartX;
+            //        deltaY = mc.Y - mStartY;
+            //        ball3.AdjustSpinMarker(mc.X, mc.Y);
+            //    }
+            //    if (mc.LeftButtonState == UpDownState.Up && mc.LastLeftButtonState == UpDownState.Down && ball3.PlacingSpinRect)
+            //    {
+            //        ball3.PlacingSpinRect = false;
+            //    }
+
+            //    // launch / set flight path
+            //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up)
+            //    {
+            //        if (ball3.IsInLaunchButtonRect(mc.X, mc.Y) && ball3.ReadyForLaunch)
+            //        {
+            //            ball3.LaunchBall();
+            //        }
+            //        else //if (mc.Y < ball3.Y - ball3.Height * 2) // uncomment if here to restrict aim to only north side of the ball3
+            //        {
+
+            //            ball3.SetFlightPath(mc.X, mc.Y);
+            //        }
+            //    }
+            //}
+
+            //// unpause
+            //if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball3.BallLaunched == true)
+            //{
+            //    ball3.Pause = false;
+
+            //}
+
+            //// Reset
+            //if (mc.RightButtonState == UpDownState.Down && mc.LastRightButtonState == UpDownState.Up)
+            //{
+            //    ball3.Reset();
+            //}
+
+            #endregion ball version 3
         }
 
         //public void UpdateMouseControls(MouseControls mc)
@@ -288,8 +380,10 @@ namespace BallzForWindows01.MainGameParts
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
 
-            ball.Draw(g);
+            //ball.Draw(g);
             ball2.Draw(g);
+            ball3.Draw(g);
+            
 
             DrawCollisionPointList(g);
             DbgFuncs.DrawDbgStrList(g);

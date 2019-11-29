@@ -20,7 +20,7 @@ namespace BallzForWindows01.GamePhysicsParts
         double distance;
         bool endPointSet = false;
 
-        double oppLen, hypLen, adjLen, anglePreRotation = 0;
+        double oppLen, hypLen, adjLen, anglePreRotation;
         PointF originPos, rightPos, aimPos;
 
         public Trajectory(string nameTag = "")
@@ -77,6 +77,7 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         #endregion debug configure info
 
+        #region Drawing debug info logic
         public RectangleF DbgTextBlock { get { return new RectangleF(dbgBlockPos, dbgBlockSize); } }
         public PointF DbgBlockPos { get { return dbgBlockPos; } }
         public SizeF DbgBlockSize { get { return dbgBlockSize; } }
@@ -132,7 +133,7 @@ namespace BallzForWindows01.GamePhysicsParts
             g.DrawLine(p, originPos, new PointF((float)endx, (float)endy));
             p.Dispose();
         }
-
+        #endregion Drawing debug info logic
 
         double CalcDistance(double sx, double sy, double ex, double ey)
         {
@@ -166,31 +167,31 @@ namespace BallzForWindows01.GamePhysicsParts
             if (aimPos.X > originPos.X && south){rot = anglePreRotation;return;}
             // southeast
             if (aimPos.X < originPos.X && south){rot = Math.PI - anglePreRotation;return;}
-
-
         }
 
 
 
         #region pending removal
 
-        #region SetDistance - replaced by CalcDistance 2019-10-19
-        //void SetDistance(double ex, double ey)
-        //{
-        //    endx = ex;
-        //    endy = ey;
-        //    double xdiff = endx - x;
-        //    double ydiff = endy - y;
-        //    double sumSqrs = (xdiff * xdiff) + (ydiff * ydiff);
-        //    distance = Math.Sqrt(sumSqrs);
-        //}
-        #endregion SetDistance - replaced by CalcDistance
+        
 
         #endregion pending removal
 
 
     }
 }
+
+#region SetDistance - replaced by CalcDistance 2019-10-19
+//void SetDistance(double ex, double ey)
+//{
+//    endx = ex;
+//    endy = ey;
+//    double xdiff = endx - x;
+//    double ydiff = endy - y;
+//    double sumSqrs = (xdiff * xdiff) + (ydiff * ydiff);
+//    distance = Math.Sqrt(sumSqrs);
+//}
+#endregion SetDistance - replaced by CalcDistance
 
 #region old rotation function, replaced 2019-11-16
 //void SetRotation()

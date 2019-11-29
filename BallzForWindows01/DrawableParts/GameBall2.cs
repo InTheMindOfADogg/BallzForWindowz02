@@ -14,6 +14,7 @@ namespace BallzForWindows01.DrawableParts
     class GameBall2 : DrawableObject
     {
 
+        public List<int> PublicHitIdxList = new List<int>();
 
         #region local drawing font settings
         Font font;
@@ -32,6 +33,7 @@ namespace BallzForWindows01.DrawableParts
         CollisionCircleD circ2;
         int collisionPointCount = 5;
         double collisionPointSideLength = 1;
+        
 
         bool collided = false;
 
@@ -75,6 +77,8 @@ namespace BallzForWindows01.DrawableParts
         int bounceCount = 0;
         int cpHitIdx = -1;
         #endregion used in bounce function
+
+        List<int> cpIdxHitList;
 
         #region Properties
         public Size GameScreenSize { get { return gameScreenSize; } set { gameScreenSize = value; } }
@@ -150,20 +154,13 @@ namespace BallzForWindows01.DrawableParts
             dstartPosition = new PointD(dx, dy);
             //circ2.Load(dx, dy, (width / 2), 0, collisionPointCount);
             circ2.Load(dx, dy, collisionPointSideLength, (width / 2), 0, collisionPointCount);
+            circ2.SetCircleColor(this.color);
+            
             PositionLaunchButton();
         }
-        private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
-        {
-            Point position = new Point();
-            Size size = new Size();
-            size.Width = 100;
-            size.Height = 40;
-            position.X = gameScreenSize.Width / 2 - size.Width / 2;
-            position.Y = gameScreenSize.Height - size.Height * 2 - 5;
-            launchButton.Load(position.X, position.Y, size.Width, size.Height, "Launch");
-        }
+        
 
-        List<int> cpIdxHitList;
+        
         public void Update()
         {
 
@@ -186,20 +183,24 @@ namespace BallzForWindows01.DrawableParts
                 timedriftModifier = totalMs / 250;
 
                 // bounce logic
-                if (collided)
+
+                //if (collided)
+                //{
+                //    cpHitIdx = circ2.CollisionPointHit2();
+                //    cpIdxHitList = circ2.TriggeredHitPointIdxList();
+                //    SetInfoCpIdxHit(cpIdxHitList);
+                //    if (cpHitIdx > -1)
+                //    {
+                //        Bounce3(cpHitIdx);
+                //    }
+                //    collided = false;
+                //}
+                SetInfoCpIdxHit(cpIdxHitList);
+                if (PublicHitIdxList.Count > 0)
                 {
-                    cpHitIdx = circ2.CollisionPointHit2();
-                    cpIdxHitList = circ2.TriggeredHitPointIdxList();
-                    SetInfoCpIdxHit(cpIdxHitList);
-                    if (cpIdxHitList.Count > 0)
-                    {
-                        Bounce3(cpHitIdx);
-                    }
-                    //if (cpHitIdx > -1)
-                    //{
-                    //    Bounce3(cpHitIdx);
-                    //}
+                    Bounce3(PublicHitIdxList[0]);
                     collided = false;
+                    PublicHitIdxList.RemoveRange(0, PublicHitIdxList.Count);
                 }
 
                 // starts looping if angle gets too high
@@ -215,16 +216,17 @@ namespace BallzForWindows01.DrawableParts
                 if (dx <= 0 || dx >= gameScreenSize.Width) { Reset(); }
             }
 
-            if(DrawDbgTxt)
+            circ2.Update(dx, dy, width / 2, calculatedAngle);
+
+            #region collision point and bounce angle dbg logic
+            if (DrawDbgTxt)
             {
                 DbgFuncs.AddStr($"{fnId} collisionPointHit (index): {cpHitIdx}");
                 DbgFuncs.AddStr($"{fnId} outerAngle: {(outerAngle * 180 / Math.PI):N2}");
                 DbgFuncs.AddStr($"{fnId} calculatedBouneAngle: {(calculatedBounceAngle * 180 / Math.PI):N2}");
                 DbgFuncs.AddStr($"{fnId} middle cp hit idx: {circ2.MiddleCPIdx}");
             }
-            
-            circ2.Update(dx, dy, width / 2, calculatedAngle);
-
+            #endregion collision point and bounce angle dbg logic
             #region testing logic for bounce
             if(DrawDbgTxt)
             {
@@ -235,20 +237,34 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
                 DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
                 DbgFuncs.AddStr($"{fnId} dbgInfoCpIdxHit: {dbgtxtCpIdxHit}");
+                DbgFuncs.AddStr($"{fnId} PublicHitIdxList: {dbgtxtPublicHitIdxList}");
+                
             }
-            
             #endregion testing logic for bounce
-
+            PublicHitIdxList.RemoveRange(0, PublicHitIdxList.Count);
         }
 
         string dbgtxtCpIdxHit = "";
+        string dbgtxtPublicHitIdxList = "";
         void SetInfoCpIdxHit(List<int> cpIdxHitList)
         {
             dbgtxtCpIdxHit = "";
-            for (int i = 0; i < cpIdxHitList.Count; i++)
+            if(cpIdxHitList != null)
             {
-                dbgtxtCpIdxHit += $"{cpIdxHitList[i]}";
-                if (i < cpIdxHitList.Count - 1) { dbgtxtCpIdxHit += ","; }
+                for (int i = 0; i < cpIdxHitList.Count; i++)
+                {
+                    dbgtxtCpIdxHit += $"{cpIdxHitList[i]}";
+                    if (i < cpIdxHitList.Count - 1) { dbgtxtCpIdxHit += ","; }
+                }
+            }
+            
+            if(PublicHitIdxList.Count > 0)
+            {
+                dbgtxtPublicHitIdxList = "";
+            }
+            for(int i = 0; i < PublicHitIdxList.Count; i++)
+            {
+                dbgtxtPublicHitIdxList += $"{PublicHitIdxList[i]}  ";
             }
 
         }
@@ -259,13 +275,95 @@ namespace BallzForWindows01.DrawableParts
         double bounceAngle = 0;
         double angleAfterBounce = 0;
         #region Bounce 3 versions
+
+        #region bounce3 v3
+        //void Bounce3(List<int> cpIdxHitList)
+        //{
+        //    string fnId = $"[{clsName}.Bounce]";
+        //    bounceCount++;
+
+        //    //cpHitIdx = circ2.CollisionPointHit();
+        //    //cpHitIdx = circ2.CollisionPointHit2();
+        //    //fpAngle = (320 * Math.PI / 180);
+        //    timesIn90 = (int)(fpAngle / south);
+        //    toPrev90 = fpAngle - (timesIn90 * south);
+        //    toNext90 = ((timesIn90 + 1) * south) - fpAngle;
+        //    bounceAngle = 0;
+        //    angleAfterBounce = 0;
+
+        //    if (fpAngle > east && fpAngle < south)
+        //    {
+        //        if (cpHitIdx < circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toPrev90 * 2;
+        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+        //        }
+        //        if (cpHitIdx > circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toPrev90 * 2;
+        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+        //        }
+        //    }
+        //    if (fpAngle > south && fpAngle < west)
+        //    {
+        //        if (cpHitIdx < circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toNext90 * 2;
+
+        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+        //        }
+        //        if (cpHitIdx > circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toPrev90 * 2;
+        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+        //        }
+        //    }
+        //    if (fpAngle > west && fpAngle < north)
+        //    {
+        //        if (cpHitIdx < circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toNext90 * 2;
+        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+        //        }
+        //        if (cpHitIdx > circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = (toPrev90 * 2);
+        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+        //        }
+        //    }
+        //    if (fpAngle > north && fpAngle < fullCircle)
+        //    {
+        //        if (cpHitIdx < circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toNext90 * 2;
+        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+        //        }
+        //        if (cpHitIdx > circ2.MiddleCPIdx)
+        //        {
+        //            bounceAngle = toPrev90 * 2;
+        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+        //        }
+
+        //    }
+
+        //    //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+        //    //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+        //    //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+        //    //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+        //    //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+        //    //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+
+        //    fpAngle = angleAfterBounce;
+
+        //}
+        #endregion bounce3 v3
+
+        #region bounce3 v2
         void Bounce3(int cpHitIdx)
         {
             string fnId = $"[{clsName}.Bounce]";
             bounceCount++;
-
-            //cpHitIdx = circ2.CollisionPointHit();
-            //cpHitIdx = circ2.CollisionPointHit2();
+            
             //fpAngle = (320 * Math.PI / 180);
             timesIn90 = (int)(fpAngle / south);
             toPrev90 = fpAngle - (timesIn90 * south);
@@ -338,7 +436,9 @@ namespace BallzForWindows01.DrawableParts
             fpAngle = angleAfterBounce;
 
         }
+        #endregion bounce3 v2
 
+        #region bounce3 v1
         //void Bounce3()
         //{
         //    string fnId = $"[GameBall.Bounce]";
@@ -418,6 +518,7 @@ namespace BallzForWindows01.DrawableParts
         //    fpAngle = angleAfterBounce;
 
         //}
+        #endregion bounce3 v1
         #endregion Bounce 3 versions
 
         void AddUpdateDebugMsgs()
@@ -459,15 +560,16 @@ namespace BallzForWindows01.DrawableParts
                 secondsRemaining = roundTime;
             }
         }
-
         public bool IsInSpinRect(int x, int y) { if (flightPath.IsInBoundingRect(x, y)) { return true; } else { return false; } }
-        public bool IsInLaunchButtonRect(int x, int y) { if (launchButton.IsInBoundingRect(x, y)) { return true; } else { return false; } }
+        
+        public bool IsInLaunchButtonRect(int x, int y) { return (launchButton.IsInBoundingRect(x, y)); }
         public void AdjustSpinMarker(int x, int y) { flightPath.SetSpinMarker(x, y); }
         private void PlaceAimMarker(int endMarkerX, int endMarkerY)
         {
             flightPath.PlaceStartMarker((int)dx, (int)dy);
-            flightPath.PlaceEndMarker(endMarkerX, endMarkerY);
+            flightPath.PlaceAimMarker(endMarkerX, endMarkerY);
         }
+
         public void Draw(Graphics g)
         {
             SolidBrush sb = new SolidBrush(color);
@@ -487,22 +589,7 @@ namespace BallzForWindows01.DrawableParts
             g.DrawLine(Pens.Red, (float)dx, (float)dy, bncEndPt.fX, bncEndPt.fY);
         }
 
-        void DrawBallLabel(Graphics g) // 0 refs as of 2019-10-26, might use later
-        {
-            //string description = "Ball";
-            //SizeF strSize = g.MeasureString(description, font);
-            //Point strPos = new Point();
-            //strPos.X = (int)center.X - (int)strSize.Width / 2;
-            //strPos.Y = (int)center.Y - (int)strSize.Height / 2;
-            //g.DrawString(description, font, Brushes.Black, strPos);
-
-            string description = "Ball";
-            SizeF strSize = g.MeasureString(description, font);
-            PointF strPos = new Point();
-            strPos.X = (int)dcenter.X - (int)strSize.Width / 2;
-            strPos.Y = (int)dcenter.Y - (int)strSize.Height / 2;
-            g.DrawString(description, font, Brushes.Black, strPos);
-        }
+        
 
         public void Reset()
         {
@@ -530,11 +617,37 @@ namespace BallzForWindows01.DrawableParts
             //timer.Dispose();
         }
 
-        public void SetCircleColor(Color c) { }
-
         protected void SetPosition(double x, double y) { dx = x; dy = y; }
         protected void SetSize(int width, int height) { this.width = width; this.height = height; }
 
+
+
+        private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
+        {
+            Point position = new Point();
+            Size size = new Size();
+            size.Width = 100;
+            size.Height = 40;
+            position.X = gameScreenSize.Width / 2 - size.Width / 2;
+            position.Y = gameScreenSize.Height - size.Height * 2 - 5;
+            launchButton.Load(position.X, position.Y, size.Width, size.Height, "Launch");
+        }
+        void DrawBallLabel(Graphics g) // 0 refs as of 2019-10-26, might use later
+        {
+            //string description = "Ball";
+            //SizeF strSize = g.MeasureString(description, font);
+            //Point strPos = new Point();
+            //strPos.X = (int)center.X - (int)strSize.Width / 2;
+            //strPos.Y = (int)center.Y - (int)strSize.Height / 2;
+            //g.DrawString(description, font, Brushes.Black, strPos);
+
+            string description = "Ball";
+            SizeF strSize = g.MeasureString(description, font);
+            PointF strPos = new Point();
+            strPos.X = (int)dcenter.X - (int)strSize.Width / 2;
+            strPos.Y = (int)dcenter.Y - (int)strSize.Height / 2;
+            g.DrawString(description, font, Brushes.Black, strPos);
+        }
     }
 }
 

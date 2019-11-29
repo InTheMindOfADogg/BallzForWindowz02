@@ -22,6 +22,8 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             clsName = "CircleDV2";
             center = new PointD(x, y);
+            this.radius = radius;
+            this.rot = rotation;
         }
         public void Load(double x, double y, double radius, double rotation) { _Load(x, y, radius, rotation); }
         void _Load(double x, double y, double radius, double rotation)
@@ -30,10 +32,13 @@ namespace BallzForWindows01.GamePhysicsParts
             this.radius = radius;
             rot = rotation;
         }
+        public void Update(double x, double y) { _Update(x, y, radius, rot); }
         public void Update(double x, double y, double radius, double rotation) { _Update(x, y, radius, rotation); }
         protected virtual void _Update(double x, double y, double radius, double rotation)
         {
             center.Set(x, y);
+            this.radius = radius;
+            this.rot = rotation;
         }
 
         public void Draw(Graphics g) { _Draw(g); }

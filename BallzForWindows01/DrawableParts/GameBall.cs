@@ -107,7 +107,7 @@ namespace BallzForWindows01.DrawableParts
             dstartPosition = new PointD(0, 0);
             SetPosition(0, 0);
             SetSize(15, 15);
-            SetColor(255, 0, 0, 0);
+            SetColor(255, 20, 200, 35);
             font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             placingAim = false;
             settingSpin = false;
@@ -152,6 +152,7 @@ namespace BallzForWindows01.DrawableParts
             dstartPosition = new PointD(dx, dy);
             //circ2.Load(dx, dy, (width / 2), 0, collisionPointCount);
             circ2.Load(dx, dy, collisionPointSideLength, (width / 2), 0, collisionPointCount);
+            circ2.SetCircleColor(this.color);
             PositionLaunchButton();
         }
         private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
@@ -473,7 +474,7 @@ namespace BallzForWindows01.DrawableParts
         private void PlaceAimMarker(int endMarkerX, int endMarkerY)
         {
             flightPath.PlaceStartMarker((int)dx, (int)dy);
-            flightPath.PlaceEndMarker(endMarkerX, endMarkerY);
+            flightPath.PlaceAimMarker(endMarkerX, endMarkerY);
         }
         public void Draw(Graphics g)
         {
