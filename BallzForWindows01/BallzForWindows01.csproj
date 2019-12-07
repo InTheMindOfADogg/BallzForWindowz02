@@ -52,6 +52,7 @@
     <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="DrawableParts\GameBall2.cs" />
     <Compile Include="DrawableParts\GameBall3.cs" />
+    <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\CircleD.cs" />
     <Compile Include="GamePhysicsParts\CircleDV2.cs" />
     <Compile Include="GamePhysicsParts\CircleDV3.cs" />

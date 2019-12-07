@@ -469,7 +469,7 @@ namespace BallzForWindows01.DrawableParts
         }
 
         public bool IsInSpinRect(int x, int y) { if (flightPath.IsInBoundingRect(x, y)) { return true; } else { return false; } }
-        public bool IsInLaunchButtonRect(int x, int y) { if (launchButton.IsInBoundingRect(x, y)) { return true; } else { return false; } }
+        public bool IsInLaunchButtonRect(int x, int y) { if (launchButton.InBoundingRect(x, y)) { return true; } else { return false; } }
         public void AdjustSpinMarker(int x, int y) { flightPath.SetSpinMarker(x, y); }
         private void PlaceAimMarker(int endMarkerX, int endMarkerY)
         {

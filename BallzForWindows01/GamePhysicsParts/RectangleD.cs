@@ -12,7 +12,7 @@ namespace BallzForWindows01.GamePhysicsParts
         double x, y, width, height;
 
         public double X { get { return x; } set { x = value; } }
-        public double Y { get { return Y; } set { y = value; } }
+        public double Y { get { return y; } set { y = value; } }
         public double Width { get { return width; } set { width = value; } }
         public double Height { get { return height; } set { height = value; } }
 
@@ -35,8 +35,23 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             this.x = x; this.y = y; this.width = width; this.height = height;
         }
-        public bool InBox(double dx, double dy) { return (dx > x && dx < x + width && dy > y && dy < y + height) ? true : false; }
-        //public bool HitBox(double dx, double dy) { return (dx >= x && dx <= x + width && dy >= y && dy <= y + height) ? true : false; }
+        //public void SetPosition(double x, double y)
+        //{
+        //    this.x = x; this.y = y;
+        //}
+        
+        public void CenterOnXY(double x, double y)
+        {
+            this.x = x - (width / 2);
+            this.y = y - (height / 2);
+        }
+
+        public bool InBox(double dx, double dy) { return (dx > x && dx < x + width && dy > y && dy < y + height); }
+        public PointD Center() { return new PointD(CenterX, CenterY); }
+        public PointD TopLeft() { return new PointD(x, y); }
+        public PointD TopRight() { return new PointD(x + width, y); }
+        public PointD BottomLeft() { return new PointD(x, y + height); }
+        public PointD BottomRight() { return new PointD(x + width, y + height); }
 
         public override string ToString() { return $"{{X={x}, Y={y}, Width={width}, Height={height}}}"; }
         public Rectangle ToRectangle() { return new Rectangle((int)x, (int)y, (int)width, (int)height); }

@@ -21,6 +21,9 @@ namespace BallzForWindows01.GamePhysicsParts
         Trajectory aimTraj;
         Trajectory spinTraj;
 
+        //Trajectory2 aimTraj;
+        //Trajectory2 spinTraj;
+
         Color lineColor = Color.FromArgb(255, 255, 0, 0);
 
         bool connectMarkers = false;
@@ -28,10 +31,10 @@ namespace BallzForWindows01.GamePhysicsParts
 
         double angle = 0;
         double drift = 0;
-        
+
 
         public bool ConnectMarkers { get { return connectMarkers; } set { connectMarkers = value; } }
-        public bool CalculatingSpin { get { return calculateSpin; } }        
+        public bool CalculatingSpin { get { return calculateSpin; } }
         public double Angle { get { return angle; } set { angle = value; } }
         public double Drift { get { return drift; } set { drift = value; } }
 
@@ -39,15 +42,14 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             _Init();
         }
-        
-        public void Load()
-        {
-
-        }
-
+        public void Load() { }
         public void Draw(Graphics g, bool render = true)
         {
             _Draw(g, render);
+        }
+        public void Reset()
+        {
+            _Reset();
         }
 
         public void PlaceStartMarker(int x, int y)
@@ -90,25 +92,22 @@ namespace BallzForWindows01.GamePhysicsParts
             aimTraj.DebugConfigure(debugValue);
             spinTraj.DebugConfigure(debugValue);
             //spinMarker.ShowXMarker = false;
-            
+
             //aimTraj.ShowDebugLine = debugValue;
             //spinTraj.ShowDebugLine = debugValue;
-            
+
             //aimMarker.ShowClickRectangle = debugValue;
             //spinMarker.ShowClickRectangle = debugValue;
         }
-        
-        
-        
-        public bool IsInBoundingRect(int mPosX, int mPosY) { return (spinMarker.IsInBoundingRect(mPosX, mPosY));  }
 
 
 
-        public void Reset()
-        {
-            _Reset();
-        }        
+        public bool IsInBoundingRect(int mPosX, int mPosY) { return (spinMarker.IsInBoundingRect(mPosX, mPosY)); }
+
+
+
         
+
         void _Init()
         {
             originMarker = new XMarker();
@@ -117,6 +116,9 @@ namespace BallzForWindows01.GamePhysicsParts
             aimMarker.DrawColor = Color.FromArgb(125, Color.Red);
             spinMarker = new XMarker();
             spinMarker.DrawColor = Color.FromArgb(125, Color.Green);
+            //aimTraj = new Trajectory("aimTraj");
+            //spinTraj = new Trajectory("spinTraj");
+
             aimTraj = new Trajectory("aimTraj");
             spinTraj = new Trajectory("spinTraj");
         }
@@ -130,12 +132,19 @@ namespace BallzForWindows01.GamePhysicsParts
                 spinMarker.Draw(g);
                 aimMarker.Draw(g);
                 spinTraj.Draw(g);
+                // overload for Trajectory (original) draw to set position for debug text, split out in Trajectory2
                 aimTraj.Draw(g, 450, 20);
+
+                // for Trajectory2 drawing. split draw debug info into seperate function
+                //aimTraj.Draw(g);
+                //aimTraj.DebugDraw(g, 450, 20);
+
             }
             if (connectMarkers)
             {
                 Pen p = new Pen(lineColor, 5);
                 DrawConnectorLine(g, p);
+                p.Dispose();
             }
         }
 
@@ -150,8 +159,13 @@ namespace BallzForWindows01.GamePhysicsParts
 
         private void AddSpin()
         {
+            // For original Trajectory.cs
             angle = aimTraj.RotAngle;
             drift = spinTraj.RotAngle;
+
+            // renamed RotAngle to Rotation in Trajectory2
+            //angle = aimTraj.Rotation;
+            //drift = spinTraj.Rotation;
         }
 
         private void DrawConnectorLine(Graphics g, Pen p)

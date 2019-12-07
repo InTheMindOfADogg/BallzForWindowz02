@@ -55,7 +55,7 @@ namespace BallzForWindows01.DrawableParts
 
         public void CleanUp() { if (font != null) { font.Dispose(); } }
 
-        public bool IsInBoundingRect(int posx, int posy)
+        public bool InBoundingRect(int posx, int posy)
         {
             return (posx > clickRectangle.X && posx < clickRectangle.X + clickRectangle.Width
                     && posy > clickRectangle.Y && posy < clickRectangle.Y + clickRectangle.Height);

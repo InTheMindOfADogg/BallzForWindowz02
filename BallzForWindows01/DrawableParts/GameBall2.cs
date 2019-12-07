@@ -33,7 +33,7 @@ namespace BallzForWindows01.DrawableParts
         CollisionCircleD circ2;
         int collisionPointCount = 5;
         double collisionPointSideLength = 1;
-        
+
 
         bool collided = false;
 
@@ -70,8 +70,20 @@ namespace BallzForWindows01.DrawableParts
 
         bool pause = false;
 
+        string dbgtxtCpIdxHit = "";
+        string dbgtxtPublicHitIdxList = "";
+
+        double east, south, west, north, fullCircle;
+
         // used in Bounce functions (ex Bounce[X])
         #region used in bounce function
+        int timesIn90 = 0;  // this is gpAngle / 90. used to "normalize" the angle so that i can work with it as if it were 0-90 degrees
+        double toNext90 = 0;
+        double toPrev90 = 0;
+        double bounceAngle = 0;
+        double angleAfterBounce = 0;
+
+
         double calculatedBounceAngle = 0;
         double outerAngle = 0;
         int bounceCount = 0;
@@ -101,7 +113,7 @@ namespace BallzForWindows01.DrawableParts
         public bool Pause { get { return pause; } set { pause = value; } }
         #endregion Properties
 
-        double east, south, west, north, fullCircle;
+
 
         public GameBall2(Size gameScreenSize)
         {
@@ -128,39 +140,9 @@ namespace BallzForWindows01.DrawableParts
 
             //DebugConfigure(false);
         }
-        private void DebugConfigure(bool debugValue = false)
-        {
-            //flightPath.ConnectMarkers = debugValue;
-            flightPath.DebugConfigure(debugValue);
-            circ2.DrawDbgTxt = DrawDbgTxt;
-        }
-        private void InitBallParts()
-        {
-            circ2 = new CollisionCircleD();            
-            flightPath = new FlightPath();
-            launchButton = new Button01();
-        }
+
         public void Load(int x, int y) { _Load(x, y, width, height); }
         public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
-        private void _Load(int x, int y, int width, int height)
-        {
-            flightPath.Load();
-            DebugConfigure(false);
-            this.width = width;
-            this.height = height;
-            dx = x;
-            dy = y;
-            dcenter = new PointD(dx + width / 2, dy + height / 2);
-            dstartPosition = new PointD(dx, dy);
-            //circ2.Load(dx, dy, (width / 2), 0, collisionPointCount);
-            circ2.Load(dx, dy, collisionPointSideLength, (width / 2), 0, collisionPointCount);
-            circ2.SetCircleColor(this.color);
-            
-            PositionLaunchButton();
-        }
-        
-
-        
         public void Update()
         {
 
@@ -228,7 +210,7 @@ namespace BallzForWindows01.DrawableParts
             }
             #endregion collision point and bounce angle dbg logic
             #region testing logic for bounce
-            if(DrawDbgTxt)
+            if (DrawDbgTxt)
             {
                 DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
                 DbgFuncs.AddStr($"{fnId}timeIn90: {timesIn90}");
@@ -238,132 +220,96 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
                 DbgFuncs.AddStr($"{fnId} dbgInfoCpIdxHit: {dbgtxtCpIdxHit}");
                 DbgFuncs.AddStr($"{fnId} PublicHitIdxList: {dbgtxtPublicHitIdxList}");
-                
+
             }
             #endregion testing logic for bounce
             PublicHitIdxList.RemoveRange(0, PublicHitIdxList.Count);
         }
-
-        string dbgtxtCpIdxHit = "";
-        string dbgtxtPublicHitIdxList = "";
-        void SetInfoCpIdxHit(List<int> cpIdxHitList)
+        
+        public void Draw(Graphics g)
         {
-            dbgtxtCpIdxHit = "";
-            if(cpIdxHitList != null)
-            {
-                for (int i = 0; i < cpIdxHitList.Count; i++)
-                {
-                    dbgtxtCpIdxHit += $"{cpIdxHitList[i]}";
-                    if (i < cpIdxHitList.Count - 1) { dbgtxtCpIdxHit += ","; }
-                }
-            }
-            
-            if(PublicHitIdxList.Count > 0)
-            {
-                dbgtxtPublicHitIdxList = "";
-            }
-            for(int i = 0; i < PublicHitIdxList.Count; i++)
-            {
-                dbgtxtPublicHitIdxList += $"{PublicHitIdxList[i]}  ";
-            }
+            SolidBrush sb = new SolidBrush(color);
+            launchButton.Draw(g);
+            flightPath.Draw(g, !ballLaunched);  // do not draw flight path is ball is launched
+            circ2.Draw(g);
 
+            //dbgDrawBounceAngle(g);
+            sb.Dispose();
+        }
+        public void Reset()
+        {
+            ballLaunched = false;
+            pause = false;
+            endTime = DateTime.Now; // not using at the moment, but might use later 2019-10-12.
+            readyForLaunch = false;
+            dx = dstartPosition.X;
+            dy = dstartPosition.Y;
+            flightPath.Reset();
+            timedriftModifier = 0;
+            speed = startingSpeed;
+            bounceCount = 0;
+            calculatedBounceAngle = 0;
+            collided = false;
+        }
+        public void CleanUp()
+        {
+            if (font != null) font.Dispose();
+            launchButton.CleanUp();
+            //timer.Close();
+            //timer.Dispose();
         }
 
-        int timesIn90 = 0;  // this is gpAngle / 90. used to "normalize" the angle so that i can work with it as if it were 0-90 degrees
-        double toNext90 = 0;
-        double toPrev90 = 0;
-        double bounceAngle = 0;
-        double angleAfterBounce = 0;
-        #region Bounce 3 versions
 
-        #region bounce3 v3
-        //void Bounce3(List<int> cpIdxHitList)
-        //{
-        //    string fnId = $"[{clsName}.Bounce]";
-        //    bounceCount++;
+        public bool IsInSpinRect(int x, int y) { if (flightPath.IsInBoundingRect(x, y)) { return true; } else { return false; } }
 
-        //    //cpHitIdx = circ2.CollisionPointHit();
-        //    //cpHitIdx = circ2.CollisionPointHit2();
-        //    //fpAngle = (320 * Math.PI / 180);
-        //    timesIn90 = (int)(fpAngle / south);
-        //    toPrev90 = fpAngle - (timesIn90 * south);
-        //    toNext90 = ((timesIn90 + 1) * south) - fpAngle;
-        //    bounceAngle = 0;
-        //    angleAfterBounce = 0;
+        public bool IsInLaunchButtonRect(int x, int y) { return (launchButton.InBoundingRect(x, y)); }
 
-        //    if (fpAngle > east && fpAngle < south)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
-        //    }
-        //    if (fpAngle > south && fpAngle < west)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toNext90 * 2;
+        public void AdjustSpinMarker(int x, int y) { flightPath.SetSpinMarker(x, y); }
 
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
-        //    }
-        //    if (fpAngle > west && fpAngle < north)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toNext90 * 2;
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = (toPrev90 * 2);
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
-        //    }
-        //    if (fpAngle > north && fpAngle < fullCircle)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toNext90 * 2;
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
+        public void LaunchBall()
+        {
+            ballLaunched = true;
+            startTime = DateTime.Now;
+            secondsElapsed = 0;
+        }
 
-        //    }
+        public void SetFlightPath(int x, int y)
+        {
+            if (!flightPath.CalculatingSpin)
+            {
+                PlaceAimMarker(x, y);
+                settingSpin = true;
+                readyForLaunch = true;
+                secondsRemaining = roundTime;
+            }
+        }
 
-        //    //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
-        //    //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+        protected void SetPosition(double x, double y) { dx = x; dy = y; }
+        protected void SetSize(int width, int height) { this.width = width; this.height = height; }
 
-        //    fpAngle = angleAfterBounce;
+        private void _Load(int x, int y, int width, int height)
+        {
+            flightPath.Load();
+            DebugConfigure(false);
+            this.width = width;
+            this.height = height;
+            dx = x;
+            dy = y;
+            dcenter = new PointD(dx + width / 2, dy + height / 2);
+            dstartPosition = new PointD(dx, dy);
+            //circ2.Load(dx, dy, (width / 2), 0, collisionPointCount);
+            circ2.Load(dx, dy, collisionPointSideLength, (width / 2), 0, collisionPointCount);
+            circ2.SetCircleColor(this.color);
 
-        //}
-        #endregion bounce3 v3
+            PositionLaunchButton();
+        }
+        
 
-        #region bounce3 v2
         void Bounce3(int cpHitIdx)
         {
             string fnId = $"[{clsName}.Bounce]";
             bounceCount++;
-            
+
             //fpAngle = (320 * Math.PI / 180);
             timesIn90 = (int)(fpAngle / south);
             toPrev90 = fpAngle - (timesIn90 * south);
@@ -436,95 +382,80 @@ namespace BallzForWindows01.DrawableParts
             fpAngle = angleAfterBounce;
 
         }
-        #endregion bounce3 v2
 
-        #region bounce3 v1
-        //void Bounce3()
-        //{
-        //    string fnId = $"[GameBall.Bounce]";
-        //    bounceCount++;
+        private void DebugConfigure(bool debugValue = false)
+        {
+            //flightPath.ConnectMarkers = debugValue;
+            flightPath.DebugConfigure(debugValue);
+            circ2.DrawDbgTxt = DrawDbgTxt;
+        }
+        private void InitBallParts()
+        {
+            circ2 = new CollisionCircleD();
+            flightPath = new FlightPath();
+            launchButton = new Button01();
+        }
 
-        //    //cpHitIdx = circ2.CollisionPointHit();
-        //    //cpHitIdx = circ2.CollisionPointHit2();
-        //    //fpAngle = (320 * Math.PI / 180);
-        //    timesIn90 = (int)(fpAngle / south);
-        //    toPrev90 = fpAngle - (timesIn90 * south);
-        //    toNext90 = ((timesIn90 + 1) * south) - fpAngle;
-        //    bounceAngle = 0;
-        //    angleAfterBounce = 0;
+        private void dbgDrawBounceAngle(Graphics g)
+        {
+            PointD bncEndPt = new PointD();
+            bncEndPt.X = dx + 20 * Math.Cos(calculatedBounceAngle);
+            bncEndPt.Y = dy + 20 * Math.Sin(calculatedBounceAngle);
+            g.DrawLine(Pens.Red, (float)dx, (float)dy, bncEndPt.fX, bncEndPt.fY);
+        }
+        
+        private void PlaceAimMarker(int endMarkerX, int endMarkerY)
+        {
+            flightPath.PlaceStartMarker((int)dx, (int)dy);
+            flightPath.PlaceAimMarker(endMarkerX, endMarkerY);
+        }
 
-        //    if (fpAngle > east && fpAngle < south)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
-        //    }
-        //    if (fpAngle > south && fpAngle < west)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toNext90 * 2;
+        private void SetInfoCpIdxHit(List<int> cpIdxHitList)
+        {
+            dbgtxtCpIdxHit = "";
+            if (cpIdxHitList != null)
+            {
+                for (int i = 0; i < cpIdxHitList.Count; i++)
+                {
+                    dbgtxtCpIdxHit += $"{cpIdxHitList[i]}";
+                    if (i < cpIdxHitList.Count - 1) { dbgtxtCpIdxHit += ","; }
+                }
+            }
 
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
-        //    }
-        //    if (fpAngle > west && fpAngle < north)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toNext90 * 2;
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = (toPrev90 * 2);
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
-        //    }
-        //    if (fpAngle > north && fpAngle < fullCircle)
-        //    {
-        //        if (cpHitIdx < circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toNext90 * 2;
-        //            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
-        //        }
-        //        if (cpHitIdx > circ2.MiddleCPIdx)
-        //        {
-        //            bounceAngle = toPrev90 * 2;
-        //            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
-        //        }
+            if (PublicHitIdxList.Count > 0)
+            {
+                dbgtxtPublicHitIdxList = "";
+            }
+            for (int i = 0; i < PublicHitIdxList.Count; i++)
+            {
+                dbgtxtPublicHitIdxList += $"{PublicHitIdxList[i]}  ";
+            }
 
-        //    }
-
-        //    //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
-        //    //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
-        //    //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
-
-        //    fpAngle = angleAfterBounce;
-
-        //}
-        #endregion bounce3 v1
-        #endregion Bounce 3 versions
-
-        void AddUpdateDebugMsgs()
+        }
+        
+        private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
+        {
+            Point position = new Point();
+            Size size = new Size();
+            size.Width = 100;
+            size.Height = 40;
+            position.X = gameScreenSize.Width / 2 - size.Width / 2;
+            position.Y = gameScreenSize.Height - size.Height * 2 - 5;
+            launchButton.Load(position.X, position.Y, size.Width, size.Height, "Launch");
+        }
+        private void DrawBallLabel(Graphics g) // 0 refs as of 2019-10-26, might use later
+        {
+            string description = "Ball";
+            SizeF strSize = g.MeasureString(description, font);
+            PointF strPos = new Point();
+            strPos.X = (int)dcenter.X - (int)strSize.Width / 2;
+            strPos.Y = (int)dcenter.Y - (int)strSize.Height / 2;
+            g.DrawString(description, font, Brushes.Black, strPos);
+        }
+        private void AddUpdateDebugMsgs()
         {
             string fnId = $"[{clsName}.AddUpdateDebugMsgs]";
-            if(DrawDbgTxt)
+            if (DrawDbgTxt)
             {
                 //DbgFuncs.AddStr($"game window size: {{ {gameScreenSize.Width}, {gameScreenSize.Height} }}");
                 DbgFuncs.AddStr($"{fnId} ballLaunched: {ballLaunched}");
@@ -541,115 +472,257 @@ namespace BallzForWindows01.DrawableParts
                 //DbgFuncs.AddStr($"west: {west:N3} ({(west * 180 / Math.PI)})");
                 //DbgFuncs.AddStr($"north: {north:N3} ({(north * 180 / Math.PI)})");
             }
-
-        }
-        public void LaunchBall()
-        {
-            ballLaunched = true;
-            startTime = DateTime.Now;
-            secondsElapsed = 0;
-        }
-
-        public void SetFlightPath(int x, int y)
-        {
-            if (!flightPath.CalculatingSpin)
-            {
-                PlaceAimMarker(x, y);
-                settingSpin = true;
-                readyForLaunch = true;
-                secondsRemaining = roundTime;
-            }
-        }
-        public bool IsInSpinRect(int x, int y) { if (flightPath.IsInBoundingRect(x, y)) { return true; } else { return false; } }
-        
-        public bool IsInLaunchButtonRect(int x, int y) { return (launchButton.IsInBoundingRect(x, y)); }
-        public void AdjustSpinMarker(int x, int y) { flightPath.SetSpinMarker(x, y); }
-        private void PlaceAimMarker(int endMarkerX, int endMarkerY)
-        {
-            flightPath.PlaceStartMarker((int)dx, (int)dy);
-            flightPath.PlaceAimMarker(endMarkerX, endMarkerY);
-        }
-
-        public void Draw(Graphics g)
-        {
-            SolidBrush sb = new SolidBrush(color);
-            launchButton.Draw(g);
-            flightPath.Draw(g, !ballLaunched);  // do not draw flight path is ball is launched
-            circ2.Draw(g);
-
-            //dbgDrawBounceAngle(g);
-            sb.Dispose();
-        }
-
-        void dbgDrawBounceAngle(Graphics g)
-        {
-            PointD bncEndPt = new PointD();
-            bncEndPt.X = dx + 20 * Math.Cos(calculatedBounceAngle);
-            bncEndPt.Y = dy + 20 * Math.Sin(calculatedBounceAngle);
-            g.DrawLine(Pens.Red, (float)dx, (float)dy, bncEndPt.fX, bncEndPt.fY);
-        }
-
-        
-
-        public void Reset()
-        {
-            ballLaunched = false;
-            pause = false;
-            endTime = DateTime.Now; // not using at the moment, but might use later 2019-10-12.
-            readyForLaunch = false;
-            dx = dstartPosition.X;
-            dy = dstartPosition.Y;
-            flightPath.Reset();
-            timedriftModifier = 0;
-            speed = startingSpeed;
-            bounceCount = 0;
-            calculatedBounceAngle = 0;
-            collided = false;
-
-        }
-
-        public void CleanUp()
-        {
-
-            font.Dispose();
-            launchButton.CleanUp();
-            //timer.Close();
-            //timer.Dispose();
-        }
-
-        protected void SetPosition(double x, double y) { dx = x; dy = y; }
-        protected void SetSize(int width, int height) { this.width = width; this.height = height; }
-
-
-
-        private void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
-        {
-            Point position = new Point();
-            Size size = new Size();
-            size.Width = 100;
-            size.Height = 40;
-            position.X = gameScreenSize.Width / 2 - size.Width / 2;
-            position.Y = gameScreenSize.Height - size.Height * 2 - 5;
-            launchButton.Load(position.X, position.Y, size.Width, size.Height, "Launch");
-        }
-        void DrawBallLabel(Graphics g) // 0 refs as of 2019-10-26, might use later
-        {
-            //string description = "Ball";
-            //SizeF strSize = g.MeasureString(description, font);
-            //Point strPos = new Point();
-            //strPos.X = (int)center.X - (int)strSize.Width / 2;
-            //strPos.Y = (int)center.Y - (int)strSize.Height / 2;
-            //g.DrawString(description, font, Brushes.Black, strPos);
-
-            string description = "Ball";
-            SizeF strSize = g.MeasureString(description, font);
-            PointF strPos = new Point();
-            strPos.X = (int)dcenter.X - (int)strSize.Width / 2;
-            strPos.Y = (int)dcenter.Y - (int)strSize.Height / 2;
-            g.DrawString(description, font, Brushes.Black, strPos);
         }
     }
 }
+
+
+#region Bounce 3 versions
+
+#region bounce3 v3
+//void Bounce3(List<int> cpIdxHitList)
+//{
+//    string fnId = $"[{clsName}.Bounce]";
+//    bounceCount++;
+
+//    //cpHitIdx = circ2.CollisionPointHit();
+//    //cpHitIdx = circ2.CollisionPointHit2();
+//    //fpAngle = (320 * Math.PI / 180);
+//    timesIn90 = (int)(fpAngle / south);
+//    toPrev90 = fpAngle - (timesIn90 * south);
+//    toNext90 = ((timesIn90 + 1) * south) - fpAngle;
+//    bounceAngle = 0;
+//    angleAfterBounce = 0;
+
+//    if (fpAngle > east && fpAngle < south)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > south && fpAngle < west)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > west && fpAngle < north)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = (toPrev90 * 2);
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > north && fpAngle < fullCircle)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+
+//    }
+
+//    //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+//    //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+
+//    fpAngle = angleAfterBounce;
+
+//}
+#endregion bounce3 v3
+
+#region bounce3 v2
+//void Bounce3(int cpHitIdx)
+//{
+//    string fnId = $"[{clsName}.Bounce]";
+//    bounceCount++;
+
+//    //fpAngle = (320 * Math.PI / 180);
+//    timesIn90 = (int)(fpAngle / south);
+//    toPrev90 = fpAngle - (timesIn90 * south);
+//    toNext90 = ((timesIn90 + 1) * south) - fpAngle;
+//    bounceAngle = 0;
+//    angleAfterBounce = 0;
+
+//    if (fpAngle > east && fpAngle < south)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > south && fpAngle < west)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > west && fpAngle < north)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = (toPrev90 * 2);
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > north && fpAngle < fullCircle)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+
+//    }
+
+//    //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+//    //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+
+//    fpAngle = angleAfterBounce;
+
+//}
+#endregion bounce3 v2
+
+#region bounce3 v1
+//void Bounce3()
+//{
+//    string fnId = $"[GameBall.Bounce]";
+//    bounceCount++;
+
+//    //cpHitIdx = circ2.CollisionPointHit();
+//    //cpHitIdx = circ2.CollisionPointHit2();
+//    //fpAngle = (320 * Math.PI / 180);
+//    timesIn90 = (int)(fpAngle / south);
+//    toPrev90 = fpAngle - (timesIn90 * south);
+//    toNext90 = ((timesIn90 + 1) * south) - fpAngle;
+//    bounceAngle = 0;
+//    angleAfterBounce = 0;
+
+//    if (fpAngle > east && fpAngle < south)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > south && fpAngle < west)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > west && fpAngle < north)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = (toPrev90 * 2);
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+//    }
+//    if (fpAngle > north && fpAngle < fullCircle)
+//    {
+//        if (cpHitIdx < circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toNext90 * 2;
+//            angleAfterBounce = (fpAngle + bounceAngle) % fullCircle;
+//        }
+//        if (cpHitIdx > circ2.MiddleCPIdx)
+//        {
+//            bounceAngle = toPrev90 * 2;
+//            angleAfterBounce = (fpAngle - bounceAngle) % fullCircle;
+//        }
+
+//    }
+
+//    //DbgFuncs.AddStr($"{fnId} fpAngle: {fpAngle:N3} ({(fpAngle * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"timeIn90: {timesIn90}");
+//    //DbgFuncs.AddStr($"{fnId} toNext90: {toNext90:N3} ({(toNext90 * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} toPrev90: {toPrev90:N3} ({(toPrev90 * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} bounceAngle: {bounceAngle:N3} ({(bounceAngle * 180 / Math.PI):N2})");
+//    //DbgFuncs.AddStr($"{fnId} angleAfterBounce: {angleAfterBounce:N3} ({(angleAfterBounce * 180 / Math.PI):N2})");
+
+//    fpAngle = angleAfterBounce;
+
+//}
+#endregion bounce3 v1
+#endregion Bounce 3 versions
 
 #region previous bounce attempts
 //void Bounce()

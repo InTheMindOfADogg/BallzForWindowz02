@@ -7,12 +7,13 @@ using System.Drawing;
 
 using System.Timers;
 
-using BallzForWindows01.DrawableParts;
-using BallzForWindows01.Structs;
+
 
 namespace BallzForWindows01.MainGameParts
 {
     using static AssistFunctions;
+    using DrawableParts;
+    using Structs;
 
     class MainGame01
     {
@@ -78,7 +79,9 @@ namespace BallzForWindows01.MainGameParts
             
             ball.Update();
             ball2.Update();
-            ball3.Update();
+
+            
+            ball3.Update(mc);
 
             UpdateCollisionPointList();
             UpdateCollisionPointList2();
@@ -211,7 +214,7 @@ namespace BallzForWindows01.MainGameParts
 
             #endregion ball version 1
 
-            #region ball2
+            #region ball2 only
             #region Setting up the shot
             if (!ball2.BallLaunched)
             {
@@ -255,7 +258,6 @@ namespace BallzForWindows01.MainGameParts
             if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball2.BallLaunched == true)
             {
                 ball2.Pause = false;
-
             }
 
             // Reset
@@ -264,113 +266,8 @@ namespace BallzForWindows01.MainGameParts
                 ball2.Reset();
             }
             #endregion ball2
-
-            #region ball version 3
-            //// Setting aim and spin
-            //if (!ball3.BallLaunched)
-            //{
-            //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball3.SettingSpin)
-            //    {
-            //        if (ball3.IsInSpinRect(mc.X, mc.Y))
-            //        {
-            //            mStartX = mc.X;
-            //            mStartY = mc.Y;
-            //            deltaX = 0;
-            //            deltaY = 0;
-            //            ball3.PlacingSpinRect = true;
-            //        }
-            //    }
-            //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Down && ball3.PlacingSpinRect)
-            //    {
-            //        deltaX = mc.X - mStartX;
-            //        deltaY = mc.Y - mStartY;
-            //        ball3.AdjustSpinMarker(mc.X, mc.Y);
-            //    }
-            //    if (mc.LeftButtonState == UpDownState.Up && mc.LastLeftButtonState == UpDownState.Down && ball3.PlacingSpinRect)
-            //    {
-            //        ball3.PlacingSpinRect = false;
-            //    }
-
-            //    // launch / set flight path
-            //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up)
-            //    {
-            //        if (ball3.IsInLaunchButtonRect(mc.X, mc.Y) && ball3.ReadyForLaunch)
-            //        {
-            //            ball3.LaunchBall();
-            //        }
-            //        else //if (mc.Y < ball3.Y - ball3.Height * 2) // uncomment if here to restrict aim to only north side of the ball3
-            //        {
-
-            //            ball3.SetFlightPath(mc.X, mc.Y);
-            //        }
-            //    }
-            //}
-
-            //// unpause
-            //if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball3.BallLaunched == true)
-            //{
-            //    ball3.Pause = false;
-
-            //}
-
-            //// Reset
-            //if (mc.RightButtonState == UpDownState.Down && mc.LastRightButtonState == UpDownState.Up)
-            //{
-            //    ball3.Reset();
-            //}
-
-            #endregion ball version 3
+            
         }
-
-        //public void UpdateMouseControls(MouseControls mc)
-        //{
-        //    #region Setting up the shot
-
-        //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball.SettingSpin)
-        //    {
-        //        if (ball.IsInSpinRect(mc.X, mc.Y))
-        //        {
-        //            mStartX = mc.X;
-        //            mStartY = mc.Y;
-        //            deltaX = 0;
-        //            deltaY = 0;
-        //            ball.PlacingSpinRect = true;
-        //        }
-        //    }
-        //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Down && ball.PlacingSpinRect)
-        //    {
-        //        deltaX = mc.X - mStartX;
-        //        deltaY = mc.Y - mStartY;
-        //        ball.AdjustSpinMarker(mc.X, mc.Y);
-        //    }
-        //    if (mc.LeftButtonState == UpDownState.Up && mc.LastLeftButtonState == UpDownState.Down && ball.PlacingSpinRect)
-        //    {
-        //        ball.PlacingSpinRect = false;
-        //    }
-        //    #endregion Setting up the shot
-
-        //    #region launch the ball
-
-
-        //    if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball.BallLaunched == false)
-        //    {
-        //        if (ball.IsInLaunchButtonRect(mc.X, mc.Y) && ball.ReadyForLaunch)
-        //        {
-        //            ball.LaunchBall();
-        //        }
-        //        else //if (mc.Y < ball.Y - ball.Height * 2) // uncomment if here to restrict aim to only north side of the ball
-        //        {
-        //            ball.SetFlightPath(mc.X, mc.Y);
-        //        }
-        //    }
-        //    #endregion launch the ball
-
-        //    // Reset
-        //    if (mc.RightButtonState == UpDownState.Down && mc.LastRightButtonState == UpDownState.Up)
-        //    {
-        //        ball.Reset();
-        //    }
-        //}
         #endregion UpdateMouseControls versions
         private void DrawToBuffer()
         {
@@ -381,7 +278,7 @@ namespace BallzForWindows01.MainGameParts
             DrawBlockList(g);
 
             //ball.Draw(g);
-            ball2.Draw(g);
+            //ball2.Draw(g);
             ball3.Draw(g);
             
 

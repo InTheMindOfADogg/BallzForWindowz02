@@ -104,12 +104,15 @@ namespace BallzForWindows01.DrawableParts
         public void Update() { }
         public void Draw(Graphics g)
         {
-            Pen p = new Pen(color, penWidth);
+            
             if (visible)
             {
+                Pen p = new Pen(color, penWidth);
                 if (showXMarker) { DrawX(g, p); }
                 if (showClickRect) { DrawClickRectangle(g); }
+                p.Dispose();
             }
+
 
         }
         private void DrawX(Graphics g, Pen p)
