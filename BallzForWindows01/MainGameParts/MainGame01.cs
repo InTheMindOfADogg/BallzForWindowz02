@@ -90,7 +90,9 @@ namespace BallzForWindows01.MainGameParts
 
             DrawToBuffer();
         }
+
         #region UpdateCollisionPointList functions
+        
         // UpdateCollisionPointList for ball 
         void UpdateCollisionPointList()
         {
@@ -110,6 +112,7 @@ namespace BallzForWindows01.MainGameParts
                 }
             }
         }
+
         // UpdateCollisionPointList2 for ball2
         void UpdateCollisionPointList2()
         {

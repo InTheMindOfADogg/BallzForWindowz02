@@ -47,8 +47,11 @@ namespace BallzForWindows01.DrawableParts
         { base.Load(x, y, radius, rotation, collisionPoints); _Load(x, y); }
 
         public void Update(MouseControls mc) { HandleMouseInput(mc); _Update(); }
+
         new public void Draw(Graphics g) { _Draw(g); }
+
         public void Reset() { _Reset(); }
+
         public void CleanUp() { _CleanUp(); }
 
 
@@ -172,7 +175,7 @@ namespace BallzForWindows01.DrawableParts
         {
             //base.Draw(g);
             DrawCircle(g);
-            DrawCollisionPointList(g);
+            DrawCollisionPoints(g);
             flightPath.Draw(g, !launched);
             launchButton.Draw(g);
         }
