@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DebugParts\DbgPath.cs" />
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="DrawableParts\GameBall2.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="GamePhysicsParts\CollisionCircleD.cs" />
     <Compile Include="GamePhysicsParts\CollisionCircleDV2.cs" />
     <Compile Include="GamePhysicsParts\FlightPath2.cs" />
+    <Compile Include="GamePhysicsParts\GameTimer.cs" />
     <Compile Include="GamePhysicsParts\RectangleD.cs" />
     <Compile Include="GamePhysicsParts\SizeD.cs" />
     <Compile Include="GamePhysicsParts\Trajectory.cs" />

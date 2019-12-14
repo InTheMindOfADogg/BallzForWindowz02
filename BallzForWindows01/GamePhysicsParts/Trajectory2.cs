@@ -36,29 +36,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public void Update() { }
         public void Draw(Graphics g) { _Draw(g); }
         public void Reset() { _Reset(); }
-
-
-
-        public void SetStartPoint(double sx, double sy)
-        {
-            originPos.Set(sx, sy);
-        }
-
-        public void SetEndPoint(double ex, double ey)
-        {
-            aimPos.Set(ex, ey);
-            rightPos.Set(aimPos.X, originPos.Y);
-            oppLen = rightPos.DistanceTo(aimPos);
-            hypLen = originPos.DistanceTo(aimPos);
-            adjLen = originPos.DistanceTo(rightPos);
-            SetRotation();
-            // endPoint is for testing. endPoint should match aimPos if calculations are correct.
-            endPoint.X = originPos.X + hypLen * Math.Cos(rotation);
-            endPoint.Y = originPos.Y + hypLen * Math.Sin(rotation);
-            endPointSet = true;
-        }
-
-
+        
         void _Init()
         {
             originPos = new PointD();
@@ -69,9 +47,6 @@ namespace BallzForWindows01.GamePhysicsParts
             oppLen = hypLen = adjLen = anglePreRotation = rotation = 0;
             endPointSet = north = south = false;
         }
-
-        //void _Load(double startX, double startY) { originPos.Set(startX, startY); }
-
         void _Draw(Graphics g)
         {
             if (/*showDebugLines*/ true) { DrawPointMarkers(g); }
@@ -79,7 +54,6 @@ namespace BallzForWindows01.GamePhysicsParts
 
             if (/*endPointSet*/ true) { g.DrawLine(Pens.Red, originPos.fX, originPos.fY, aimPos.fX, aimPos.fY); }
         }
-
         void _Reset()
         {
             originPos.Zero();
@@ -137,10 +111,26 @@ namespace BallzForWindows01.GamePhysicsParts
             p.Dispose();
         }
 
+        public void SetStartPoint(double sx, double sy){originPos.Set(sx, sy);}
+
+        public void SetEndPoint(double ex, double ey)
+        {
+            aimPos.Set(ex, ey);
+            rightPos.Set(aimPos.X, originPos.Y);
+            oppLen = rightPos.DistanceTo(aimPos);
+            hypLen = originPos.DistanceTo(aimPos);
+            adjLen = originPos.DistanceTo(rightPos);
+            SetRotation();
+            // endPoint is for testing. endPoint should match aimPos if calculations are correct.
+            endPoint.X = originPos.X + hypLen * Math.Cos(rotation);
+            endPoint.Y = originPos.Y + hypLen * Math.Sin(rotation);
+            endPointSet = true;
+        }
+
         #region Drawing debug info logic
-        public RectangleF DbgTextBlock { get { return new RectangleF(dbgBlockPos, dbgBlockSize); } }
-        public PointF DbgBlockPos { get { return dbgBlockPos; } }
-        public SizeF DbgBlockSize { get { return dbgBlockSize; } }
+        //public RectangleF DbgTextBlock { get { return new RectangleF(dbgBlockPos, dbgBlockSize); } }
+        //public PointF DbgBlockPos { get { return dbgBlockPos; } }
+        //public SizeF DbgBlockSize { get { return dbgBlockSize; } }
         PointF dbgBlockPos = new PointF();
         SizeF dbgBlockSize = new SizeF();
         public void DebugDraw(Graphics g, float dbgTextPosX = 0, float dbgTextPosY = 0)

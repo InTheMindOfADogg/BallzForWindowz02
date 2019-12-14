@@ -22,10 +22,12 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public PointD() { Set(0, 0); }
         public PointD(double x, double y) { Set(x, y); }
-        
+
+
+        public void Set(PointD p) { x = p.x; y = p.y; }
         public void Set(double x, double y) { this.x = x; this.y = y; }
         public void Zero() { x = y = 0; }
-        
+
         public double DistanceTo(double toPointX, double toPointY)
         {
             return _DistanceTo(toPointX, toPointY);
@@ -68,7 +70,7 @@ namespace BallzForWindows01.GamePhysicsParts
             return rot;
         }
 
-        public override string ToString() { return $"{{X={x}, Y={y}}}"; }        
+        public override string ToString() { return $"{{X={x}, Y={y}}}"; }
         public Point ToPoint() { return new Point((int)x, (int)y); }
         public PointF ToPointF() { return new PointF((float)x, (float)y); }
 

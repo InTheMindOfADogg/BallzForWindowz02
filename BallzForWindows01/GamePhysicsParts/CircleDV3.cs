@@ -22,6 +22,13 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             _Init(x, y, radius, rotation);
         }
+        
+        protected void Load(double x, double y, double radius, double rotation)
+        {
+            _Load(x, y, radius, rotation);
+        }
+        
+
         void _Init(double x, double y, double radius, double rotation)
         {
             clsName = "CircleDV3";
@@ -29,19 +36,12 @@ namespace BallzForWindows01.GamePhysicsParts
             this.radius = radius;
             this.rotation = rotation;
         }
-
-        public virtual void Load(double x, double y, double radius, double rotation)
-        {
-            _Load(x, y, radius, rotation);
-        }
         void _Load(double x, double y, double radius, double rotation)
         {
             position.Set(x, y);
             this.radius = radius;
             this.rotation = rotation;
         }
-
-        public void Draw(Graphics g) { DrawCircle(g); }
         protected void DrawCircle(Graphics g)
         {
             float len = 4;      // length of sides for center marker
@@ -56,3 +56,12 @@ namespace BallzForWindows01.GamePhysicsParts
 
     }
 }
+
+#region removed 2019-12-07
+//public void Draw(Graphics g) { DrawCircle(g); }
+
+//public virtual void Load(double x, double y, double radius, double rotation)
+//{
+//    _Load(x, y, radius, rotation);
+//}
+#endregion removed 2019-12-07

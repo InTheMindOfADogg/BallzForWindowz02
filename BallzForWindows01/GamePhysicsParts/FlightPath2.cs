@@ -10,6 +10,7 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     using static AssistFunctions;
     using DrawableParts;
+    using DebugParts;
 
     class FlightPath2
     {
@@ -22,18 +23,25 @@ namespace BallzForWindows01.GamePhysicsParts
 
         Color lineColor = Color.FromArgb(255, 255, 0, 0);
 
+        DbgPath dpath = new DbgPath();
+
         bool connectMarkers = false;
-        //bool calculateSpin = false;
 
         double angle = 0;
         double drift = 0;
-
+        double driftFactor = 0;
+        
+        // planning for timeDriftModifier to be the decay of drift over time. 
+        double timeDriftModifier = 0;
+        double driftHardness = 0.5;
 
         public bool ConnectMarkers { get { return connectMarkers; } set { connectMarkers = value; } }
-        //public bool CalculatingSpin { get { return calculateSpin; } }
         public bool AimMarkerPlaced { get { return aimMarker.Placed; } }
-        public double Angle { get { return angle; } set { angle = value; } }
-        public double Drift { get { return drift; } set { drift = value; } }
+        //public double Angle { get { return angle; } set { angle = value; } }
+        //public double Drift { get { return drift; } set { drift = value; } }
+        //public double DriftFactor { get { return driftFactor; } set { driftFactor = value; } }
+        public double TimeDriftModifier { get { return timeDriftModifier; } set { timeDriftModifier = value; } }
+        public double DriftHardness { get { return driftHardness; } set { driftHardness = value; } }
 
 
         public FlightPath2() { _Init(); }
@@ -43,65 +51,23 @@ namespace BallzForWindows01.GamePhysicsParts
         public void Reset() { _Reset(); }
         public void CleanUp() { _CleanUp(); }
 
-        public bool InAimRect(double x, double y)
-        {
-            return aimMarker.InClickRect(x, y);
-        }
-        public bool InSpinRect(double x, double y)
-        {
-            return spinMarker.InClickRect(x, y);
-        }
-
-        public void PlaceOriginMarker(double x, double y)
-        {
-            originMarker.Place(x, y);
-            aimTraj.SetStartPoint(x, y);
-            spinTraj.SetStartPoint(x, y);
-        }
-
-        public void PlaceAimMarker(double x, double y)
-        {
-            aimMarker.Place(x, y);
-            aimTraj.SetEndPoint(x, y);
-            //calculateSpin = true;
-
-            if(!spinMarker.Placed)
-            {
-                double spinX = (originMarker.Position.X + aimMarker.Position.X) / 2;
-                double spinY = (originMarker.Position.Y + aimMarker.Position.Y) / 2;
-                PlaceSpinMarker(spinX, spinY);
-                connectMarkers = true;
-            }
-            
-            
-        }
-
-        public void PlaceSpinMarker(double x, double y)
-        {
-            spinMarker.Place(x, y);
-            spinTraj.SetEndPoint(x, y);
-            if (!spinMarker.ShowClickRectangle) spinMarker.ShowClickRectangle = true;
-            //AddSpin();
-            angle = aimTraj.Rotation;
-            drift = spinTraj.Rotation;
-        }
-
         void _Init()
         {
             originMarker = new XMarker2();
             aimMarker = new XMarker2();
             spinMarker = new XMarker2();
-            
-            originMarker.DrawColor = Color.FromArgb(125, Color.Red);            
-            aimMarker.DrawColor = Color.FromArgb(125, Color.Red);            
+
+            originMarker.DrawColor = Color.FromArgb(125, Color.Red);
+            aimMarker.DrawColor = Color.FromArgb(125, Color.Red);
             spinMarker.DrawColor = Color.FromArgb(125, Color.Green);
 
             aimTraj = new Trajectory2("aimTraj");
             spinTraj = new Trajectory2("spinTraj");
         }
-
         void _Load() { }
-        void _Update() { }
+        void _Update()
+        {
+        }
         void _Draw(Graphics g, bool render)
         {
             if (!render) return;
@@ -119,9 +85,10 @@ namespace BallzForWindows01.GamePhysicsParts
             if (connectMarkers)
             {
                 Pen p = new Pen(lineColor, 5);
-                DrawConnectorLine(g, p);
+                //DrawConnectorLine(g, p);
                 p.Dispose();
             }
+            dpath.Draw(g);
         }
         void _Reset()
         {
@@ -142,6 +109,60 @@ namespace BallzForWindows01.GamePhysicsParts
             g.DrawCurve(p, pArray);
 
         }
+
+        
+        public double CalculatedAngle(double elapsedTime = 0)
+        {
+            // added elapsedTime here but not used at the moment (2019-12-07)
+            // I am thinking of using elapsed time to degrade the amount of drift.
+            // For example, the longer the ball is moving, the less drift it will have, so it will have the
+            // highest amount of drift right at launch and then it will get closer to a strait line
+            // as it moves forward.
+            angle = aimTraj.Rotation;
+            drift = spinTraj.Rotation;
+            driftFactor = (angle - drift) * driftHardness;
+            return (angle - (driftFactor * timeDriftModifier));
+        }
+
+        public void DbgPlotPath()
+        {
+            dpath.PlotPoints(originMarker.Center, angle, drift, timeDriftModifier, driftHardness);
+        }
+
+        public bool InAimRect(double x, double y){return aimMarker.InClickRect(x, y);}
+        public bool InSpinRect(double x, double y){return spinMarker.InClickRect(x, y);}
+
+        public void PlaceOriginMarker(double x, double y)
+        {
+            originMarker.Place(x, y);
+            aimTraj.SetStartPoint(x, y);
+            spinTraj.SetStartPoint(x, y);
+        }
+
+        public void PlaceAimMarker(double x, double y)
+        {
+            aimMarker.Place(x, y);
+            aimTraj.SetEndPoint(x, y);
+
+            if(!spinMarker.Placed)
+            {
+                double spinX = (originMarker.Position.X + aimMarker.Position.X) / 2;
+                double spinY = (originMarker.Position.Y + aimMarker.Position.Y) / 2;
+                PlaceSpinMarker(spinX, spinY);
+                connectMarkers = true;
+            }
+        }
+
+        public void PlaceSpinMarker(double x, double y)
+        {
+            spinMarker.Place(x, y);
+            spinTraj.SetEndPoint(x, y);
+            if (!spinMarker.ShowClickRectangle) spinMarker.ShowClickRectangle = true;
+            //angle = aimTraj.Rotation;
+            //drift = spinTraj.Rotation;
+        }
+
+        
 
 
     }
