@@ -13,6 +13,9 @@ namespace BallzForWindows01.GamePhysicsParts
         public double Rotation { get { return rotation; } }
         public bool ShowDebugLine { get { return showDebugLines; } set { showDebugLines = value; } }
 
+        public PointD EndPos { get { return aimPos; } }
+        public PointD StartPos { get { return originPos; } }
+
 
         string clsName = "Trajectory2";
         string nameTag = "";
@@ -20,8 +23,6 @@ namespace BallzForWindows01.GamePhysicsParts
         PointD originPos;
         PointD rightPos;
         PointD aimPos;
-        // endPoint is just for testing. If the calculations are correct, endpoint should be the same as aimPos
-        PointD endPoint;
 
         double rotation;
         double oppLen, hypLen, adjLen, anglePreRotation;
@@ -36,13 +37,16 @@ namespace BallzForWindows01.GamePhysicsParts
         public void Update() { }
         public void Draw(Graphics g) { _Draw(g); }
         public void Reset() { _Reset(); }
-        
+        public void SetStartPoint(PointD p) { _SetStartPoint(p.X, p.Y); }
+        public void SetStartPoint(double sx, double sy) { _SetStartPoint(sx, sy); }
+        public void SetEndPoint(PointD p) { _SetEndPoint(p.X, p.Y); }
+        public void SetEndPoint(double ex, double ey) { _SetEndPoint(ex, ey); }
+
         void _Init()
         {
             originPos = new PointD();
             rightPos = new PointD();
             aimPos = new PointD();
-            endPoint = new PointD();
 
             oppLen = hypLen = adjLen = anglePreRotation = rotation = 0;
             endPointSet = north = south = false;
@@ -50,16 +54,13 @@ namespace BallzForWindows01.GamePhysicsParts
         void _Draw(Graphics g)
         {
             if (/*showDebugLines*/ true) { DrawPointMarkers(g); }
-            if (/*endPointSet*/ true) { g.DrawLine(Pens.Red, originPos.fX, originPos.fY, endPoint.fX, endPoint.fY); }
-
             if (/*endPointSet*/ true) { g.DrawLine(Pens.Red, originPos.fX, originPos.fY, aimPos.fX, aimPos.fY); }
         }
         void _Reset()
         {
             originPos.Zero();
             rightPos.Zero();
-            aimPos.Zero();
-            endPoint.Zero();
+            aimPos.Zero();            
             endPointSet = false;
         }
 
@@ -100,20 +101,23 @@ namespace BallzForWindows01.GamePhysicsParts
             g.DrawRectangle(Pens.Orange, rightPos.fX - (width / 2), rightPos.fY - (width / 2), width, width);
 
             // drawing endPoint box
-            g.DrawRectangle(Pens.Purple, endPoint.fX - (width / 2), endPoint.fY - (width / 2), width, width); // endPos
+            //g.DrawRectangle(Pens.Purple, endPoint.fX - (width / 2), endPoint.fY - (width / 2), width, width); // endPos
 
             g.DrawLine(Pens.Green, originPos.ToPointF(), aimPos.ToPointF()); // hyp
             g.DrawLine(Pens.Blue, originPos.ToPointF(), rightPos.ToPointF()); // adj
             g.DrawLine(Pens.Orange, aimPos.ToPointF(), rightPos.ToPointF()); // opp
 
-            Pen p = new Pen(Brushes.Black, 3);
-            g.DrawLine(p, originPos.ToPointF(), endPoint.ToPointF());
-            p.Dispose();
+            //Pen p = new Pen(Brushes.Black, 3);
+            //g.DrawLine(p, originPos.ToPointF(), endPoint.ToPointF());
+            //p.Dispose();
         }
 
-        public void SetStartPoint(double sx, double sy){originPos.Set(sx, sy);}
-
-        public void SetEndPoint(double ex, double ey)
+        void _SetStartPoint(double sx, double sy)
+        {
+            originPos.Set(sx, sy);
+        }
+        
+        void _SetEndPoint(double ex, double ey)
         {
             aimPos.Set(ex, ey);
             rightPos.Set(aimPos.X, originPos.Y);
@@ -122,8 +126,8 @@ namespace BallzForWindows01.GamePhysicsParts
             adjLen = originPos.DistanceTo(rightPos);
             SetRotation();
             // endPoint is for testing. endPoint should match aimPos if calculations are correct.
-            endPoint.X = originPos.X + hypLen * Math.Cos(rotation);
-            endPoint.Y = originPos.Y + hypLen * Math.Sin(rotation);
+            //endPoint.X = originPos.X + hypLen * Math.Cos(rotation);
+            //endPoint.Y = originPos.Y + hypLen * Math.Sin(rotation);
             endPointSet = true;
         }
 
@@ -151,7 +155,7 @@ namespace BallzForWindows01.GamePhysicsParts
                 DrawString(g, f, $"rot(degrees): {rotation * 180 / Math.PI:N2}", ref fpos);
                 DrawString(g, f, $"originPos: {originPos}", ref fpos);
                 DrawString(g, f, $"aimPos: {aimPos}", ref fpos);
-                DrawString(g, f, $"endPoint: {endPoint}", ref fpos);
+                //DrawString(g, f, $"endPoint: {endPoint}", ref fpos);
                 DrawString(g, f, $"rightPos: {rightPos}", ref fpos);
                 f.Dispose();
             }

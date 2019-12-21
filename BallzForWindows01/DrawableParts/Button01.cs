@@ -36,6 +36,7 @@ namespace BallzForWindows01.DrawableParts
         public Color FontColor { get { return fontColor; } set { fontColor = value; } }
         public bool IsPlaced { get { return placed; } }
         public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
+        public string Text { get { return text; } set { text = value; } }
 
         public Button01()
         {
