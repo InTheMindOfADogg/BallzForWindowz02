@@ -61,7 +61,7 @@ namespace BallzForWindows01
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 700);
+            this.ClientSize = new System.Drawing.Size(1000, 900);
             this.Name = "BallzForm";
             this.Text = "Ballz Game01";
             this.StartPosition = FormStartPosition.CenterScreen;

@@ -67,6 +67,7 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Draw(Graphics g, bool render = true)
         {
+            
             if (!render) return;
             if (originMarker.Placed && aimMarker.Placed)
             {
@@ -77,7 +78,7 @@ namespace BallzForWindows01.GamePhysicsParts
 
                 // for Trajectory2 drawing. split draw debug info into seperate function
                 aimTraj.Draw(g);
-                aimTraj.DebugDraw(g, 450, 20);
+                aimTraj.DebugDraw(g, 600, 20);
             }
             if (connectMarkers)
             {
@@ -95,17 +96,18 @@ namespace BallzForWindows01.GamePhysicsParts
             //calculateSpin = false;
             connectMarkers = false;
         }
-        public void CleanUp() 
-        { 
+        public void CleanUp()
+        {
         }
 
         public void DbgText()
         {
-            string fnId = $"[{clsName}.DbgText]";
-            DbgFuncs.AddStr($"{fnId} angle: {angle}");
-            DbgFuncs.AddStr($"{fnId} drift: {drift}");
-            DbgFuncs.AddStr($"{fnId} driftHardness: {driftHardness}");
-            DbgFuncs.AddStr($"{fnId} driftFactor: {driftFactor}");
+            //string fnId = $"[{clsName}.DbgText]";
+            //DbgFuncs.AddStr($"{fnId} angle: {angle} ({(angle * 180 / Math.PI):N3})");
+            //DbgFuncs.AddStr($"{fnId} drift: {drift} ({(drift * 180 / Math.PI):N3})");
+            //DbgFuncs.AddStr($"{fnId} driftHardness: {driftHardness}");
+            //DbgFuncs.AddStr($"{fnId} driftFactor: {driftFactor} ({(driftFactor * 180 / Math.PI):N3})");
+            dpath.DbgText();
         }
 
         private void DrawConnectorLine(Graphics g, Pen p)
@@ -115,12 +117,14 @@ namespace BallzForWindows01.GamePhysicsParts
 
         }
 
+
         ///----- CalculatedAngle -----
         public double CalculatedAngle(double elapsedTime = 0)
         {
             angle = aimTraj.Rotation;
             drift = spinTraj.Rotation;
             driftFactor = (angle - drift) * driftHardness;
+            
             return (angle - (driftFactor * elapsedTime));
         }
         //public double CalculatedAngle(double elapsedTime = 0)
@@ -144,6 +148,8 @@ namespace BallzForWindows01.GamePhysicsParts
             dpath.PlotPoints(originMarker.Center, angle, drift, timeDriftModifier, driftHardness);
         }
 
+
+
         public bool InAimRect(double x, double y) { return aimMarker.InClickRect(x, y); }
         public bool InSpinRect(double x, double y) { return spinMarker.InClickRect(x, y); }
 
@@ -159,7 +165,7 @@ namespace BallzForWindows01.GamePhysicsParts
             aimMarker.Place(x, y);
             aimTraj.SetEndPoint(x, y);
 
-            
+
 
             if (!spinMarker.Placed)
             {

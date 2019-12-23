@@ -16,6 +16,8 @@ namespace BallzForWindows01
             g.DrawString(str, f, Brushes.Black, fontPos);
             return g.MeasureString(str, f);
         }
+
+        public static string FnId(string clsName, string fnName) { return $"[{clsName}.{fnName}]"; }
     }
-    
+
 }

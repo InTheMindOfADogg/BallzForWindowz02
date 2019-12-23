@@ -52,7 +52,9 @@ namespace BallzForWindows01.MainGameParts
             int ballStartX, ballStartY;
 
             //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
-            ballStartX = 300;
+            //ballStartX = 300;
+            //ballStartY = height / 2 + 50;
+            ballStartX = 700;
             ballStartY = height / 2 + 50;
 
             ball.Load(ballStartX, ballStartY);
