@@ -119,14 +119,31 @@ namespace BallzForWindows01.GamePhysicsParts
 
 
         ///----- CalculatedAngle -----
+
+        // TODO: rework to use path from dbgpath (either TestPlot2d5 or TestPlot03 or TestPlot03_GOOD_PROGRESS
         public double CalculatedAngle(double elapsedTime = 0)
         {
             angle = aimTraj.Rotation;
             drift = spinTraj.Rotation;
             driftFactor = (angle - drift) * driftHardness;
-            
-            return (angle - (driftFactor * elapsedTime));
+
+            double tmpAngle = angle - (driftFactor * elapsedTime);
+            return tmpAngle;
+            //return (angle - (driftFactor * elapsedTime));
         }
+
+        /// -----------------        
+
+        //public double CalculatedAngle(double elapsedTime = 0)
+        //{
+        //    angle = aimTraj.Rotation;
+        //    drift = spinTraj.Rotation;
+        //    driftFactor = (angle - drift) * driftHardness;
+        //    return (angle - (driftFactor * elapsedTime));
+        //}
+
+        /// -----------------
+
         //public double CalculatedAngle(double elapsedTime = 0)
         //{
         //    #region Note
