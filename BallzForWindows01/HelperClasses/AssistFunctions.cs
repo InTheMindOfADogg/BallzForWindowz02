@@ -17,6 +17,10 @@ namespace BallzForWindows01
             return g.MeasureString(str, f);
         }
 
+        public static void dbgPrintAngle(string fnId, string text, double angle)
+        {
+            DbgFuncs.AddStr($"{fnId} {text}: {angle:N3} ({(angle * 180 / Math.PI):N3})");
+        }
         public static string FnId(string clsName, string fnName) { return $"[{clsName}.{fnName}]"; }
     }
 

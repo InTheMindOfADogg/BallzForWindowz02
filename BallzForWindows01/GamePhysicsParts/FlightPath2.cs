@@ -44,7 +44,7 @@ namespace BallzForWindows01.GamePhysicsParts
         //public double DriftFactor { get { return driftFactor; } set { driftFactor = value; } }
         public double TimeDriftModifier { get { return timeDriftModifier; } /*set { timeDriftModifier = value; }*/ }
         public double DriftHardness { get { return driftHardness; } set { driftHardness = value; } }
-
+        public double Angle { get { return angle; } }
 
         public FlightPath2()
         {
@@ -102,38 +102,60 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public void DbgText()
         {
-            //string fnId = $"[{clsName}.DbgText]";
+            string fnId = FnId(clsName, "DbgText");
             //DbgFuncs.AddStr($"{fnId} angle: {angle} ({(angle * 180 / Math.PI):N3})");
             //DbgFuncs.AddStr($"{fnId} drift: {drift} ({(drift * 180 / Math.PI):N3})");
             //DbgFuncs.AddStr($"{fnId} driftHardness: {driftHardness}");
             //DbgFuncs.AddStr($"{fnId} driftFactor: {driftFactor} ({(driftFactor * 180 / Math.PI):N3})");
+            dbgPrintAngle(fnId, "angle", angle);
             dpath.DbgText();
-        }
-
-        private void DrawConnectorLine(Graphics g, Pen p)
-        {
-            PointF[] pArray = { originMarker.Center.ToPointF(), spinMarker.Center.ToPoint(), aimMarker.Center.ToPoint() };
-            g.DrawCurve(p, pArray);
 
         }
 
 
+
+
+        // TODO: rework CalculatedAngle so that ball does not go in circle if adjusted over 0/360 line. see either TestPlot2d5 or TestPlot03 or TestPlot03_GOOD_PROGRESS
         ///----- CalculatedAngle -----
-
-        // TODO: rework to use path from dbgpath (either TestPlot2d5 or TestPlot03 or TestPlot03_GOOD_PROGRESS
-        public double CalculatedAngle(double elapsedTime = 0)
+        public double CalculatedAngle(double currentAngle, double elapsedTime = 0)
         {
+            string fnId = FnId(clsName, "CalculatedAngle");
+            dbgPrintAngle(fnId, "currentAngle", currentAngle);
             angle = aimTraj.Rotation;
             drift = spinTraj.Rotation;
-            driftFactor = (angle - drift) * driftHardness;
+
+            driftFactor = angle - drift;
+            driftFactor *= driftHardness;
 
             double tmpAngle = angle - (driftFactor * elapsedTime);
+
+            dbgPrintAngle(fnId, "angle", angle);
+            dbgPrintAngle(fnId, "drift", drift);
+            dbgPrintAngle(fnId, "driftFactor", driftFactor);
+
             return tmpAngle;
-            //return (angle - (driftFactor * elapsedTime));
         }
 
-        /// -----------------        
+        /// -----------------
+        //public double CalculatedAngle(double elapsedTime = 0)
+        //{
+        //    string fnId = FnId(clsName, "CalculatedAngle");
+        //    angle = aimTraj.Rotation;
+        //    drift = spinTraj.Rotation;
 
+        //    driftFactor = angle - drift;
+        //    driftFactor *= driftHardness;
+
+        //    double tmpAngle = angle - (driftFactor * elapsedTime);
+
+        //    dbgPrintAngle(fnId, "angle", angle);
+        //    dbgPrintAngle(fnId, "drift", drift);
+        //    dbgPrintAngle(fnId, "driftFactor", driftFactor);
+
+        //    return tmpAngle;
+        //    //return (angle - (driftFactor * elapsedTime));
+        //}
+        /// -----------------
         //public double CalculatedAngle(double elapsedTime = 0)
         //{
         //    angle = aimTraj.Rotation;
@@ -141,9 +163,7 @@ namespace BallzForWindows01.GamePhysicsParts
         //    driftFactor = (angle - drift) * driftHardness;
         //    return (angle - (driftFactor * elapsedTime));
         //}
-
         /// -----------------
-
         //public double CalculatedAngle(double elapsedTime = 0)
         //{
         //    #region Note
@@ -204,7 +224,18 @@ namespace BallzForWindows01.GamePhysicsParts
             if (!spinMarker.ShowClickRectangle) spinMarker.ShowClickRectangle = true;
         }
 
+
+        private void DrawConnectorLine(Graphics g, Pen p)
+        {
+            PointF[] pArray = { originMarker.Center.ToPointF(), spinMarker.Center.ToPoint(), aimMarker.Center.ToPoint() };
+            g.DrawCurve(p, pArray);
+
+        }
+
     }
+
+
+
 
 }
 

@@ -8,6 +8,7 @@ using System.Timers;
 
 namespace BallzForWindows01.DrawableParts
 {
+    using static AssistFunctions;
     using GamePhysicsParts;
     using Structs;
 
@@ -59,6 +60,7 @@ namespace BallzForWindows01.DrawableParts
             PositionLaunchButton();
         }
 
+        double startingAngle = 0;
         public void Update(MouseControls mc)
         {
             HandleMouseInput(mc);
@@ -74,9 +76,10 @@ namespace BallzForWindows01.DrawableParts
                 {
                     flightPath.PlaceSpinMarker(mousePos.X, mousePos.Y);
                 }
+                
             }
 
-            rotation = flightPath.CalculatedAngle(gtimer.TotalSeconds);
+            rotation = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
             flightPath.DbgPlotPath();
 
             if (launched)
@@ -94,7 +97,9 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} ");
                 DbgFuncs.AddStr($"{fnId} launched: {launched}");
                 DbgFuncs.AddStr($"{fnId} flightPath.AimMarkerPlaced: {flightPath.AimMarkerPlaced}");
-                DbgFuncs.AddStr($"{fnId} rotation: {(rotation * 180 / Math.PI):N2}");
+                //DbgFuncs.AddStr($"{fnId} rotation: {(rotation * 180 / Math.PI):N2}");
+                dbgPrintAngle(fnId, "rotation", rotation);
+                
                 gtimer.DbgTxt();
                 flightPath.DbgText();
 
