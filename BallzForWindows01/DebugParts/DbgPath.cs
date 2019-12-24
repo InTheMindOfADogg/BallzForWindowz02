@@ -44,7 +44,8 @@ namespace BallzForWindows01.DebugParts
 
 
             //TestPlot02(startPos, angle, drift, timeDegradeModifier, hardness);            
-            TestPlot02d1(startPos, angle, drift, timeDegradeModifier, hardness);
+            //TestPlot02d1(startPos, angle, drift, timeDegradeModifier, hardness);
+            TestPlot04(startPos, angle, drift, timeDegradeModifier, hardness);
             //TestPlot04d1(startPos, angle, drift, timeDegradeModifier, hardness);
         }
         #region testing different paths
@@ -110,7 +111,7 @@ namespace BallzForWindows01.DebugParts
                 //driftFactor = angle - drift;
                 tmpCalcAngle = angle - (driftFactor * i);
                 tmpAngleList.Add(tmpCalcAngle);
-                dbgPrintAngle(fnId, "angle at {i} seconds", tmpCalcAngle);
+                //dbgPrintAngle(fnId, "angle at {i} seconds", tmpCalcAngle);
             }
 
             tmp.Set(startPos);

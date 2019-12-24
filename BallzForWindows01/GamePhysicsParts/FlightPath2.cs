@@ -74,17 +74,11 @@ namespace BallzForWindows01.GamePhysicsParts
                 //originMarker.Draw(g);
                 spinMarker.Draw(g);
                 aimMarker.Draw(g);
-                spinTraj.Draw(g);
 
+                spinTraj.Draw(g);
                 // for Trajectory2 drawing. split draw debug info into seperate function
                 aimTraj.Draw(g);
                 aimTraj.DebugDraw(g, 600, 20);
-            }
-            if (connectMarkers)
-            {
-                //Pen p = new Pen(lineColor, 5);
-                //DrawConnectorLine(g, p);
-                //p.Dispose();
             }
             dpath.Draw(g);
         }
@@ -94,44 +88,34 @@ namespace BallzForWindows01.GamePhysicsParts
             aimMarker.Reset();
             spinMarker.Reset();
             //calculateSpin = false;
-            connectMarkers = false;
+            //connectMarkers = false;
         }
         public void CleanUp()
         {
         }
 
-        public void DbgText()
-        {
-            string fnId = FnId(clsName, "DbgText");
-            //DbgFuncs.AddStr($"{fnId} angle: {angle} ({(angle * 180 / Math.PI):N3})");
-            //DbgFuncs.AddStr($"{fnId} drift: {drift} ({(drift * 180 / Math.PI):N3})");
-            //DbgFuncs.AddStr($"{fnId} driftHardness: {driftHardness}");
-            //DbgFuncs.AddStr($"{fnId} driftFactor: {driftFactor} ({(driftFactor * 180 / Math.PI):N3})");
-            dbgPrintAngle(fnId, "angle", angle);
-            dpath.DbgText();
-
-        }
-
-
-
+        
 
         // TODO: rework CalculatedAngle so that ball does not go in circle if adjusted over 0/360 line. see either TestPlot2d5 or TestPlot03 or TestPlot03_GOOD_PROGRESS
         ///----- CalculatedAngle -----
         public double CalculatedAngle(double currentAngle, double elapsedTime = 0)
         {
             string fnId = FnId(clsName, "CalculatedAngle");
-            dbgPrintAngle(fnId, "currentAngle", currentAngle);
+            double tmpAngle = 0;
+            //dbgPrintAngle(fnId, "currentAngle", currentAngle);
             angle = aimTraj.Rotation;
             drift = spinTraj.Rotation;
 
-            driftFactor = angle - drift;
-            driftFactor *= driftHardness;
+            //driftFactor = angle - drift;
+            //driftFactor *= driftHardness;
 
-            double tmpAngle = angle - (driftFactor * elapsedTime);
+            tmpAngle = angle - (driftFactor * elapsedTime);
 
             dbgPrintAngle(fnId, "angle", angle);
             dbgPrintAngle(fnId, "drift", drift);
+            dbgPrintAngle(fnId, "tmpAngle", tmpAngle);
             dbgPrintAngle(fnId, "driftFactor", driftFactor);
+            DbgFuncs.AddStr($"{fnId} elapsedTime: {elapsedTime}");
 
             return tmpAngle;
         }
@@ -185,8 +169,6 @@ namespace BallzForWindows01.GamePhysicsParts
             dpath.PlotPoints(originMarker.Center, angle, drift, timeDriftModifier, driftHardness);
         }
 
-
-
         public bool InAimRect(double x, double y) { return aimMarker.InClickRect(x, y); }
         public bool InSpinRect(double x, double y) { return spinMarker.InClickRect(x, y); }
 
@@ -201,29 +183,73 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             aimMarker.Place(x, y);
             aimTraj.SetEndPoint(x, y);
-
-
-
             if (!spinMarker.Placed)
             {
                 double spinX = (originMarker.Position.X + aimMarker.Position.X) / 2;
                 double spinY = (originMarker.Position.Y + aimMarker.Position.Y) / 2;
                 PlaceSpinMarker(spinX, spinY);
-                //connectMarkers = true;
             }
+            CalculateDriftFactor();
+            
         }
 
         public void PlaceSpinMarker(double x, double y)
         {
             spinMarker.Place(x, y);
 
-            // testing 2019-12-21
-            //spinTraj.SetStartPoint(aimTraj.EndPos);
-
             spinTraj.SetEndPoint(x, y);
             if (!spinMarker.ShowClickRectangle) spinMarker.ShowClickRectangle = true;
+            CalculateDriftFactor();
         }
 
+
+        public void DbgText()
+        {
+            string fnId = FnId(clsName, "DbgText");
+            dbgPrintAngle(fnId, "tmpAngle", tmpAngle);
+            dbgPrintAngle(fnId, "tmpDrift", tmpDrift);
+            dbgPrintAngle(fnId, "angleAdjustAmount", angleAdjustAmount);
+            dbgPrintAngle(fnId, "driftAdjustAmount", driftAdjustAmount);
+            dbgPrintAngle(fnId, "adjustedAngle", adjustedAngle);
+            dbgPrintAngle(fnId, "adjustedDrift", adjustedDrift);
+            dbgPrintAngle(fnId, "testDriftFactor", testDriftFactor);
+            dbgPrintAngle(fnId, "aimTraj.Rotation", aimTraj.Rotation);
+            dbgPrintAngle(fnId, "spinTraj.Rotation", spinTraj.Rotation);
+
+
+
+            dpath.DbgText();
+
+        }
+        double tmpAngle = 0;
+        double tmpDrift = 0;
+        double angleAdjustAmount = 0;
+        double driftAdjustAmount = 0;
+        double adjustedAngle = 0;
+        double adjustedDrift = 0;
+        double testDriftFactor = 0;
+        public void CalculateDriftFactor()
+        {
+            string fnId = FnId(clsName, "CalculateDriftFactor");
+            // adjust angle to 180 using temp variables
+            double adjustToAngle = Math.PI;
+            tmpAngle = aimTraj.Rotation;
+            tmpDrift = spinTraj.Rotation;
+            
+            angleAdjustAmount = (adjustToAngle - tmpAngle) * -1;
+            driftAdjustAmount = (adjustToAngle - tmpDrift) * -1;
+
+            adjustedAngle = adjustToAngle + angleAdjustAmount;
+            adjustedDrift = adjustToAngle + driftAdjustAmount;
+
+            // calculate drift factor using adjusted angles
+
+            testDriftFactor = adjustedAngle - adjustedDrift;
+            
+
+            // apply drift factor modifiers if desired
+
+        }
 
         private void DrawConnectorLine(Graphics g, Pen p)
         {

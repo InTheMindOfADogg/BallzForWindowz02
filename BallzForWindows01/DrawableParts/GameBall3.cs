@@ -63,23 +63,32 @@ namespace BallzForWindows01.DrawableParts
         double startingAngle = 0;
         public void Update(MouseControls mc)
         {
+            string fnId = FnId(clsName, "Update");
             HandleMouseInput(mc);
-            //_Update();
-            string fnId = $"[{clsName}._Update]";
+            
+            
+            //DbgFuncs.AddStr($"{fnId} launched: {launched}");
+            //DbgFuncs.AddStr($"{fnId} adjustingAim: {adjustingAim}");
+            //DbgFuncs.AddStr($"{fnId} adjustingSpin: {adjustingSpin}");
             if (!launched)
             {
                 if (adjustingAim)
                 {
                     flightPath.PlaceAimMarker(mousePos.X, mousePos.Y);
+
                 }
                 if (adjustingSpin)
                 {
                     flightPath.PlaceSpinMarker(mousePos.X, mousePos.Y);
                 }
-                
             }
 
+            
+            //flightPath.Update();
+            double newRot = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
+            dbgPrintAngle(fnId, "newRot", newRot);
             rotation = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
+            dbgPrintAngle(fnId, "rotation", rotation);
             flightPath.DbgPlotPath();
 
             if (launched)
@@ -94,11 +103,11 @@ namespace BallzForWindows01.DrawableParts
             if (DrawDbgTxt)
             {
 
-                DbgFuncs.AddStr($"{fnId} ");
-                DbgFuncs.AddStr($"{fnId} launched: {launched}");
-                DbgFuncs.AddStr($"{fnId} flightPath.AimMarkerPlaced: {flightPath.AimMarkerPlaced}");
-                //DbgFuncs.AddStr($"{fnId} rotation: {(rotation * 180 / Math.PI):N2}");
-                dbgPrintAngle(fnId, "rotation", rotation);
+                //DbgFuncs.AddStr($"{fnId} ");
+                //DbgFuncs.AddStr($"{fnId} launched: {launched}");
+                //DbgFuncs.AddStr($"{fnId} flightPath.AimMarkerPlaced: {flightPath.AimMarkerPlaced}");
+                ////DbgFuncs.AddStr($"{fnId} rotation: {(rotation * 180 / Math.PI):N2}");
+                //dbgPrintAngle(fnId, "rotation", rotation);
                 
                 gtimer.DbgTxt();
                 flightPath.DbgText();
@@ -204,8 +213,6 @@ namespace BallzForWindows01.DrawableParts
                     launched = true;
                     gtimer.Start();
                 }
-
-
             }
 
         }
