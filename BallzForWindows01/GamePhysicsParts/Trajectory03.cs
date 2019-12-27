@@ -29,7 +29,7 @@ namespace BallzForWindows01.GamePhysicsParts
         double rotation;
         double oppLen, hypLen, adjLen, anglePreRotation;
 
-        bool north, south; 
+        bool north, south;
         //bool endPointSet;
 
         public Trajectory03()
@@ -39,7 +39,7 @@ namespace BallzForWindows01.GamePhysicsParts
             //rightPos = new PointD();
             startMarker = new XMarker2();
             endMarker = new XMarker2();
-            north = south = false; 
+            north = south = false;
             //endPointSet = false;
 
             startMarker.DrawColor = Color.Black;
@@ -69,10 +69,6 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Reset()
         {
-            //startPoint.Zero();
-            //rightPos.Zero();
-            //endPoint.Zero();
-            //endPointSet = false;
             startMarker.Reset();
             endMarker.Reset();
         }
@@ -100,29 +96,29 @@ namespace BallzForWindows01.GamePhysicsParts
 
         void _SetStartPoint(double sx, double sy)
         {
-            //startPoint.Set(sx, sy);
             startMarker.Place(sx, sy);
         }
 
         void _SetEndPoint(double ex, double ey)
         {
             endMarker.Place(ex, ey);
+
+            // Temporary PointDs for calculating side lengths and rotation
             PointD startPoint = new PointD(startMarker.Position);
             PointD endPoint = new PointD(endMarker.Position);
-            PointD rightPoint = new PointD(endPoint.X, startPoint.Y);
-            
-            SetSideLengths(startPoint, endPoint, rightPoint);
+
+            SetSideLengths(startPoint, endPoint);
             SetRotation(startPoint, endPoint);
-            //endPointSet = true;
         }
-        void SetSideLengths(PointD startPoint, PointD endPoint, PointD rightPoint)
-        {            
+        void SetSideLengths(PointD startPoint, PointD endPoint)
+        {
+            PointD rightPoint = new PointD(endPoint.X, startPoint.Y);
             oppLen = rightPoint.DistanceTo(endPoint);
             hypLen = startPoint.DistanceTo(endPoint);
             adjLen = startPoint.DistanceTo(rightPoint);
         }
 
-        
+
 
         /// ----- SetRotation -----
 
@@ -218,10 +214,10 @@ namespace BallzForWindows01.GamePhysicsParts
 
             float width = 20;
             // Drawing origin position box
-            g.DrawRectangle(Pens.Black, startMarker.Position.fX - (width / 2), startMarker.Position.fY - (width / 2), width, width);            
+            g.DrawRectangle(Pens.Black, startMarker.Position.fX - (width / 2), startMarker.Position.fY - (width / 2), width, width);
 
             // Drawing aim position box
-            g.DrawRectangle(Pens.Red, endMarker.Position.fX - (width / 2), endMarker.Position.fY - (width / 2), width, width);            
+            g.DrawRectangle(Pens.Red, endMarker.Position.fX - (width / 2), endMarker.Position.fY - (width / 2), width, width);
 
             PointD rightPoint = new PointD(endMarker.Position.X, startMarker.Position.Y);
             // Drawing right position box
