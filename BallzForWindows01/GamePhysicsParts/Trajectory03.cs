@@ -50,12 +50,12 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Update()
         {
-            string fnId = FnId(clsName, "Update"); 
-            if(!inows(nameTag)){fnId += $"[\"{nameTag}\"]";}
+            string fnId = FnId(clsName, "Update");
+            if (!inows(nameTag)) { fnId += $"[\"{nameTag}\"]"; }
 
             dbgPrintAngle(fnId, "rotation", rotation);
-            
-            
+
+
         }
         public void Draw(Graphics g)
         {
@@ -87,7 +87,7 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public bool InEndRect(PointD p) { return _InEndRect(p.X, p.Y); }
         public bool InEndRect(double px, double py) { return _InEndRect(px, py); }
-        
+
 
 
         public void SetStartPoint(PointD p) { _SetStartPoint(p.X, p.Y); }
@@ -137,10 +137,7 @@ namespace BallzForWindows01.GamePhysicsParts
             endPointSet = true;
         }
 
-        private bool _InEndRect(double px, double py)
-        {
-            return endMarker.InClickRect(px, py);
-        }
+        private bool _InEndRect(double px, double py) { return endMarker.InClickRect(px, py); }
 
         void DrawPointMarkers(Graphics g)
         {
