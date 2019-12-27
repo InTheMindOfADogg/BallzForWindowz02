@@ -24,7 +24,7 @@ namespace BallzForWindows01.MainGameParts
         GameBall ball;
         GameBall2 ball2;
 
-        GameBall3 ball3;
+        //GameBall3 ball3;
         GameBall04 ball4;
         
         //bool pause = false;
@@ -39,12 +39,12 @@ namespace BallzForWindows01.MainGameParts
 
             ball = new GameBall(new Size(width, height));
             ball2 = new GameBall2(new Size(width, height));
-            ball3 = new GameBall3(new Size(width, height));
+            //ball3 = new GameBall3(new Size(width, height));
             ball4 = new GameBall04(new Size(width, height));
 
             ball.DrawDbgTxt = false;
             ball2.DrawDbgTxt = false;
-            ball3.DrawDbgTxt = false;
+            //ball3.DrawDbgTxt = false;
             ball4.DrawDbgTxt = true;
 
         }
@@ -62,8 +62,9 @@ namespace BallzForWindows01.MainGameParts
 
             ball.Load(ballStartX, ballStartY);
             ball2.Load(ballStartX, ballStartY);
-            ball3.Load(ballStartX, ballStartY, 2, 15, 0, 5);
-            ball3.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
+
+            //ball3.Load(ballStartX, ballStartY, 2, 15, 0, 5);
+            //ball3.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
 
             ball4.Load(ballStartX, ballStartY, 2, 15, 0, 5);
             ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
@@ -89,7 +90,7 @@ namespace BallzForWindows01.MainGameParts
             ball2.Update();
 
             
-            ball3.Update(mc);
+            //ball3.Update(mc);
 
             ball4.Update(mc);
 
@@ -146,26 +147,26 @@ namespace BallzForWindows01.MainGameParts
         }
 
         // UpdateCollisionPointList3 for ball 3
-        void UpdateCollisionPointList3()
-        {
-            CollisionPoint tempcp;
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                for (int j = 0; j < ball3.CollisionPointList.Count; j++)
-                {
-                    tempcp = ball3.CollisionPointList[j];
-                    if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
-                    {
-                        tempcp.PointHit = true;
-                        //ball3.Collide = true;
-                        //ball3.PublicHitIdxList.Add(i);
-                        return;
-                        //continue;
-                    }
-                    tempcp.PointHit = false;
-                }
-            }
-        }
+        //void UpdateCollisionPointList3()
+        //{
+        //    CollisionPoint tempcp;
+        //    for (int i = 0; i < cplist.Count; i++)
+        //    {
+        //        for (int j = 0; j < ball3.CollisionPointList.Count; j++)
+        //        {
+        //            tempcp = ball3.CollisionPointList[j];
+        //            if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
+        //            {
+        //                tempcp.PointHit = true;
+        //                //ball3.Collide = true;
+        //                //ball3.PublicHitIdxList.Add(i);
+        //                return;
+        //                //continue;
+        //            }
+        //            tempcp.PointHit = false;
+        //        }
+        //    }
+        //}
         #endregion UpdateCollisionPointList functions
 
         int mStartX, mStartY, deltaX, deltaY;

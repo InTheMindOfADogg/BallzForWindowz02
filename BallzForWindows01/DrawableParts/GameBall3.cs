@@ -27,7 +27,7 @@ namespace BallzForWindows01.DrawableParts
 
         double speed = 1.0;
         double startingSpeed = 1.0;
-        
+
 
         bool adjustingAim = false;
         bool adjustingSpin = false;
@@ -40,8 +40,8 @@ namespace BallzForWindows01.DrawableParts
 
 
         public GameBall3(Size gameScreenSize)
-            : base() 
-        { 
+            : base()
+        {
             //_Init(gameScreenSize);
             clsName = "GameBall3";
             this.gameScreenSize = gameScreenSize;
@@ -60,7 +60,7 @@ namespace BallzForWindows01.DrawableParts
         new public void Load(double x, double y, double hitBoxSideLength, double radius, double rotation, int collisionPoints)
         {
             base.Load(x, y, hitBoxSideLength, radius, rotation, collisionPoints);
-            
+
             //_Load(x, y);
             flightPath.Load();
             flightPath.DriftHardness = 0.5;
@@ -71,10 +71,11 @@ namespace BallzForWindows01.DrawableParts
         double startingAngle = 0;
         public void Update(MouseControls mc)
         {
+            bool dbgtxt = false;
             string fnId = FnId(clsName, "Update");
-            HandleMouseInput(mc);            
-            
-            DbgFuncs.AddStr($"{fnId} launched: {launched}");
+            HandleMouseInput(mc);
+
+            if (dbgtxt) DbgFuncs.AddStr($"{fnId} launched: {launched}");
             if (!launched)
             {
                 if (adjustingAim)
@@ -93,7 +94,7 @@ namespace BallzForWindows01.DrawableParts
             //double newRot = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
             //dbgPrintAngle(fnId, "newRot", newRot);
             rotation = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
-            dbgPrintAngle(fnId, "rotation", rotation);
+            if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
             flightPath.DbgPlotPath();
 
             if (launched)
@@ -105,7 +106,7 @@ namespace BallzForWindows01.DrawableParts
 
             UpdateCollisionPoints(position.X, position.Y, radius, rotation);
 
-            if (DrawDbgTxt)
+            if (dbgtxt && DrawDbgTxt)
             {
 
                 //DbgFuncs.AddStr($"{fnId} ");
@@ -113,7 +114,7 @@ namespace BallzForWindows01.DrawableParts
                 //DbgFuncs.AddStr($"{fnId} flightPath.AimMarkerPlaced: {flightPath.AimMarkerPlaced}");
                 ////DbgFuncs.AddStr($"{fnId} rotation: {(rotation * 180 / Math.PI):N2}");
                 //dbgPrintAngle(fnId, "rotation", rotation);
-                
+
                 gtimer.DbgTxt();
                 flightPath.DbgText();
 
@@ -121,7 +122,7 @@ namespace BallzForWindows01.DrawableParts
             }
         }
 
-        new public void Draw(Graphics g) 
+        new public void Draw(Graphics g)
         {
             //_Draw(g); 
             base.Draw(g);
@@ -132,7 +133,7 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.Draw(g);
         }
 
-        public void Reset() 
+        public void Reset()
         {
             //_Reset(); 
             launched = false;
@@ -148,7 +149,7 @@ namespace BallzForWindows01.DrawableParts
             aimTraj.Reset();
         }
 
-        public void CleanUp() 
+        public void CleanUp()
         {
             //_CleanUp(); 
             btnLaunch.CleanUp();
@@ -158,9 +159,10 @@ namespace BallzForWindows01.DrawableParts
 
         void HandleMouseInput(MouseControls mc)
         {
+            bool dbgtxt = false;
             string fnId = $"[{clsName}.HandleMouseInput]";
-            DbgFuncs.AddStr($"{fnId} mc.LeftButtonState: {mc.LeftButtonState}");
-            DbgFuncs.AddStr($"{fnId} mc.LastLeftButtonState: {mc.LastLeftButtonState}");
+            if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LeftButtonState: {mc.LeftButtonState}");
+            if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LastLeftButtonState: {mc.LastLeftButtonState}");
 
             mousePos.Set(mc.X, mc.Y);
 

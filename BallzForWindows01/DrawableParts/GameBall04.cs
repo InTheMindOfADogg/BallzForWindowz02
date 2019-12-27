@@ -83,12 +83,10 @@ namespace BallzForWindows01.DrawableParts
                 if (adjustingAim)
                 {
                     aimTraj.SetEndPoint(mousePos);
-                    //flightPath.PlaceAimMarker(mousePos.X, mousePos.Y);
                 }
                 if (adjustingSpin)
                 {
-                    spinTraj.SetEndPoint(mousePos);
-                    //flightPath.PlaceSpinMarker(mousePos.X, mousePos.Y);
+                    spinTraj.SetEndPoint(mousePos);                    
                 }
             }
             UpdateTrajectories();
