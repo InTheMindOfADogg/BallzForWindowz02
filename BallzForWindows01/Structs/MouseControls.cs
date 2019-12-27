@@ -8,6 +8,7 @@ using System.Drawing;
 
 namespace BallzForWindows01.Structs
 {
+    using GamePhysicsParts;
     public enum MouseEventType
     {
         LeftButtonUp,
@@ -19,6 +20,7 @@ namespace BallzForWindows01.Structs
 
     class MouseControls
     {
+        public PointD Position { get { return position; } }
         public int X { get { return x; } set { x = value; } }
         public int Y { get { return y; } set { y = value; } }
         public int LastX { get { return lastX; } }
@@ -28,6 +30,7 @@ namespace BallzForWindows01.Structs
         public UpDownState LastLeftButtonState { get { return lastLeftState; } set { lastLeftState = value; } }
         public UpDownState LastRightButtonState { get { return lastRightState; } set { lastRightState = value; } }
 
+        PointD position;
         private int x;
         private int y;
         int lastX;
@@ -43,12 +46,16 @@ namespace BallzForWindows01.Structs
         Point rightDownPos = new Point();
 
 
-        public MouseControls() { }
+        public MouseControls() 
+        {
+            position = new PointD();
+        }
 
 
         public void Update(MouseEventArgs e, MouseEventType t)
         {
             UpdateLastState();
+            position.Set(e.X, e.Y);
             x = e.X;
             y = e.Y;
             switch(t)

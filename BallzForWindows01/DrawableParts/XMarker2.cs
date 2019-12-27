@@ -46,13 +46,13 @@ namespace BallzForWindows01.DrawableParts
         {
             position.Set(x, y);
             SetClickRectangle(position.X, position.Y, box.Width, box.Height, true);
-            visible = true;
             placed = true;
+            visible = true;
+
         }
-        public bool InClickRect(double x, double y)
-        {
-            return box.InBox(x, y);
-        }
+
+        public bool InClickRect(PointD p) { return box.InBox(p.X, p.Y); }
+        public bool InClickRect(double x, double y) { return box.InBox(x, y); }
 
 
         private void _Init()
@@ -85,14 +85,13 @@ namespace BallzForWindows01.DrawableParts
             placed = false;
         }
         private void _CleanUp() { }
-        
+
 
         private void DrawX(Graphics g, Pen p)
         {
             g.DrawLine(p, box.TopLeft().ToPointF(), box.BottomRight().ToPointF());
             g.DrawLine(p, box.BottomLeft().ToPoint(), box.TopRight().ToPointF());
         }
-
         private void DrawClickRectangle(Graphics g, Pen p)
         {
             g.DrawRectangle(p, box.fX, box.fY, box.fWidth, box.fHeight);

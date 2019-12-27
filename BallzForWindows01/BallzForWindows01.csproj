@@ -64,6 +64,7 @@
     <Compile Include="GamePhysicsParts\RectangleD.cs" />
     <Compile Include="GamePhysicsParts\SizeD.cs" />
     <Compile Include="GamePhysicsParts\Trajectory.cs" />
+    <Compile Include="GamePhysicsParts\Trajectory03.cs" />
     <Compile Include="GamePhysicsParts\Trajectory2.cs" />
     <Compile Include="HelperClasses\AssistFunctions.cs" />
     <Compile Include="BallzForm.cs">

@@ -70,6 +70,17 @@ namespace BallzForWindows01.GamePhysicsParts
             return rot;
         }
 
+
+        public PointD HalfWayTo(double endx, double endy) { return _HalfWayTo(endx, endy); }
+        public PointD HalfWayTo(PointD endp) { return _HalfWayTo(endp.X, endp.Y); }
+        private PointD _HalfWayTo(double endx, double endy)
+        {
+            PointD midp = new PointD();
+            midp.X = x + ((endx - x) / 2);
+            midp.Y = y + ((endy - y) / 2);
+            return midp;
+        }
+
         public override string ToString() { return $"{{X={x}, Y={y}}}"; }
         public Point ToPoint() { return new Point((int)x, (int)y); }
         public PointF ToPointF() { return new PointF((float)x, (float)y); }

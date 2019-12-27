@@ -35,6 +35,9 @@ namespace BallzForWindows01.DrawableParts
         //bool placingSpinRect = false;
         bool launched = false;
 
+        Trajectory03 aimTraj;
+        Trajectory03 spinTraj;
+
 
         public GameBall3(Size gameScreenSize)
             : base() 
@@ -47,6 +50,11 @@ namespace BallzForWindows01.DrawableParts
             startPosition = new PointD();
             mousePos = new PointD();
             gtimer = new GameTimer();
+
+            aimTraj = new Trajectory03();
+            spinTraj = new Trajectory03();
+            spinTraj.SetXColor(Color.AntiqueWhite);
+
         }
 
         new public void Load(double x, double y, double hitBoxSideLength, double radius, double rotation, int collisionPoints)
@@ -64,12 +72,9 @@ namespace BallzForWindows01.DrawableParts
         public void Update(MouseControls mc)
         {
             string fnId = FnId(clsName, "Update");
-            HandleMouseInput(mc);
-            
+            HandleMouseInput(mc);            
             
             DbgFuncs.AddStr($"{fnId} launched: {launched}");
-            //DbgFuncs.AddStr($"{fnId} adjustingAim: {adjustingAim}");
-            //DbgFuncs.AddStr($"{fnId} adjustingSpin: {adjustingSpin}");
             if (!launched)
             {
                 if (adjustingAim)
@@ -122,6 +127,9 @@ namespace BallzForWindows01.DrawableParts
             base.Draw(g);
             flightPath.Draw(g, !launched);
             btnLaunch.Draw(g);
+
+            aimTraj.Draw(g);
+            spinTraj.Draw(g);
         }
 
         public void Reset() 
@@ -136,6 +144,8 @@ namespace BallzForWindows01.DrawableParts
             speed = startingSpeed;
             adjustingAim = false;
             adjustingSpin = false;
+
+            aimTraj.Reset();
         }
 
         public void CleanUp() 
@@ -182,6 +192,16 @@ namespace BallzForWindows01.DrawableParts
                 {
                     flightPath.PlaceOriginMarker(position.X, position.Y);
                     flightPath.PlaceAimMarker(mc.X, mc.Y);
+
+                    aimTraj.SetStartPoint(position);
+                    aimTraj.SetEndPoint(mc.Position);
+
+                    spinTraj.SetStartPoint(position);
+                    PointD spinStartPos = new PointD();
+                    spinStartPos = position.HalfWayTo(mc.Position.X, mc.Position.Y);
+                    spinTraj.SetEndPoint(spinStartPos);
+
+
                     return;
                 }
 
