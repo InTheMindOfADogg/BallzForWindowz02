@@ -232,6 +232,92 @@ namespace BallzForWindows01.GamePhysicsParts
     }
 }
 
+#region rebuilding SetRotation process
+///// ----- SetRotation -----
+// This is the one I eneded up using at end of the cleaning/building process 2019-12-27
+//void SetRotation(PointD startPoint, PointD endPoint)
+//{
+//    north = south = false;
+//    if (endPoint.Y < startPoint.Y) { north = true; }
+//    if (endPoint.Y > startPoint.Y) { south = true; }
+//    anglePreRotation = Math.Asin(oppLen / hypLen);
+//    // north
+//    if (endPoint.X == startPoint.X && north) { rotation = (3 * Math.PI) / 2; return; }
+//    // south
+//    if (endPoint.X == startPoint.X && south) { rotation = (Math.PI) / 2; return; }
+//    // east
+//    if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { rotation = 0; return; }
+//    // west
+//    if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { rotation = Math.PI; return; }
+//    // northwest
+//    if (endPoint.X > startPoint.X && north) { rotation = Math.PI * 2 - anglePreRotation; return; }
+//    //northeast
+//    if (endPoint.X < startPoint.X && north) { rotation = Math.PI + anglePreRotation; return; }
+//    // southwest
+//    if (endPoint.X > startPoint.X && south) { rotation = anglePreRotation; return; }
+//    // southeast
+//    if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
+//}
+
+///// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//#region SetRotation previous versions, rebuilt 2019-12-27    
+////void SetRotation()
+////{
+////    PointD endPoint = new PointD();
+////    PointD startPoint = new PointD();
+////    startPoint.Set(startMarker.Position);
+////    endPoint.Set(endMarker.Position);
+
+////    north = south = false;
+////    if (endPoint.Y < startPoint.Y) { north = true; }
+////    if (endPoint.Y > startPoint.Y) { south = true; }
+////    anglePreRotation = Math.Asin(oppLen / hypLen);
+////    // north
+////    if (endPoint.X == startPoint.X && north) { rotation = (3 * Math.PI) / 2; return; }
+////    // south
+////    if (endPoint.X == startPoint.X && south) { rotation = (Math.PI) / 2; return; }
+////    // east
+////    if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { rotation = 0; return; }
+////    // west
+////    if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { rotation = Math.PI; return; }
+////    // northwest
+////    if (endPoint.X > startPoint.X && north) { rotation = Math.PI * 2 - anglePreRotation; return; }
+////    //northeast
+////    if (endPoint.X < startPoint.X && north) { rotation = Math.PI + anglePreRotation; return; }
+////    // southwest
+////    if (endPoint.X > startPoint.X && south) { rotation = anglePreRotation; return; }
+////    // southeast
+////    if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
+////}
+///// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+////void SetRotation()
+////{
+////    north = south = false;
+////    if (endPoint.Y < startPoint.Y) { north = true; }
+////    if (endPoint.Y > startPoint.Y) { south = true; }
+////    anglePreRotation = Math.Asin(oppLen / hypLen);
+////    // north
+////    if (endPoint.X == startPoint.X && north) { rotation = (3 * Math.PI) / 2; return; }
+////    // south
+////    if (endPoint.X == startPoint.X && south) { rotation = (Math.PI) / 2; return; }
+////    // east
+////    if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { rotation = 0; return; }
+////    // west
+////    if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { rotation = Math.PI; return; }
+////    // northwest
+////    if (endPoint.X > startPoint.X && north) { rotation = Math.PI * 2 - anglePreRotation; return; }
+////    //northeast
+////    if (endPoint.X < startPoint.X && north) { rotation = Math.PI + anglePreRotation; return; }
+////    // southwest
+////    if (endPoint.X > startPoint.X && south) { rotation = anglePreRotation; return; }
+////    // southeast
+////    if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
+////}
+
+//#endregion SetRotation previous versions, rebuilt 2019-12-27
+///// ----- SetRotation -----
+#endregion rebuilding SetRotation process
 
 
 #region _SetEndPoint previous version, rebuilt 2019-12-27
