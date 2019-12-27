@@ -19,9 +19,9 @@ namespace BallzForWindows01.GamePhysicsParts
         string clsName = "Trajectory03";
         string nameTag = "";
 
-        PointD startPoint;
-        PointD endPoint;
-        PointD rightPos;
+        //PointD startPoint;
+        //PointD endPoint;
+        //PointD rightPos;
 
         XMarker2 startMarker;
         XMarker2 endMarker;
@@ -34,9 +34,9 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public Trajectory03()
         {
-            startPoint = new PointD();
-            endPoint = new PointD();
-            rightPos = new PointD();
+            //startPoint = new PointD();
+            //endPoint = new PointD();
+            //rightPos = new PointD();
             startMarker = new XMarker2();
             endMarker = new XMarker2();
             north = south = false; 
@@ -69,9 +69,9 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Reset()
         {
-            startPoint.Zero();
-            rightPos.Zero();
-            endPoint.Zero();
+            //startPoint.Zero();
+            //rightPos.Zero();
+            //endPoint.Zero();
             //endPointSet = false;
             startMarker.Reset();
             endMarker.Reset();
@@ -117,9 +117,9 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         void SetSideLengths(PointD startPoint, PointD endPoint, PointD rightPoint)
         {            
-            oppLen = rightPos.DistanceTo(endPoint);
+            oppLen = rightPoint.DistanceTo(endPoint);
             hypLen = startPoint.DistanceTo(endPoint);
-            adjLen = startPoint.DistanceTo(rightPos);
+            adjLen = startPoint.DistanceTo(rightPoint);
         }
 
         
@@ -217,25 +217,21 @@ namespace BallzForWindows01.GamePhysicsParts
         {
 
             float width = 20;
-            // drawing origin position box
-            g.DrawRectangle(Pens.Black, startPoint.fX - (width / 2), startPoint.fY - (width / 2), width, width);
+            // Drawing origin position box
+            g.DrawRectangle(Pens.Black, startMarker.Position.fX - (width / 2), startMarker.Position.fY - (width / 2), width, width);            
 
-            // drawing aim position box
-            g.DrawRectangle(Pens.Red, endPoint.fX - (width / 2), endPoint.fY - (width / 2), width, width);
+            // Drawing aim position box
+            g.DrawRectangle(Pens.Red, endMarker.Position.fX - (width / 2), endMarker.Position.fY - (width / 2), width, width);            
 
-            // drawing right position box
-            g.DrawRectangle(Pens.Orange, rightPos.fX - (width / 2), rightPos.fY - (width / 2), width, width);
+            PointD rightPoint = new PointD(endMarker.Position.X, startMarker.Position.Y);
+            // Drawing right position box
+            g.DrawRectangle(Pens.Orange, rightPoint.fX - (width / 2), rightPoint.fY - (width / 2), width, width);
 
-            // drawing endPoint box
-            //g.DrawRectangle(Pens.Purple, endPoint.fX - (width / 2), endPoint.fY - (width / 2), width, width); // endPos
+            // Drawing lines between boxes            
+            g.DrawLine(Pens.Green, startMarker.Position.ToPointF(), endMarker.Position.ToPointF()); // hyp
+            g.DrawLine(Pens.Blue, startMarker.Position.ToPointF(), rightPoint.ToPointF()); // adj
+            g.DrawLine(Pens.Orange, endMarker.Position.ToPointF(), rightPoint.ToPointF()); // opp
 
-            g.DrawLine(Pens.Green, startPoint.ToPointF(), endPoint.ToPointF()); // hyp
-            g.DrawLine(Pens.Blue, startPoint.ToPointF(), rightPos.ToPointF()); // adj
-            g.DrawLine(Pens.Orange, endPoint.ToPointF(), rightPos.ToPointF()); // opp
-
-            //Pen p = new Pen(Brushes.Black, 3);
-            //g.DrawLine(p, originPos.ToPointF(), endPoint.ToPointF());
-            //p.Dispose();
         }
     }
 }
