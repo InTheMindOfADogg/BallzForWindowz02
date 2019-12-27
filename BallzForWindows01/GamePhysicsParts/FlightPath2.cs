@@ -100,9 +100,10 @@ namespace BallzForWindows01.GamePhysicsParts
         ///----- CalculatedAngle -----
         public double CalculatedAngle(double currentAngle, double elapsedTime = 0)
         {
+            bool dbgtxt = false;
             string fnId = FnId(clsName, "CalculatedAngle");
             double tmpAngle = 0;
-            dbgPrintAngle(fnId, "currentAngle", currentAngle);
+            if (dbgtxt) dbgPrintAngle(fnId, "currentAngle", currentAngle);
             angle = aimTraj.Rotation;
             drift = spinTraj.Rotation;
 
@@ -110,11 +111,11 @@ namespace BallzForWindows01.GamePhysicsParts
 
             tmpAngle = angle - (driftFactor * elapsedTime);
 
-            dbgPrintAngle(fnId, "angle", angle);
-            dbgPrintAngle(fnId, "drift", drift);
-            dbgPrintAngle(fnId, "tmpAngle", tmpAngle);
-            dbgPrintAngle(fnId, "driftFactor", driftFactor);
-            DbgFuncs.AddStr($"{fnId} elapsedTime: {elapsedTime}");
+            if (dbgtxt) dbgPrintAngle(fnId, "angle", angle);
+            if (dbgtxt) dbgPrintAngle(fnId, "drift", drift);
+            if (dbgtxt) dbgPrintAngle(fnId, "tmpAngle", tmpAngle);
+            if (dbgtxt) dbgPrintAngle(fnId, "driftFactor", driftFactor);
+            if (dbgtxt) DbgFuncs.AddStr($"{fnId} elapsedTime: {elapsedTime}");
 
             return tmpAngle;
         }

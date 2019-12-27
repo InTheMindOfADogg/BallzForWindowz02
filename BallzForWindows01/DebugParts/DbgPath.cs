@@ -323,6 +323,7 @@ namespace BallzForWindows01.DebugParts
 
         void TestPlot04(PointD startPos, double angle, double drift, double timeDegradeModifier, double hardness)
         {
+            bool dbgtxt = false;
             string fnId = FnId(clsName, "TestPlot04");
 
             pathList.RemoveRange(0, pathList.Count);
@@ -350,33 +351,33 @@ namespace BallzForWindows01.DebugParts
             adjustToAngle = (Math.PI);   // 180 degrees
 
             maxDriftAdjust = 178 * Math.PI / 720;
-            dbgPrintAngle(fnId, "maxDriftAdjust", maxDriftAdjust);
+            if(dbgtxt) dbgPrintAngle(fnId, "maxDriftAdjust", maxDriftAdjust);
 
             angleAdjustAmount = ((adjustToAngle) - angle) * -1;
             driftAdjustAmount = ((adjustToAngle) - drift) * -1;
-            dbgPrintAngle(fnId, "angleAdjustmentAmount", angleAdjustAmount);
-            dbgPrintAngle(fnId, "driftAdjustmentAmount", driftAdjustAmount);
+            if (dbgtxt) dbgPrintAngle(fnId, "angleAdjustmentAmount", angleAdjustAmount);
+            if (dbgtxt) dbgPrintAngle(fnId, "driftAdjustmentAmount", driftAdjustAmount);
 
 
             maxDrift = adjustToAngle + maxDriftAdjust;
             minDrift = adjustToAngle - maxDriftAdjust;
-            dbgPrintAngle(fnId, "maxDrift", maxDrift);
-            dbgPrintAngle(fnId, "minDrift", minDrift);
+            if (dbgtxt) dbgPrintAngle(fnId, "maxDrift", maxDrift);
+            if (dbgtxt) dbgPrintAngle(fnId, "minDrift", minDrift);
 
             adjustedAngle = (adjustToAngle) + angleAdjustAmount;
             adjustedDrift = (adjustToAngle) + driftAdjustAmount;
-            dbgPrintAngle(fnId, "adjustedAngle", adjustedAngle);
-            dbgPrintAngle(fnId, "adjustedDrift", adjustedDrift);
+            if (dbgtxt) dbgPrintAngle(fnId, "adjustedAngle", adjustedAngle);
+            if (dbgtxt) dbgPrintAngle(fnId, "adjustedDrift", adjustedDrift);
 
-            dbgPrintAngle(fnId, "angleAdjustmentAmount after restriction", angleAdjustAmount);
-            dbgPrintAngle(fnId, "driftAdjustmentAmount after restriction", driftAdjustAmount);
+            if (dbgtxt) dbgPrintAngle(fnId, "angleAdjustmentAmount after restriction", angleAdjustAmount);
+            if (dbgtxt) dbgPrintAngle(fnId, "driftAdjustmentAmount after restriction", driftAdjustAmount);
 
             // Restricting adjusted drift amount
             if (adjustedDrift > maxDrift) adjustedDrift = maxDrift;
             if (adjustedDrift < minDrift) adjustedDrift = minDrift;
 
-            dbgPrintAngle(fnId, "adjustedAngle after restriction", adjustedAngle);
-            dbgPrintAngle(fnId, "adjustedDrift after restriction", adjustedDrift);
+            if (dbgtxt) dbgPrintAngle(fnId, "adjustedAngle after restriction", adjustedAngle);
+            if (dbgtxt) dbgPrintAngle(fnId, "adjustedDrift after restriction", adjustedDrift);
 
 
             // Plotting the angles for tmpPathList
@@ -402,13 +403,13 @@ namespace BallzForWindows01.DebugParts
             angle = angle - angleAdjustAmount;
 
             angleFinal = angle - angleAdjustAmount;
-            dbgPrintAngle(fnId, "angleFinal", angleFinal);
+            if (dbgtxt) dbgPrintAngle(fnId, "angleFinal", angleFinal);
 
             driftFactor = (angle - drift);
             driftFactor *= hardness;
 
 
-            dbgPrintAngle(fnId, "angle", angle);
+            if (dbgtxt) dbgPrintAngle(fnId, "angle", angle);
             tmp.Set(startPos);
             for (int i = 0; i < points; i++)
             {

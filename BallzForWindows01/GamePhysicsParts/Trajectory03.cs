@@ -51,7 +51,9 @@ namespace BallzForWindows01.GamePhysicsParts
         public void Update()
         {
             string fnId = FnId(clsName, "Update"); 
-            
+            if(!inows(nameTag)){fnId += $"[\"{nameTag}\"]";}
+
+            dbgPrintAngle(fnId, "rotation", rotation);
             
             
         }

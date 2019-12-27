@@ -53,6 +53,8 @@ namespace BallzForWindows01.DrawableParts
             aimTraj = new Trajectory03();
             spinTraj = new Trajectory03();
             spinTraj.SetXColor(Color.AntiqueWhite);
+            aimTraj.NameTag = "aimTraj";
+            spinTraj.NameTag = "spinTraj";
 
         }
 
