@@ -15,6 +15,7 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public bool Placed { get { return endMarker.Placed; } }
         public string NameTag { get { return nameTag; } set { nameTag = value; } }
+        public double Rotation { get { return rotation; } }
 
         string clsName = "Trajectory03";
         string nameTag = "";
@@ -41,15 +42,13 @@ namespace BallzForWindows01.GamePhysicsParts
         {
 
         }
-        double testRotFromPointDs = 0;
+        
         public void Update()
         {
             string fnId = FnId(clsName, "Update");
             if (!inows(nameTag)) { fnId += $"[\"{nameTag}\"]"; }
 
-            dbgPrintAngle(fnId, "rotation", rotation);
-            testRotFromPointDs = startMarker.Position.RotationTo(endMarker.Position);
-            dbgPrintAngle(fnId, "testRotFromPointDs", testRotFromPointDs);
+            //dbgPrintAngle(fnId, "rotation", rotation);
 
 
         }

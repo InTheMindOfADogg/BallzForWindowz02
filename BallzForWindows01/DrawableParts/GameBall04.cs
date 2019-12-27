@@ -15,8 +15,6 @@ namespace BallzForWindows01.DrawableParts
     {
         Size gameScreenSize;
 
-        //FlightPath2 flightPath;
-
         Trajectory03 aimTraj;
         Trajectory03 spinTraj;
 
@@ -26,28 +24,23 @@ namespace BallzForWindows01.DrawableParts
         PointD mousePos;
 
         GameTimer gtimer;
-        //double elapsedTime = 0; // elapsedTime just place holder for now. I am planning to use it for furture ball moving logic. 2019-12-07
+        
 
         double speed = 1.0;
         double startingSpeed = 1.0;
         double startingAngle = 0;
 
         bool adjustingAim = false;
-        bool adjustingSpin = false;
-        //bool readyForLaunch = false;    // same as setting spin, might need to adjust later
-        //bool placingSpinRect = false;
-        bool launched = false;
-
-        
+        bool adjustingSpin = false;        
+        bool launched = false;       
 
 
         public GameBall04(Size gameScreenSize)
             : base()
         {
-            //_Init(gameScreenSize);
+            
             clsName = "GameBall04";
-            this.gameScreenSize = gameScreenSize;
-            //flightPath = new FlightPath2();
+            this.gameScreenSize = gameScreenSize;            
             btnLaunch = new Button01();
             startPosition = new PointD();
             mousePos = new PointD();
@@ -65,9 +58,6 @@ namespace BallzForWindows01.DrawableParts
         {
             base.Load(x, y, hitBoxSideLength, radius, rotation, collisionPoints);
 
-            //_Load(x, y);
-            //flightPath.Load();
-            //flightPath.DriftHardness = 0.5;
             startPosition.Set(x, y);
             PositionLaunchButton();
         }
