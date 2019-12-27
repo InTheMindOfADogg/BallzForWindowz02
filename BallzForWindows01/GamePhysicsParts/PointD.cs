@@ -21,6 +21,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public float iY { get { return (int)y; } }
 
         public PointD() { Set(0, 0); }
+        public PointD(PointD pos) { Set(pos.X, pos.Y); }
         public PointD(double x, double y) { Set(x, y); }
 
 
