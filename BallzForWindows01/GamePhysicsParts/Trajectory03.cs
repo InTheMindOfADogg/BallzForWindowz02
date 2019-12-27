@@ -29,7 +29,8 @@ namespace BallzForWindows01.GamePhysicsParts
         double rotation;
         double oppLen, hypLen, adjLen, anglePreRotation;
 
-        bool north, south, endPointSet;
+        bool north, south; 
+        //bool endPointSet;
 
         public Trajectory03()
         {
@@ -38,7 +39,8 @@ namespace BallzForWindows01.GamePhysicsParts
             rightPos = new PointD();
             startMarker = new XMarker2();
             endMarker = new XMarker2();
-            north = south = endPointSet = false;
+            north = south = false; 
+            //endPointSet = false;
 
             startMarker.DrawColor = Color.Black;
             endMarker.DrawColor = Color.Black;
@@ -70,7 +72,7 @@ namespace BallzForWindows01.GamePhysicsParts
             startPoint.Zero();
             rightPos.Zero();
             endPoint.Zero();
-            endPointSet = false;
+            //endPointSet = false;
             startMarker.Reset();
             endMarker.Reset();
         }
@@ -95,15 +97,37 @@ namespace BallzForWindows01.GamePhysicsParts
         public void SetEndPoint(PointD p) { _SetEndPoint(p.X, p.Y); }
         public void SetEndPoint(double ex, double ey) { _SetEndPoint(ex, ey); }
 
+
+        void _SetStartPoint(double sx, double sy)
+        {
+            //startPoint.Set(sx, sy);
+            startMarker.Place(sx, sy);
+        }
+
+        void _SetEndPoint(double ex, double ey)
+        {
+            endMarker.Place(ex, ey);
+            PointD startPoint = new PointD(startMarker.Position);
+            PointD endPoint = new PointD(endMarker.Position);
+            PointD rightPoint = new PointD(endPoint.X, startPoint.Y);
+            
+            SetSideLengths(startPoint, endPoint, rightPoint);
+            SetRotation(startPoint, endPoint);
+            //endPointSet = true;
+        }
+        void SetSideLengths(PointD startPoint, PointD endPoint, PointD rightPoint)
+        {            
+            oppLen = rightPos.DistanceTo(endPoint);
+            hypLen = startPoint.DistanceTo(endPoint);
+            adjLen = startPoint.DistanceTo(rightPos);
+        }
+
+        
+
         /// ----- SetRotation -----
 
         void SetRotation(PointD startPoint, PointD endPoint)
         {
-            //PointD endPoint = new PointD();
-            //PointD startPoint = new PointD();
-            //startPoint.Set(startMarker.Position);
-            //endPoint.Set(endMarker.Position);
-
             north = south = false;
             if (endPoint.Y < startPoint.Y) { north = true; }
             if (endPoint.Y > startPoint.Y) { south = true; }
@@ -125,7 +149,10 @@ namespace BallzForWindows01.GamePhysicsParts
             // southeast
             if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
         }
+
         /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        #region SetRotation previous versions, rebuilt 2019-12-27    
         //void SetRotation()
         //{
         //    PointD endPoint = new PointD();
@@ -178,37 +205,11 @@ namespace BallzForWindows01.GamePhysicsParts
         //    // southeast
         //    if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
         //}
+
+        #endregion SetRotation previous versions, rebuilt 2019-12-27
         /// ----- SetRotation -----
-        
-        void _SetStartPoint(double sx, double sy)
-        {
-            startPoint.Set(sx, sy);
-            startMarker.Place(sx, sy);
-        }
 
-        void _SetEndPoint(double ex, double ey)
-        {
-            endMarker.Place(ex, ey);
-            endPoint.Set(ex, ey);
-            rightPos.Set(endPoint.X, startPoint.Y);
-            oppLen = rightPos.DistanceTo(endPoint);
-            hypLen = startPoint.DistanceTo(endPoint);
-            adjLen = startPoint.DistanceTo(rightPos);
-            SetRotation();
-            endPointSet = true;
-        }
 
-        //void _SetEndPoint(double ex, double ey)
-        //{
-        //    endMarker.Place(ex, ey);
-        //    endPoint.Set(ex, ey);
-        //    rightPos.Set(endPoint.X, startPoint.Y);
-        //    oppLen = rightPos.DistanceTo(endPoint);
-        //    hypLen = startPoint.DistanceTo(endPoint);
-        //    adjLen = startPoint.DistanceTo(rightPos);
-        //    SetRotation();
-        //    endPointSet = true;
-        //}
 
         private bool _InEndRect(double px, double py) { return endMarker.InClickRect(px, py); }
 
@@ -238,3 +239,19 @@ namespace BallzForWindows01.GamePhysicsParts
         }
     }
 }
+
+
+
+#region _SetEndPoint previous version, rebuilt 2019-12-27
+//void _SetEndPoint(double ex, double ey)
+//{
+//    endMarker.Place(ex, ey);
+//    endPoint.Set(ex, ey);
+//    rightPos.Set(endPoint.X, startPoint.Y);
+//    oppLen = rightPos.DistanceTo(endPoint);
+//    hypLen = startPoint.DistanceTo(endPoint);
+//    adjLen = startPoint.DistanceTo(rightPos);
+//    SetRotation();
+//    endPointSet = true;
+//}
+#endregion _SetEndPoint previous version, rebuilt 2019-12-27
