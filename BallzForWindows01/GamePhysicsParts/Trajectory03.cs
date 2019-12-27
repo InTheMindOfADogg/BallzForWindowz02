@@ -7,9 +7,15 @@ using System.Drawing;
 
 namespace BallzForWindows01.GamePhysicsParts
 {
+    using static AssistFunctions;
     using DrawableParts;
+
     class Trajectory03
     {
+
+        public bool Placed { get { return endMarker.Placed; } }
+        public string NameTag { get { return nameTag; } set { nameTag = value; } }
+
         string clsName = "Trajectory03";
         string nameTag = "";
 
@@ -44,7 +50,10 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Update()
         {
-
+            string fnId = FnId(clsName, "Update"); 
+            
+            
+            
         }
         public void Draw(Graphics g)
         {
@@ -73,6 +82,10 @@ namespace BallzForWindows01.GamePhysicsParts
             startMarker.DrawColor = c;
             endMarker.DrawColor = c;
         }
+
+        public bool InEndRect(PointD p) { return _InEndRect(p.X, p.Y); }
+        public bool InEndRect(double px, double py) { return _InEndRect(px, py); }
+        
 
 
         public void SetStartPoint(PointD p) { _SetStartPoint(p.X, p.Y); }
@@ -120,6 +133,11 @@ namespace BallzForWindows01.GamePhysicsParts
             adjLen = startPoint.DistanceTo(rightPos);
             SetRotation();
             endPointSet = true;
+        }
+
+        private bool _InEndRect(double px, double py)
+        {
+            return endMarker.InClickRect(px, py);
         }
 
         void DrawPointMarkers(Graphics g)

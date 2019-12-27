@@ -25,6 +25,7 @@ namespace BallzForWindows01.MainGameParts
         GameBall2 ball2;
 
         GameBall3 ball3;
+        GameBall04 ball4;
         
         //bool pause = false;
 
@@ -39,10 +40,12 @@ namespace BallzForWindows01.MainGameParts
             ball = new GameBall(new Size(width, height));
             ball2 = new GameBall2(new Size(width, height));
             ball3 = new GameBall3(new Size(width, height));
+            ball4 = new GameBall04(new Size(width, height));
 
             ball.DrawDbgTxt = false;
             ball2.DrawDbgTxt = false;
-            ball3.DrawDbgTxt = true;
+            ball3.DrawDbgTxt = false;
+            ball4.DrawDbgTxt = true;
 
         }
         public void Load()
@@ -61,6 +64,9 @@ namespace BallzForWindows01.MainGameParts
             ball2.Load(ballStartX, ballStartY);
             ball3.Load(ballStartX, ballStartY, 2, 15, 0, 5);
             ball3.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
+
+            ball4.Load(ballStartX, ballStartY, 2, 15, 0, 5);
+            ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
 
             AddCollisionPoint(300, 570, 25);
             AddCollisionPoint(300, 370, 25);
@@ -84,6 +90,8 @@ namespace BallzForWindows01.MainGameParts
 
             
             ball3.Update(mc);
+
+            ball4.Update(mc);
 
             UpdateCollisionPointList();
             UpdateCollisionPointList2();
@@ -284,7 +292,9 @@ namespace BallzForWindows01.MainGameParts
 
             //ball.Draw(g);
             //ball2.Draw(g);
-            ball3.Draw(g);
+            //ball3.Draw(g);
+
+            ball4.Draw(g);
             
 
             DrawCollisionPointList(g);

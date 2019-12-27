@@ -16,6 +16,7 @@ namespace BallzForWindows01
             g.DrawString(str, f, Brushes.Black, fontPos);
             return g.MeasureString(str, f);
         }
+        public static bool inows(string str) { return string.IsNullOrWhiteSpace(str); }
 
         public static void dbgPrintAngle(string fnId, string text, double angle)
         {
