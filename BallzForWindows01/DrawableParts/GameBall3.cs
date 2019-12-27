@@ -67,7 +67,7 @@ namespace BallzForWindows01.DrawableParts
             HandleMouseInput(mc);
             
             
-            //DbgFuncs.AddStr($"{fnId} launched: {launched}");
+            DbgFuncs.AddStr($"{fnId} launched: {launched}");
             //DbgFuncs.AddStr($"{fnId} adjustingAim: {adjustingAim}");
             //DbgFuncs.AddStr($"{fnId} adjustingSpin: {adjustingSpin}");
             if (!launched)
@@ -83,10 +83,10 @@ namespace BallzForWindows01.DrawableParts
                 }
             }
 
-            
-            //flightPath.Update();
-            double newRot = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
-            dbgPrintAngle(fnId, "newRot", newRot);
+
+            flightPath.CalculateDriftFactor();
+            //double newRot = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
+            //dbgPrintAngle(fnId, "newRot", newRot);
             rotation = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
             dbgPrintAngle(fnId, "rotation", rotation);
             flightPath.DbgPlotPath();
