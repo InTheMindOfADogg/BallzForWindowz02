@@ -41,12 +41,15 @@ namespace BallzForWindows01.GamePhysicsParts
         {
 
         }
+        double testRotFromPointDs = 0;
         public void Update()
         {
             string fnId = FnId(clsName, "Update");
             if (!inows(nameTag)) { fnId += $"[\"{nameTag}\"]"; }
 
             dbgPrintAngle(fnId, "rotation", rotation);
+            testRotFromPointDs = startMarker.Position.RotationTo(endMarker.Position);
+            dbgPrintAngle(fnId, "testRotFromPointDs", testRotFromPointDs);
 
 
         }
@@ -54,9 +57,6 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             startMarker.Draw(g);
             endMarker.Draw(g);
-            //DrawPointMarkers(g);
-            //if (/*showDebugLines*/ true) { DrawPointMarkers(g); }
-            //if (/*endPointSet*/ true) { g.DrawLine(Pens.Red, startPoint.fX, startPoint.fY, endPoint.fX, endPoint.fY); }
         }
         public void Reset()
         {

@@ -24,18 +24,42 @@ namespace BallzForWindows01.DrawableParts
         PointD position;
         RectangleD box;
         bool placed;
-        bool showClickRect; // = false;
+        bool showClickRect; // = true;
         bool showXMarker; // = true;
 
         int penWidth = 2;
 
 
-        public XMarker2() { _Init(); }
-        public void Load() { _Load(); }
-        public void Update() { _Update(); }
-        public void Draw(Graphics g) { _Draw(g); }
-        public void Reset() { _Reset(); }
-        public void CleanUp() { _CleanUp(); }
+        public XMarker2()
+        {
+            clsName = "XMarker2";
+            position = new PointD(0, 0);
+            box = new RectangleD(position.X, position.Y, 20, 20);
+            box.CenterOnXY(position.X, position.Y);
+            visible = false;
+            placed = false;
+            showClickRect = true;
+            showXMarker = true;
+        }
+        public void Load() { }
+        public void Update() { }
+        public void Draw(Graphics g)
+        {
+            if (visible)
+            {
+                Pen p = new Pen(color, penWidth);
+                if (showXMarker) { DrawX(g, p); }
+                if (showClickRect) { DrawClickRectangle(g, p); }
+                p.Dispose();
+            }
+        }
+        public void Reset()
+        {
+            position.Set(0, 0);
+            visible = false;
+            placed = false;
+        }
+        public void CleanUp() { }
 
 
         public void SetSize(double width, double height)
@@ -54,37 +78,6 @@ namespace BallzForWindows01.DrawableParts
         public bool InClickRect(PointD p) { return box.InBox(p.X, p.Y); }
         public bool InClickRect(double x, double y) { return box.InBox(x, y); }
 
-
-        private void _Init()
-        {
-            clsName = "XMarker2";
-            position = new PointD(0, 0);
-            box = new RectangleD(position.X, position.Y, 20, 20);
-            box.CenterOnXY(position.X, position.Y);
-            visible = false;
-            placed = false;
-            showClickRect = false;
-            showXMarker = true;
-        }
-        private void _Load() { }
-        private void _Update() { }
-        private void _Draw(Graphics g)
-        {
-            if (visible)
-            {
-                Pen p = new Pen(color, penWidth);
-                if (showXMarker) { DrawX(g, p); }
-                if (showClickRect) { DrawClickRectangle(g, p); }
-                p.Dispose();
-            }
-        }
-        private void _Reset()
-        {
-            position.Set(0, 0);
-            visible = false;
-            placed = false;
-        }
-        private void _CleanUp() { }
 
 
         private void DrawX(Graphics g, Pen p)
@@ -108,3 +101,35 @@ namespace BallzForWindows01.DrawableParts
 
     }
 }
+
+
+#region removed private versions of core public functions 2019-12-27
+//private void _Init()
+//{
+//    clsName = "XMarker2";
+//    position = new PointD(0, 0);
+//    box = new RectangleD(position.X, position.Y, 20, 20);
+//    box.CenterOnXY(position.X, position.Y);
+//    visible = false;
+//    placed = false;
+//    showClickRect = false;
+//    showXMarker = true;
+//}
+//private void _Draw(Graphics g)
+//{
+//    if (visible)
+//    {
+//        Pen p = new Pen(color, penWidth);
+//        if (showXMarker) { DrawX(g, p); }
+//        if (showClickRect) { DrawClickRectangle(g, p); }
+//        p.Dispose();
+//    }
+//}
+//private void _Reset()
+//{
+//    position.Set(0, 0);
+//    visible = false;
+//    placed = false;
+//}
+//private void _CleanUp() { }
+#endregion removed private versions of core public functions 2019-12-27
