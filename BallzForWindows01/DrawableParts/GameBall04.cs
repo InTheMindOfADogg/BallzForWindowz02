@@ -28,7 +28,10 @@ namespace BallzForWindows01.DrawableParts
 
         double speed = 1.0;
         double startingSpeed = 1.0;
-        double startingAngle = 0;
+        double startingRotation = 0;
+
+        double driftFactor = 0;
+        double initialDriftPerSecond = 0;
 
         bool adjustingAim = false;
         bool adjustingSpin = false;
@@ -83,12 +86,15 @@ namespace BallzForWindows01.DrawableParts
                     spinTraj.SetEndPoint(mousePos);
                 }
                 SetInitialTrajectory();
+                CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
+                CalculateInitialDriftPerSecond();
+
             }
 
-            // Put here for building, after finished building, move to pre launch logic
-            CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
-
-            if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
+            // Put here for building, after finished building, move to pre launch logic        
+            //CalculateInitialDriftPerSecond();
+            ApplyDriftPerSecond(gtimer.TotalSeconds);
+            
 
             if (launched)
             {
@@ -102,7 +108,11 @@ namespace BallzForWindows01.DrawableParts
             if (dbgtxt && DrawDbgTxt)
             {
                 gtimer.DbgTxt();
-                //dbgPrintAngle(fnId, "driftFactor", driftFactor);
+                if (dbgtxt) dbgPrintAngle(fnId, "driftFactor", driftFactor);
+                if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
+                if (dbgtxt) dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
+                DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
+
             }
         }
 
@@ -125,44 +135,69 @@ namespace BallzForWindows01.DrawableParts
             speed = startingSpeed;
             adjustingAim = false;
             adjustingSpin = false;
-
+            updatedAtSeconds = 0;
+            driftFactor = 0;
+            initialDriftPerSecond = 0;
+            //driftForSecond = 0;
+            //previousRotation = 0;
+            startingRotation = 0;
             aimTraj.Reset();
             spinTraj.Reset();
         }
 
         public void CleanUp()
         {
-            //_CleanUp(); 
             btnLaunch.CleanUp();
         }
 
-        double driftFactor = 0;
+        
         void SetInitialTrajectory()
         {
             rotation = aimTraj.Rotation;
-
-
+            startingRotation = rotation;
         }
 
+        
         void CalculateDriftFactor(double aim, double spin)
         {
             string fnId = FnId(clsName, "CalculateDriftFactor");
-            dbgPrintAngle(fnId, "aim", aim);
-            dbgPrintAngle(fnId, "spin", spin);
-
-            
+            //dbgPrintAngle(fnId, "aim", aim);
+            //dbgPrintAngle(fnId, "spin", spin);
+            DbgFuncs.AddStr($"{fnId} Calculating drift factor");
             RotationDirection defautRotationDirection = (aim < spin) ? RotationDirection.Clockwise : RotationDirection.CounterClockwise;
             double defaultDifference = (aim < spin) ? spin - aim : aim - spin;
             double oppositeDifference = (2 * Math.PI) - defaultDifference;
             RotationDirection oppositeRotationDirection = (aim < spin) ? RotationDirection.CounterClockwise : RotationDirection.Clockwise;
             RotationDirection shortestRotationDirection = (defaultDifference < oppositeDifference) ? defautRotationDirection : oppositeRotationDirection;
             double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;
-
             double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));
-
             driftFactor = rslt;
-            dbgPrintAngle(fnId, "driftFactor", driftFactor);
 
+            //dbgPrintAngle(fnId, "driftFactor", driftFactor);
+        }
+        void CalculateInitialDriftPerSecond()
+        {
+            initialDriftPerSecond = driftFactor / 100;
+        }
+
+        //double previousRotation = 0;
+        double updatedAtSeconds = 0;
+        //double driftForSecond = 0;
+        void ApplyDriftPerSecond(double elapsedSeconds)
+        {
+            
+            if(elapsedSeconds > updatedAtSeconds)
+            {
+                rotation += initialDriftPerSecond;
+                
+                // Applying decay to drift per second
+                //if (Math.Abs(initialDriftPerSecond) > 0) { initialDriftPerSecond = initialDriftPerSecond - (initialDriftPerSecond * 0.01); }  
+                
+                
+                
+                // Update updatedAtSeconds
+                updatedAtSeconds = elapsedSeconds;
+            }
         }
 
 
