@@ -92,6 +92,7 @@
     <Compile Include="MainGameParts\MainGame01.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\EnumsFile.cs" />
     <Compile Include="Structs\MouseControls.cs" />
     <Compile Include="Structs\MyTimer.cs" />
     <EmbeddedResource Include="BallzForm.resx">

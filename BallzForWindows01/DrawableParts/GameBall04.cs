@@ -24,23 +24,23 @@ namespace BallzForWindows01.DrawableParts
         PointD mousePos;
 
         GameTimer gtimer;
-        
+
 
         double speed = 1.0;
         double startingSpeed = 1.0;
         double startingAngle = 0;
 
         bool adjustingAim = false;
-        bool adjustingSpin = false;        
-        bool launched = false;       
+        bool adjustingSpin = false;
+        bool launched = false;
 
 
         public GameBall04(Size gameScreenSize)
             : base()
         {
-            
+
             clsName = "GameBall04";
-            this.gameScreenSize = gameScreenSize;            
+            this.gameScreenSize = gameScreenSize;
             btnLaunch = new Button01();
             startPosition = new PointD();
             mousePos = new PointD();
@@ -82,13 +82,13 @@ namespace BallzForWindows01.DrawableParts
                 {
                     spinTraj.SetEndPoint(mousePos);
                 }
+                SetInitialTrajectory();
             }
-            UpdateTrajectories();
 
-            //flightPath.CalculateDriftFactor();
-            //rotation = flightPath.CalculatedAngle(rotation, gtimer.TotalSeconds);
+            // Put here for building, after finished building, move to pre launch logic
+            CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
+
             if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
-            //flightPath.DbgPlotPath();
 
             if (launched)
             {
@@ -102,18 +102,14 @@ namespace BallzForWindows01.DrawableParts
             if (dbgtxt && DrawDbgTxt)
             {
                 gtimer.DbgTxt();
-                //flightPath.DbgText();
-
-
+                //dbgPrintAngle(fnId, "driftFactor", driftFactor);
             }
         }
 
 
         new public void Draw(Graphics g)
         {
-            //_Draw(g); 
             base.Draw(g);
-            //flightPath.Draw(g, !launched);
             btnLaunch.Draw(g);
 
             aimTraj.Draw(g);
@@ -122,13 +118,10 @@ namespace BallzForWindows01.DrawableParts
 
         public void Reset()
         {
-            //_Reset(); 
             launched = false;
             gtimer.Stop();
             gtimer.Reset();
-            //readyForLaunch = false;
             position.Set(startPosition);
-            //flightPath.Reset();
             speed = startingSpeed;
             adjustingAim = false;
             adjustingSpin = false;
@@ -143,11 +136,35 @@ namespace BallzForWindows01.DrawableParts
             btnLaunch.CleanUp();
         }
 
-        void UpdateTrajectories()
+        double driftFactor = 0;
+        void SetInitialTrajectory()
         {
-            aimTraj.Update();
-            spinTraj.Update();
+            rotation = aimTraj.Rotation;
+
+
         }
+
+        void CalculateDriftFactor(double aim, double spin)
+        {
+            string fnId = FnId(clsName, "CalculateDriftFactor");
+            dbgPrintAngle(fnId, "aim", aim);
+            dbgPrintAngle(fnId, "spin", spin);
+
+            
+            RotationDirection defautRotationDirection = (aim < spin) ? RotationDirection.Clockwise : RotationDirection.CounterClockwise;
+            double defaultDifference = (aim < spin) ? spin - aim : aim - spin;
+            double oppositeDifference = (2 * Math.PI) - defaultDifference;
+            RotationDirection oppositeRotationDirection = (aim < spin) ? RotationDirection.CounterClockwise : RotationDirection.Clockwise;
+            RotationDirection shortestRotationDirection = (defaultDifference < oppositeDifference) ? defautRotationDirection : oppositeRotationDirection;
+            double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;
+
+            double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));
+
+            driftFactor = rslt;
+            dbgPrintAngle(fnId, "driftFactor", driftFactor);
+
+        }
+
 
         void HandleMouseInput(MouseControls mc)
         {
