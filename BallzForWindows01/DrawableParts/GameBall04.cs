@@ -100,7 +100,7 @@ namespace BallzForWindows01.DrawableParts
 
             if (dbgtxt && DrawDbgTxt)
             {
-                gtimer.DbgTxt();
+                //gtimer.DbgTxt();
                 if (dbgtxt) dbgPrintAngle(fnId, "driftFactor", driftFactor);
                 if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
                 if (dbgtxt) dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
