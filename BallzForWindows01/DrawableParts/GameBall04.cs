@@ -25,7 +25,6 @@ namespace BallzForWindows01.DrawableParts
 
         GameTimer gtimer;
 
-
         double speed = 1.0;
         double startingSpeed = 1.0;
         double startingRotation = 0;
@@ -41,26 +40,22 @@ namespace BallzForWindows01.DrawableParts
         public GameBall04(Size gameScreenSize)
             : base()
         {
-
             clsName = "GameBall04";
             this.gameScreenSize = gameScreenSize;
             btnLaunch = new Button01();
             startPosition = new PointD();
             mousePos = new PointD();
             gtimer = new GameTimer();
-
             aimTraj = new Trajectory03();
             spinTraj = new Trajectory03();
             spinTraj.SetXColor(Color.AntiqueWhite);
             aimTraj.NameTag = "aimTraj";
             spinTraj.NameTag = "spinTraj";
-
         }
 
         new public void Load(double x, double y, double hitBoxSideLength, double radius, double rotation, int collisionPoints)
         {
             base.Load(x, y, hitBoxSideLength, radius, rotation, collisionPoints);
-
             startPosition.Set(x, y);
             PositionLaunchButton();
         }
@@ -74,7 +69,6 @@ namespace BallzForWindows01.DrawableParts
             HandleMouseInput(mc);
 
             if (dbgtxt) DbgFuncs.AddStr($"{fnId} launched: {launched}");
-
 
             if (!launched)
             {
@@ -121,7 +115,6 @@ namespace BallzForWindows01.DrawableParts
         {
             base.Draw(g);
             btnLaunch.Draw(g);
-
             aimTraj.Draw(g);
             spinTraj.Draw(g);
         }
@@ -138,8 +131,6 @@ namespace BallzForWindows01.DrawableParts
             updatedAtSeconds = 0;
             driftFactor = 0;
             initialDriftPerSecond = 0;
-            //driftForSecond = 0;
-            //previousRotation = 0;
             startingRotation = 0;
             aimTraj.Reset();
             spinTraj.Reset();
@@ -172,28 +163,21 @@ namespace BallzForWindows01.DrawableParts
             double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;
             double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));
             driftFactor = rslt;
-
-            //dbgPrintAngle(fnId, "driftFactor", driftFactor);
         }
         void CalculateInitialDriftPerSecond()
         {
             initialDriftPerSecond = driftFactor / 100;
         }
 
-        //double previousRotation = 0;
         double updatedAtSeconds = 0;
-        //double driftForSecond = 0;
         void ApplyDriftPerSecond(double elapsedSeconds)
-        {
-            
+        {            
             if(elapsedSeconds > updatedAtSeconds)
             {
                 rotation += initialDriftPerSecond;
                 
-                // Applying decay to drift per second
-                //if (Math.Abs(initialDriftPerSecond) > 0) { initialDriftPerSecond = initialDriftPerSecond - (initialDriftPerSecond * 0.01); }  
-                
-                
+                // Applying decay to drift per second // Possible future feature
+                //if (Math.Abs(initialDriftPerSecond) > 0) { initialDriftPerSecond = initialDriftPerSecond - (initialDriftPerSecond * 0.01); }                  
                 
                 // Update updatedAtSeconds
                 updatedAtSeconds = elapsedSeconds;
@@ -269,11 +253,12 @@ namespace BallzForWindows01.DrawableParts
                     return;
                 }
 
-                // TODO: set up launch
+                // Launch the ball and start the timer (when launch button is clicked)
                 if ((!adjustingAim && !adjustingSpin)
                     && mc.LastLeftButtonState == UpDownState.Up
                     && mc.LeftButtonState == UpDownState.Down
-                    && InLaunchButtonRect(mc.X, mc.Y))
+                    //&& InLaunchButtonRect(mc.X, mc.Y)
+                    && btnLaunch.InBoundingRect(mc.X, mc.Y))
                 {
                     launched = true;
                     gtimer.Start();
@@ -294,9 +279,10 @@ namespace BallzForWindows01.DrawableParts
             btnLaunch.Load(position.X, position.Y, size.Width, size.Height, "Launch");
         }
 
-        public bool InLaunchButtonRect(int x, int y) { return (btnLaunch.InBoundingRect(x, y)); }
-
-
 
     }
 }
+
+#region Removed InLaunchButtonRect and just called function directly in mouse controls (launch ball section) 2020-01-01
+//public bool InLaunchButtonRect(int x, int y) { return (btnLaunch.InBoundingRect(x, y)); }
+#endregion Removed InLaunchButtonRect and just called function directly in mouse controls (launch ball section) 2020-01-01

@@ -18,11 +18,11 @@ namespace BallzForWindows01.DrawableParts
         bool collision = false;
 
         bool pointHit = false;
+        
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
-
-
         public PointD Pos { get { return pos; } }
         public bool Collision { get { return collision; } }
+
 
         public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
         public CollisionPoint(double x, double y, double cbSideLength) { _Init(x, y, cbSideLength, cbSideLength, Color.FromArgb(255, 175, 30, 50)); }

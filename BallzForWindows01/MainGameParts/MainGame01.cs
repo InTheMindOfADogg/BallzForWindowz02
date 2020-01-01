@@ -41,11 +41,8 @@ namespace BallzForWindows01.MainGameParts
             ball4 = new GameBall04(new Size(width, height));
 
             if (ball != null) { ball.DrawDbgTxt = false; }
-
-            if (ball2 != null) { ball2.DrawDbgTxt = false; }
-
-            //ball3.DrawDbgTxt = false;
-            ball4.DrawDbgTxt = true;
+            if (ball2 != null) { ball2.DrawDbgTxt = false; }            
+            if (ball4 != null) { ball4.DrawDbgTxt = true; }
 
         }
         public void Load()
@@ -62,11 +59,12 @@ namespace BallzForWindows01.MainGameParts
 
             if (ball != null) { ball.Load(ballStartX, ballStartY); }
             if (ball2 != null) { ball2.Load(ballStartX, ballStartY); }
-
-
-
-            ball4.Load(ballStartX, ballStartY, 2, 15, 0, 5);
-            ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
+            if (ball4 != null)
+            {
+                ball4.Load(ballStartX, ballStartY, 2, 15, 0, 5);
+                ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
+            }
+                
 
             AddCollisionPoint(300, 570, 25);
             AddCollisionPoint(300, 370, 25);
@@ -89,12 +87,12 @@ namespace BallzForWindows01.MainGameParts
             if (ball2 != null) { ball2.Update(); }
 
             // GameBall04 ball4 has mouse controls built into Update function
-            ball4.Update(mc);
+            if (ball4 != null) { ball4.Update(mc); }
 
 
             if (ball != null) { UpdateCollisionPointList(); }
             if (ball2 != null) { UpdateCollisionPointList2(); }
-            UpdateCollisionPointList(ball4);
+            if (ball4 != null) { UpdateCollisionPointList(ball4); }
             
             DrawToBuffer();
         }
@@ -316,7 +314,7 @@ namespace BallzForWindows01.MainGameParts
             if (ball != null) { ball.Draw(g); }
             if (ball2 != null) { ball2.Draw(g); }
 
-            ball4.Draw(g);
+            if (ball4 != null) { ball4.Draw(g); }
 
             DrawCollisionPointList(g);
 
