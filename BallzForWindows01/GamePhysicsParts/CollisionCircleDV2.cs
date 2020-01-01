@@ -32,7 +32,6 @@ namespace BallzForWindows01.GamePhysicsParts
             clsName = "CollisionCircleDV2";
             cplist = new List<CollisionPoint>();
         }
-
         public void Load(double x, double y, double cpBoxSideLength, double radius, double rotation, int collisionPointCount)
         {
             base.Load(x, y, radius, rotation);
@@ -54,7 +53,6 @@ namespace BallzForWindows01.GamePhysicsParts
                 if (i == 0) { cpColor = dfltColorCollisionPoints; }
             }
         }
-
         public void Draw(Graphics g)
         {
             DrawCircle(g);
@@ -70,6 +68,7 @@ namespace BallzForWindows01.GamePhysicsParts
             return cp;
         }
 
+        // I should probably rework this to just move the points instead of recalculating the points all over again.
         protected void UpdateCollisionPoints(double x, double y, double radius, double rotation)
         {
             PointD cppos = new PointD();

@@ -11,4 +11,16 @@ namespace BallzForWindows01.Structs
         Clockwise,
         CounterClockwise
     }
+
+    public enum Heading
+    {        
+        East,
+        SouthEast,
+        South,
+        SouthWest,
+        West,
+        NorthWest,
+        North,
+        NorthEast
+    }
 }

@@ -89,10 +89,11 @@ namespace BallzForWindows01.DrawableParts
                 gtimer.Update();
 
                 // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
-
-
+                CalculateBounceAngle();
+                rotation += bounceAngle;
                 position.X = position.X + speed * Math.Cos(rotation);
                 position.Y = position.Y + speed * Math.Sin(rotation);
+                bounceAngle = 0;
             }
 
             UpdateCollisionPoints(position.X, position.Y, radius, rotation);
@@ -104,6 +105,8 @@ namespace BallzForWindows01.DrawableParts
                 if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
                 if (dbgtxt) dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
                 DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
+                DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
+                dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
 
             }
         }
@@ -129,20 +132,27 @@ namespace BallzForWindows01.DrawableParts
             startingRotation = 0;
             aimTraj.Reset();
             spinTraj.Reset();
+
+            // temporary/testing resets
+            bounceAngle = 0;
         }
         public void CleanUp()
         {
             btnLaunch.CleanUp();
         }
 
-
-        void SetInitialTrajectory()
+        #region building bounce logic. Started 2020-01-01
+        double bounceAngle = 0;
+        void CalculateBounceAngle()
         {
-            rotation = aimTraj.Rotation;
-            startingRotation = rotation;
+            //string fnId = FnId(clsName, "CheckForBounce");
+
+
         }
 
+        #endregion building bounce logic. Started 2020-01-01
 
+        void SetInitialTrajectory() { startingRotation = rotation = aimTraj.Rotation; }
         void CalculateDriftFactor(double aim, double spin)
         {
             string fnId = FnId(clsName, "CalculateDriftFactor");
@@ -158,12 +168,7 @@ namespace BallzForWindows01.DrawableParts
             double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));
             driftFactor = rslt;
         }
-        void CalculateInitialDriftPerSecond()
-        {
-            initialDriftPerSecond = driftFactor / 100;
-        }
-
-        
+        void CalculateInitialDriftPerSecond() { initialDriftPerSecond = driftFactor / 100; }
         void ApplyDriftPerSecond(double elapsedSeconds)
         {
             if (elapsedSeconds > updatedAtSeconds)
@@ -177,7 +182,6 @@ namespace BallzForWindows01.DrawableParts
                 updatedAtSeconds = elapsedSeconds;
             }
         }
-
 
         void HandleMouseInput(MouseControls mc)
         {
@@ -261,7 +265,6 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
-
         void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
         {
             Point position = new Point();
@@ -276,6 +279,14 @@ namespace BallzForWindows01.DrawableParts
 
     }
 }
+
+#region SetInitialTrajectory previous version
+//void SetInitialTrajectory()
+//{
+//    rotation = aimTraj.Rotation;
+//    startingRotation = rotation;
+//}
+#endregion SetInitialTrajectory previous version
 
 #region GameBall04 before adding collision/bounce logic 2020-01-01
 //namespace BallzForWindows01.DrawableParts
