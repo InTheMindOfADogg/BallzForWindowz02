@@ -50,17 +50,11 @@ namespace BallzForWindows01.DrawableParts
 
         public void Set(double x, double y, double cboxWidth, double cboxHeight) 
         {
-            //_Set(x, y, cboxWidth, cboxHeight); 
             pos.Set(x, y);
             boxSize.Set(cboxWidth, cboxHeight);
             SetCollisionBox();
         }
-        //void _Set(double x, double y, double cboxWidth, double cboxHeight)
-        //{
-        //    pos.Set(x, y);
-        //    boxSize.Set(cboxWidth, cboxHeight);
-        //    SetCollisionBox();
-        //}
+        
         public void Update(double x, double y) { }
         public void Draw(Graphics g)
         {
@@ -91,3 +85,12 @@ namespace BallzForWindows01.DrawableParts
         }
     }
 }
+
+#region 2020-01-01 Moved _Set into Set since there is only one version of Set at this time
+//void _Set(double x, double y, double cboxWidth, double cboxHeight)
+//{
+//    pos.Set(x, y);
+//    boxSize.Set(cboxWidth, cboxHeight);
+//    SetCollisionBox();
+//}
+#endregion 2020-01-01 Moved _Set into Set since there is only one version of Set at this time
