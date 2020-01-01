@@ -141,6 +141,7 @@ namespace BallzForWindows01.MainGameParts
             }
         }
 
+        // UpdateCollisionPointList for GameBall04 ball4
         void UpdateCollisionPointList(GameBall04 b)
         {
             CollisionPoint tempcp;
