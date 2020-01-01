@@ -21,7 +21,7 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             bool north, south;
             double anglePreRotation = 0;
-            double rotation = 0;
+            //double rot = 0;
             double oppLen = 0, hypLen = 0;
             PointD rightPoint = new PointD(endPoint.X, startPoint.Y);
             oppLen = rightPoint.DistanceTo(endPoint);
@@ -31,21 +31,21 @@ namespace BallzForWindows01.GamePhysicsParts
             if (endPoint.Y > startPoint.Y) { south = true; }
             anglePreRotation = Math.Asin(oppLen / hypLen);
             // north
-            if (endPoint.X == startPoint.X && north) { rotation = (3 * Math.PI) / 2; return; }
+            if (endPoint.X == startPoint.X && north) { rot = (3 * Math.PI) / 2; return; }
             // south
-            if (endPoint.X == startPoint.X && south) { rotation = (Math.PI) / 2; return; }
+            if (endPoint.X == startPoint.X && south) { rot = (Math.PI) / 2; return; }
             // east
-            if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { rotation = 0; return; }
+            if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { rot = 0; return; }
             // west
-            if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { rotation = Math.PI; return; }
+            if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { rot = Math.PI; return; }
             // northwest
-            if (endPoint.X > startPoint.X && north) { rotation = Math.PI * 2 - anglePreRotation; return; }
+            if (endPoint.X > startPoint.X && north) { rot = Math.PI * 2 - anglePreRotation; return; }
             //northeast
-            if (endPoint.X < startPoint.X && north) { rotation = Math.PI + anglePreRotation; return; }
+            if (endPoint.X < startPoint.X && north) { rot = Math.PI + anglePreRotation; return; }
             // southwest
-            if (endPoint.X > startPoint.X && south) { rotation = anglePreRotation; return; }
+            if (endPoint.X > startPoint.X && south) { rot = anglePreRotation; return; }
             // southeast
-            if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
+            if (endPoint.X < startPoint.X && south) { rot = Math.PI - anglePreRotation; return; }
         }
 
     }
