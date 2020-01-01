@@ -76,6 +76,7 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
+        public bool CheckForCollision(PointD pos) { return (collision = cbox.InBox(pos.X, pos.Y)); }
         public bool CheckForCollision(double px, double py) { return (collision = cbox.InBox(px, py)); }
         //public bool CheckForCollision(CollisionPoint cp) { return (collision = cbox.InBox(cp.pos.X, cp.pos.Y)); }        
         void SetCollisionBox()

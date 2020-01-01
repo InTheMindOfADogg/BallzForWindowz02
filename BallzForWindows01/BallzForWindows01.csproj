@@ -53,7 +53,7 @@
     <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="DrawableParts\GameBall04.cs" />
     <Compile Include="DrawableParts\GameBall2.cs" />
-    <Compile Include="DrawableParts\GameBall3.cs" />
+    <Compile Include="Deprecated\GameBall3.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\CircleD.cs" />
     <Compile Include="GamePhysicsParts\CircleDV2.cs" />
@@ -123,9 +123,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Deprecated\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

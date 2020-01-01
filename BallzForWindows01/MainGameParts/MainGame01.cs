@@ -38,8 +38,8 @@ namespace BallzForWindows01.MainGameParts
             blockList = new List<BasicBlock01>();
 
             //ball = new GameBall(new Size(width, height));
-            ball2 = new GameBall2(new Size(width, height));
-            //ball3 = new GameBall3(new Size(width, height));
+            //ball2 = new GameBall2(new Size(width, height));
+            ////ball3 = new GameBall3(new Size(width, height));     // going to remove this one
             ball4 = new GameBall04(new Size(width, height));
 
             if (ball != null) { ball.DrawDbgTxt = false; }
@@ -91,14 +91,14 @@ namespace BallzForWindows01.MainGameParts
 
             if (ball != null) { ball.Update(); }
             if (ball2 != null) { ball2.Update(); }
-
-
             //ball3.Update(mc);
-
             ball4.Update(mc);
+
 
             if (ball != null) { UpdateCollisionPointList(); }
             if (ball2 != null) { UpdateCollisionPointList2(); }
+            UpdateCollisionPointList(ball4);
+            
 
 
 
@@ -149,9 +149,23 @@ namespace BallzForWindows01.MainGameParts
             }
         }
 
-        void UpdateCollisionPointList3()
+        void UpdateCollisionPointList(GameBall04 b)
         {
-
+            CollisionPoint tempcp;
+            int ballCpListCount = b.CollisionPointList.Count;
+            for (int i = 0; i < cplist.Count; i++)
+            {
+                for (int j = 0; j < ballCpListCount; j++)
+                {
+                    tempcp = b.CollisionPointList[j];
+                    if (cplist[i].CheckForCollision(tempcp.Pos))
+                    {
+                        tempcp.PointHit = true;
+                        return;
+                    }
+                    tempcp.PointHit = false;
+                }
+            }
         }
 
         // UpdateCollisionPointList3 for ball 3
@@ -235,7 +249,7 @@ namespace BallzForWindows01.MainGameParts
                 ball.Reset();
             }
 
-            #endregion ball version 1
+        #endregion ball version 1
 
         Ball2Controls:
             if (ball2 == null) { goto EndControls; }
@@ -290,7 +304,7 @@ namespace BallzForWindows01.MainGameParts
             {
                 ball2.Reset();
             }
-            #endregion ball2
+        #endregion ball2
 
         EndControls:
             return;
