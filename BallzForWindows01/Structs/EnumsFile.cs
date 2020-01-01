@@ -23,4 +23,6 @@ namespace BallzForWindows01.Structs
         North,
         NorthEast
     }
+
+
 }
