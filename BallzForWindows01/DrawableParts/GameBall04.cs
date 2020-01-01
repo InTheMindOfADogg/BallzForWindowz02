@@ -64,6 +64,7 @@ namespace BallzForWindows01.DrawableParts
             startPosition.Set(x, y);
             PositionLaunchButton();
         }
+        
 
 
         public void Update(MouseControls mc)
@@ -91,8 +92,7 @@ namespace BallzForWindows01.DrawableParts
 
             }
 
-            // Put here for building, after finished building, move to pre launch logic        
-            //CalculateInitialDriftPerSecond();
+                        
             ApplyDriftPerSecond(gtimer.TotalSeconds);
             
 

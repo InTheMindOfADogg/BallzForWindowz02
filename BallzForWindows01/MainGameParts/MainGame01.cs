@@ -21,15 +21,15 @@ namespace BallzForWindows01.MainGameParts
         Bitmap backbuffer = null;
 
         List<BasicBlock01> blockList;
-        GameBall ball;
-        GameBall2 ball2;
+        GameBall ball = null;
+        GameBall2 ball2 = null;
 
         //GameBall3 ball3;
         GameBall04 ball4;
-        
+
         //bool pause = false;
 
-        
+
         List<CollisionPoint> cplist = new List<CollisionPoint>();
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
@@ -37,13 +37,15 @@ namespace BallzForWindows01.MainGameParts
             height = gameWindowHeight;
             blockList = new List<BasicBlock01>();
 
-            ball = new GameBall(new Size(width, height));
+            //ball = new GameBall(new Size(width, height));
             ball2 = new GameBall2(new Size(width, height));
             //ball3 = new GameBall3(new Size(width, height));
             ball4 = new GameBall04(new Size(width, height));
 
-            ball.DrawDbgTxt = false;
-            ball2.DrawDbgTxt = false;
+            if (ball != null) { ball.DrawDbgTxt = false; }
+
+            if (ball2 != null) { ball2.DrawDbgTxt = false; }
+
             //ball3.DrawDbgTxt = false;
             ball4.DrawDbgTxt = true;
 
@@ -60,8 +62,9 @@ namespace BallzForWindows01.MainGameParts
             ballStartX = 700;
             ballStartY = height / 2 + 50;
 
-            ball.Load(ballStartX, ballStartY);
-            ball2.Load(ballStartX, ballStartY);
+            if (ball != null) { ball.Load(ballStartX, ballStartY); }
+            if (ball2 != null) { ball2.Load(ballStartX, ballStartY); }
+
 
             //ball3.Load(ballStartX, ballStartY, 2, 15, 0, 5);
             //ball3.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
@@ -81,43 +84,43 @@ namespace BallzForWindows01.MainGameParts
             tempcp.Load(x, y, sideLength);
             cplist.Add(tempcp);
         }
-        
+
         public void Update(MouseControls mc)
         {
             UpdateMouseControls(mc);
-            
-            ball.Update();
-            ball2.Update();
 
-            
+            if (ball != null) { ball.Update(); }
+            if (ball2 != null) { ball2.Update(); }
+
+
             //ball3.Update(mc);
 
             ball4.Update(mc);
 
-            UpdateCollisionPointList();
-            UpdateCollisionPointList2();
+            if (ball != null) { UpdateCollisionPointList(); }
+            if (ball2 != null) { UpdateCollisionPointList2(); }
 
-            
+
 
             DrawToBuffer();
         }
 
         #region UpdateCollisionPointList functions
-        
+
         // UpdateCollisionPointList for ball 
         void UpdateCollisionPointList()
         {
             CollisionPoint tempcp;
             for (int i = 0; i < cplist.Count; i++)
             {
-                for(int j = 0; j < ball.CollisionPointList.Count; j++)
+                for (int j = 0; j < ball.CollisionPointList.Count; j++)
                 {
                     tempcp = ball.CollisionPointList[j];
-                    if(cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
+                    if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
                     {
                         tempcp.PointHit = true;
                         ball.Collide = true;
-                        return;                        
+                        return;
                     }
                     tempcp.PointHit = false;
                 }
@@ -144,6 +147,11 @@ namespace BallzForWindows01.MainGameParts
                     tempcp.PointHit = false;
                 }
             }
+        }
+
+        void UpdateCollisionPointList3()
+        {
+
         }
 
         // UpdateCollisionPointList3 for ball 3
@@ -173,9 +181,10 @@ namespace BallzForWindows01.MainGameParts
         #region UpdateMouseControls versions
         public void UpdateMouseControls(MouseControls mc)
         {
+            if (ball == null) { goto Ball2Controls; }
             #region ball version 1
             #region Setting up the shot
-            if(!ball.BallLaunched)
+            if (!ball.BallLaunched)
             {
                 if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball.SettingSpin)
                 {
@@ -217,7 +226,7 @@ namespace BallzForWindows01.MainGameParts
             if (mc.LeftButtonState == UpDownState.Down && mc.LastLeftButtonState == UpDownState.Up && ball.BallLaunched == true)
             {
                 ball.Pause = false;
-                
+
             }
 
             // Reset
@@ -228,6 +237,8 @@ namespace BallzForWindows01.MainGameParts
 
             #endregion ball version 1
 
+        Ball2Controls:
+            if (ball2 == null) { goto EndControls; }
             #region ball2 only
             #region Setting up the shot
             if (!ball2.BallLaunched)
@@ -280,7 +291,10 @@ namespace BallzForWindows01.MainGameParts
                 ball2.Reset();
             }
             #endregion ball2
-            
+
+        EndControls:
+            return;
+
         }
         #endregion UpdateMouseControls versions
         private void DrawToBuffer()
@@ -291,14 +305,15 @@ namespace BallzForWindows01.MainGameParts
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
 
-            //ball.Draw(g);
-            //ball2.Draw(g);
+            if (ball != null) { ball.Draw(g); }
+            if (ball2 != null) { ball2.Draw(g); }
+
             //ball3.Draw(g);
 
             ball4.Draw(g);
-            
 
             DrawCollisionPointList(g);
+
             DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();
             g.Dispose();
@@ -311,7 +326,7 @@ namespace BallzForWindows01.MainGameParts
 
         void DrawCollisionPointList(Graphics g)
         {
-            for(int i = 0; i < cplist.Count; i++)
+            for (int i = 0; i < cplist.Count; i++)
             {
                 cplist[i].Draw(g);
             }
@@ -361,8 +376,8 @@ namespace BallzForWindows01.MainGameParts
 
         public void CleanUp()
         {
-            ball.CleanUp();
-            ball2.CleanUp();
+            if (ball != null) { ball.CleanUp(); }
+            if (ball2 != null) { ball2.CleanUp(); }
             CleanUpBlockList();
 
         }
