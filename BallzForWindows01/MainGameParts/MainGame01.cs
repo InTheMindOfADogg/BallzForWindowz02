@@ -83,10 +83,12 @@ namespace BallzForWindows01.MainGameParts
 
         public void Update(MouseControls mc)
         {
+            // GameBall and GameBall2 do not have mouse controls built into Update
             UpdateMouseControls(mc);
-
             if (ball != null) { ball.Update(); }
             if (ball2 != null) { ball2.Update(); }
+
+            // GameBall04 ball4 has mouse controls built into Update function
             ball4.Update(mc);
 
 
