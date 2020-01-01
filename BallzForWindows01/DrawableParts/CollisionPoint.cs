@@ -48,13 +48,19 @@ namespace BallzForWindows01.DrawableParts
             SetCollisionBox();
         }
 
-        public void Set(double x, double y, double cboxWidth, double cboxHeight) { _Set(x, y, cboxWidth, cboxHeight); }
-        void _Set(double x, double y, double cboxWidth, double cboxHeight)
+        public void Set(double x, double y, double cboxWidth, double cboxHeight) 
         {
+            //_Set(x, y, cboxWidth, cboxHeight); 
             pos.Set(x, y);
             boxSize.Set(cboxWidth, cboxHeight);
             SetCollisionBox();
         }
+        //void _Set(double x, double y, double cboxWidth, double cboxHeight)
+        //{
+        //    pos.Set(x, y);
+        //    boxSize.Set(cboxWidth, cboxHeight);
+        //    SetCollisionBox();
+        //}
         public void Update(double x, double y) { }
         public void Draw(Graphics g)
         {
