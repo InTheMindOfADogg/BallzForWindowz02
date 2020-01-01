@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 namespace BallzForWindows01.GamePhysicsParts
 {
     // Created 2020-01-01
+    
+    // TODO in this class:
+    // add Heading (from EnumsFile)
+    // functions to set heading
+    // function(s) to adjust rotation
+    // other stuff probably....
+    // Plan with this class:
+    // Create Trajectory04 and replace the double rotation with this class
+
     class RotationD
     {
         double rot = 0;
