@@ -15,6 +15,7 @@ namespace BallzForWindows01.DrawableParts
         PointD p1, p2;
         double rot = 0;
         double length = 0;
+        double angleDegrees = 0;
         int thickness = 3;
         bool collision = false;
 
@@ -53,7 +54,7 @@ namespace BallzForWindows01.DrawableParts
             p2.Y = p1.Y + length * Math.Sin(rot);
         }
 
-        double angleDegrees = 0;
+        
         public void Update(double adjustRotation = 0)
         {
             if (adjustRotation != 0)

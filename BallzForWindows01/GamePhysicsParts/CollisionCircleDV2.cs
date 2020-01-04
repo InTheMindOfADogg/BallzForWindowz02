@@ -13,7 +13,7 @@ namespace BallzForWindows01.GamePhysicsParts
 
         // Properties
         public List<CollisionPoint> CollisionPointList { get { return cplist; } }
-        public double MiddleCPIdx { get { return middleCpidx; } }
+        //public double MiddleCPIdx { get { return middleCpidx; } }
 
 
         List<CollisionPoint> cplist;
@@ -25,7 +25,7 @@ namespace BallzForWindows01.GamePhysicsParts
         bool[] cpHitArr = null;
 
         double spaceBetween = 0;
-        double firstCpAngle = 0;
+        //double firstCpAngle = 0;
 
         public CollisionCircleDV2() : base()
         {

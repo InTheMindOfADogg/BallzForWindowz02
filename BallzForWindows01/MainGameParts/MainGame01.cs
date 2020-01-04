@@ -52,8 +52,7 @@ namespace BallzForWindows01.MainGameParts
             int ballStartX, ballStartY;
 
             //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
-            //ballStartX = 300;
-            //ballStartY = height / 2 + 50;
+            
             ballStartX = 500;
             ballStartY = height / 2 + 50;
 
@@ -155,6 +154,7 @@ namespace BallzForWindows01.MainGameParts
                     {
                         tempcp.PointHit = true;
                         return;
+                        //continue;
                     }
                     tempcp.PointHit = false;
                 }

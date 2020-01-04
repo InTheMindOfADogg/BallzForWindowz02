@@ -77,23 +77,28 @@ namespace BallzForWindows01.DrawableParts
                 CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
                 CalculateInitialDriftPerSecond();
             }
-
-
             ApplyDriftPerSecond(gtimer.TotalSeconds);
-
-
             if (launched)
             {
                 gtimer.Update();
-
                 // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
                 CalculateBounceAngle();
                 rotation += bounceAngle;
                 position.X = position.X + speed * Math.Cos(rotation);
                 position.Y = position.Y + speed * Math.Sin(rotation);
 
-                if (bounceAngle != 0) { lastBounceAngle = bounceAngle; }
-                bounceAngle = 0;
+                if (bounceAngle != 0) 
+                { 
+                    lastBounceAngle = bounceAngle;
+                    bounceAngle = 0;
+                }
+                if(totalPointsHit > 0) 
+                { 
+                    lastTotalPointsHit = totalPointsHit;
+                    totalPointsHit = 0;
+                }
+                
+                
             }
 
             MoveCollisionPoints(position.X, position.Y, radius, rotation);
@@ -111,15 +116,13 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
                 DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
-
-
-                if(firstPointHit > 0) 
+                DbgFuncs.AddStr($"{fnId} lastTotalPointsHit: {lastTotalPointsHit}");
+                if(firstPointHit > -1) 
                 { 
                     launched = false;
                     aimTraj.Visible = false;
                     spinTraj.Visible = false;
                 }
-
             }
 
 
@@ -150,6 +153,8 @@ namespace BallzForWindows01.DrawableParts
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
+            lastTotalPointsHit = 0;
+            totalPointsHit = 0;
         }
         public void CleanUp()
         {
@@ -162,6 +167,8 @@ namespace BallzForWindows01.DrawableParts
         double testBounceAngle = 0;
         bool shouldBounce = false;
         int firstPointHit = -1;
+        int totalPointsHit = 0;
+        int lastTotalPointsHit = 0;
         void CalculateBounceAngle()
         {
             //string fnId = FnId(clsName, "CheckForBounce");
@@ -169,6 +176,7 @@ namespace BallzForWindows01.DrawableParts
             {
                 if (CollisionPointList[i].PointHit)
                 {
+                    totalPointsHit++;
                     shouldBounce = true;
                     if(firstPointHit < 0)
                     {
@@ -176,10 +184,6 @@ namespace BallzForWindows01.DrawableParts
                     }
                     
                     //CollisionPoint cp = CollisionPointList[i];
-
-
-                    
-
                 }
             }
         }
@@ -217,6 +221,15 @@ namespace BallzForWindows01.DrawableParts
             }
         }
 
+        bool PointInCircle(double x, double y)
+        {
+            PointD tempPoint = new PointD(x, y);
+
+
+
+
+            return false;
+        }
         void HandleMouseInput(MouseControls mc)
         {
             bool dbgtxt = true;
