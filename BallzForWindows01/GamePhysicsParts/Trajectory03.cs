@@ -17,6 +17,8 @@ namespace BallzForWindows01.GamePhysicsParts
         public string NameTag { get { return nameTag; } set { nameTag = value; } }
         public double Rotation { get { return rotation; } }
 
+        public bool Visible { get { return visible; } set { visible = value; } }
+
         string clsName = "Trajectory03";
         string nameTag = "";
 
@@ -27,6 +29,7 @@ namespace BallzForWindows01.GamePhysicsParts
         double oppLen, hypLen, adjLen, anglePreRotation;
 
         bool north, south;
+        bool visible = true;
 
         public Trajectory03()
         {
@@ -54,6 +57,7 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Draw(Graphics g)
         {
+            if (!visible) { return; }
             startMarker.Draw(g);
             endMarker.Draw(g);
         }
@@ -61,6 +65,7 @@ namespace BallzForWindows01.GamePhysicsParts
         {
             startMarker.Reset();
             endMarker.Reset();
+            visible = true;
         }
         public void CleanUp()
         {

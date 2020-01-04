@@ -86,54 +86,59 @@ namespace BallzForWindows01.GamePhysicsParts
             //DebugTextCollisionCircle();
         }
 
-        protected void DebugTextCollisionCircle()
-        {
-            if (DrawDbgTxt)
-            {
-                DbgFuncs.AddStr($"[{clsName}._Update]: middleCpidx: {middleCpidx}");
-                DbgFuncs.AddStr($"[{clsName}._Update]: spaceBetween: {spaceBetween * 180 / Math.PI}");
-                DbgFuncs.AddStr($"[{clsName}._Update]: firstCpAngle: {firstCpAngle * 180 / Math.PI}");
-                DbgFuncs.AddStr($"[{clsName}._Update]: cpBoxSize: {cpBoxSideLength}");
-            }
-        }
+        
 
         protected void DrawCollisionPoints(Graphics g)
         {
             for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g); }
         }
 
-        public List<int> TriggeredHitPointIdxList()
-        {
-            List<int> triggeredHitIdx = new List<int>();
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                cpHitArr[i] = false;
-                if (cplist[i].PointHit)
-                {
-                    cpHitArr[i] = true;
-                    triggeredHitIdx.Add(i);
-                }
-            }
-            return triggeredHitIdx;
-        }
-        public int CollisionPointHit()
-        {
-            for (int i = 0; i < cplist.Count; i++) { if (cplist[i].PointHit && i != middleCpidx) { return i; } }
-            return -1;
-        }
-        public int CollisionPointHit2()
-        {
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                if (cplist[i].PointHit) { return i; }
-            }
-            return -1;
-        }
 
+        
 
     }
 
 }
+
+#region 0 refs as of 2020-01-04
+//public List<int> TriggeredHitPointIdxList()
+//{
+//    List<int> triggeredHitIdx = new List<int>();
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        cpHitArr[i] = false;
+//        if (cplist[i].PointHit)
+//        {
+//            cpHitArr[i] = true;
+//            triggeredHitIdx.Add(i);
+//        }
+//    }
+//    return triggeredHitIdx;
+//}
+//public int CollisionPointHit()
+//{
+//    for (int i = 0; i < cplist.Count; i++) { if (cplist[i].PointHit && i != middleCpidx) { return i; } }
+//    return -1;
+//}
+//public int CollisionPointHit2()
+//{
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        if (cplist[i].PointHit) { return i; }
+//    }
+//    return -1;
+//}
+//protected void DebugTextCollisionCircle()
+//{
+//    if (DrawDbgTxt)
+//    {
+//        DbgFuncs.AddStr($"[{clsName}._Update]: middleCpidx: {middleCpidx}");
+//        DbgFuncs.AddStr($"[{clsName}._Update]: spaceBetween: {spaceBetween * 180 / Math.PI}");
+//        DbgFuncs.AddStr($"[{clsName}._Update]: firstCpAngle: {firstCpAngle * 180 / Math.PI}");
+//        DbgFuncs.AddStr($"[{clsName}._Update]: cpBoxSize: {cpBoxSideLength}");
+//    }
+//}
+#endregion 0 refs as of 2020-01-04
 
 #region _Init, moved into constructor and removed parts not needed at this time 2020-01-01
 //void _Init(int collisionPoints, double cpBoxSideLength)

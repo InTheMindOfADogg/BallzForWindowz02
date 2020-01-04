@@ -101,17 +101,28 @@ namespace BallzForWindows01.DrawableParts
             if (dbgtxt && DrawDbgTxt)
             {
                 //gtimer.DbgTxt();
-                if (dbgtxt) dbgPrintAngle(fnId, "driftFactor", driftFactor);
-                if (dbgtxt) dbgPrintAngle(fnId, "rotation", rotation);
-                if (dbgtxt) dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
+                dbgPrintAngle(fnId, "driftFactor", driftFactor);
+                dbgPrintAngle(fnId, "rotation", rotation);
+                dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
                 DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
                 DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
                 dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
+                DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
+
+
+                if(firstPointHit > 0) 
+                { 
+                    launched = false;
+                    aimTraj.Visible = false;
+                    spinTraj.Visible = false;
+                }
 
             }
+
+
         }
         new public void Draw(Graphics g)
         {
@@ -138,6 +149,7 @@ namespace BallzForWindows01.DrawableParts
 
             // temporary/testing resets
             bounceAngle = 0;
+            firstPointHit = -1;
         }
         public void CleanUp()
         {
@@ -149,6 +161,7 @@ namespace BallzForWindows01.DrawableParts
         double lastBounceAngle = 0;
         double testBounceAngle = 0;
         bool shouldBounce = false;
+        int firstPointHit = -1;
         void CalculateBounceAngle()
         {
             //string fnId = FnId(clsName, "CheckForBounce");
@@ -157,7 +170,13 @@ namespace BallzForWindows01.DrawableParts
                 if (CollisionPointList[i].PointHit)
                 {
                     shouldBounce = true;
-                    CollisionPoint cp = CollisionPointList[i];
+                    if(firstPointHit < 0)
+                    {
+                        firstPointHit = i;
+                    }
+                    
+                    //CollisionPoint cp = CollisionPointList[i];
+
 
                     
 
