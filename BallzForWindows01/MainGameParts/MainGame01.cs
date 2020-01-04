@@ -41,7 +41,7 @@ namespace BallzForWindows01.MainGameParts
             ball4 = new GameBall04(new Size(width, height));
 
             if (ball != null) { ball.DrawDbgTxt = false; }
-            if (ball2 != null) { ball2.DrawDbgTxt = false; }            
+            if (ball2 != null) { ball2.DrawDbgTxt = false; }
             if (ball4 != null) { ball4.DrawDbgTxt = true; }
 
         }
@@ -52,7 +52,7 @@ namespace BallzForWindows01.MainGameParts
             int ballStartX, ballStartY;
 
             //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
-            
+
             ballStartX = 500;
             ballStartY = height / 2 + 50;
 
@@ -63,7 +63,7 @@ namespace BallzForWindows01.MainGameParts
                 ball4.Load(ballStartX, ballStartY, 2, 10, 0, 5);
                 ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
             }
-                
+
 
             AddCollisionPoint(300, 570, 25);
             AddCollisionPoint(300, 370, 25);
@@ -85,14 +85,13 @@ namespace BallzForWindows01.MainGameParts
             if (ball != null) { ball.Update(); }
             if (ball2 != null) { ball2.Update(); }
 
-            // GameBall04 ball4 has mouse controls built into Update function
-            if (ball4 != null) { ball4.Update(mc, cplist); }
-
-
             if (ball != null) { UpdateCollisionPointList(); }
             if (ball2 != null) { UpdateCollisionPointList2(); }
-            //if (ball4 != null) { UpdateCollisionPointList(ball4); }
-            
+
+
+            // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
+            if (ball4 != null) { ball4.Update(mc, cplist); }
+
             DrawToBuffer();
         }
 
@@ -140,50 +139,7 @@ namespace BallzForWindows01.MainGameParts
             }
         }
 
-        ///
-        // UpdateCollisionPointList for GameBall04 ball4
-        //void UpdateCollisionPointList(GameBall04 b)
-        //{
-        //    CollisionPoint tempcp;
-        //    int ballCpListCount = b.CollisionPointList.Count;
-        //    for (int i = 0; i < cplist.Count; i++)
-        //    {
-        //        for (int j = 0; j < ballCpListCount; j++)
-        //        {
-        //            tempcp = b.CollisionPointList[j];
-        //            if (cplist[i].CheckForCollision(tempcp.Pos))
-        //            {
-        //                tempcp.PointHit = true;
-        //                return;
-        //                //continue;
-        //            }
-        //            tempcp.PointHit = false;
-        //        }
-        //    }
-        //}
         
-        ///         
-        // UpdateCollisionPointList3 for ball 3
-        //void UpdateCollisionPointList3()
-        //{
-        //    CollisionPoint tempcp;
-        //    for (int i = 0; i < cplist.Count; i++)
-        //    {
-        //        for (int j = 0; j < ball3.CollisionPointList.Count; j++)
-        //        {
-        //            tempcp = ball3.CollisionPointList[j];
-        //            if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
-        //            {
-        //                tempcp.PointHit = true;
-        //                //ball3.Collide = true;
-        //                //ball3.PublicHitIdxList.Add(i);
-        //                return;
-        //                //continue;
-        //            }
-        //            tempcp.PointHit = false;
-        //        }
-        //    }
-        //}
         #endregion UpdateCollisionPointList functions
 
         int mStartX, mStartY, deltaX, deltaY;
@@ -393,3 +349,51 @@ namespace BallzForWindows01.MainGameParts
 
     }
 }
+
+
+#region built collision detection checking into GameBall04.Update. 2020-01-04
+// UpdateCollisionPointList for GameBall04 ball4
+//void UpdateCollisionPointList(GameBall04 b)
+//{
+//    CollisionPoint tempcp;
+//    int ballCpListCount = b.CollisionPointList.Count;
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        for (int j = 0; j < ballCpListCount; j++)
+//        {
+//            tempcp = b.CollisionPointList[j];
+//            if (cplist[i].CheckForCollision(tempcp.Pos))
+//            {
+//                tempcp.PointHit = true;
+//                return;
+//                //continue;
+//            }
+//            tempcp.PointHit = false;
+//        }
+//    }
+//}
+#endregion built collision detection checking into GameBall04.Update. 2020-01-04
+
+#region old update collision point logic for GameBall3
+// UpdateCollisionPointList3 for ball 3
+//void UpdateCollisionPointList3()
+//{
+//    CollisionPoint tempcp;
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        for (int j = 0; j < ball3.CollisionPointList.Count; j++)
+//        {
+//            tempcp = ball3.CollisionPointList[j];
+//            if (cplist[i].CheckForCollision(tempcp.Pos.X, tempcp.Pos.Y))
+//            {
+//                tempcp.PointHit = true;
+//                //ball3.Collide = true;
+//                //ball3.PublicHitIdxList.Add(i);
+//                return;
+//                //continue;
+//            }
+//            tempcp.PointHit = false;
+//        }
+//    }
+//}
+#endregion old update collision point logic for GameBall3

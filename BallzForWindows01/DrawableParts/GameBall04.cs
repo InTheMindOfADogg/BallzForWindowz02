@@ -124,7 +124,6 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                DbgFuncs.AddStr($"{fnId} lastHz: {lastHz}");
                 if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
             }
         }
@@ -222,7 +221,7 @@ namespace BallzForWindows01.DrawableParts
             firstPointHit = -1;
             shouldBounce = false;
             hz = HitZones.LA;
-            lastHz = HitZones.LA;
+            //lastHz = HitZones.LA;
 
         }
         public void CleanUp()
@@ -237,7 +236,10 @@ namespace BallzForWindows01.DrawableParts
         bool shouldBounce = false;
         int firstPointHit = -1;
         HitZones hz = HitZones.LA;
-        HitZones lastHz = HitZones.LA;
+
+        // Checks if the ball has collided with any points passed in and sets HitZone hz.
+        // HitZone hz is based off the ball position (center) relative to the sides of the
+        // CollisionPoint rectangle.
         public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
             //CollisionPoint tempcp;
