@@ -12,18 +12,17 @@ namespace BallzForWindows01.GamePhysicsParts
     {
 
         protected PointD position;
-        protected double radius = 0;
+        protected double radius = 15;
         protected double rotation = 0;
 
         public CircleDV3()
         {
-            //_Init(0, 0, 20, 0);
             clsName = "CircleDV3";
             position = new PointD(30, 30);
             radius = 15;
             rotation = 0;
         }
-        
+
         protected void Load(double x, double y, double radius, double rotation)
         {
             position.Set(x, y);
@@ -31,9 +30,6 @@ namespace BallzForWindows01.GamePhysicsParts
             this.rotation = rotation;
         }
 
-        public void SetCircleColor(Color c) { SetColor(c); }
-
-        
         protected void DrawCircle(Graphics g)
         {
             float len = 4;      // length of sides for center marker
@@ -41,12 +37,20 @@ namespace BallzForWindows01.GamePhysicsParts
             g.FillRectangle(Brushes.Red, position.fX - (len / 2), position.fY - (len / 2), len, len);   // draw center marker for testing            
             //g.DrawEllipse(Pens.Green, (float)center.fX - ((float)radius), center.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
             g.DrawEllipse(p, (float)position.fX - ((float)radius), position.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
+
+            //g.DrawLine(p, position.fX - 10, position.fY, position.fX + 10, position.fY);  // test to verify where position is
             p.Dispose();
         }
 
-        
+        protected bool InCircle(double x, double y)
+        {
+            if (position.DistanceTo(x, y) < radius) { return true; }
+            return false;
+        }
 
-        
+        public void SetCircleColor(Color c) { SetColor(c); }
+
+
 
     }
 }
