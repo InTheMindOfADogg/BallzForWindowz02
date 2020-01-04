@@ -242,13 +242,11 @@ namespace BallzForWindows01.DrawableParts
         // CollisionPoint rectangle.
         public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
-            //CollisionPoint tempcp;
             for (int i = 0; i < blockCpList.Count; i++)
             {
                 
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
-                    //tempcp = CollisionPointList[j];
                     if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
                     {
                         CollisionPointList[j].PointHit = true;
@@ -258,27 +256,10 @@ namespace BallzForWindows01.DrawableParts
                     CollisionPointList[j].PointHit = false;
                 }
             }
-        }
-        //public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
-        //{
-        //    CollisionPoint tempcp;
-        //    for (int i = 0; i < blockCpList.Count; i++)
-        //    {
-
-        //        for (int j = 0; j < CollisionPointList.Count; j++)
-        //        {
-        //            tempcp = CollisionPointList[j];
-        //            if (blockCpList[i].CheckForCollision(tempcp.Pos))
-        //            {
-        //                tempcp.PointHit = true;
-        //                hz = bc.SetHitZone(position, blockCpList[i].Rect);
-        //                return;
-        //            }
-        //            tempcp.PointHit = false;
-        //        }
-        //    }
-        //}
-        public void ClearBlockCollision(List<CollisionPoint> blockCpList) { for (int i = 0; i < blockCpList.Count; i++) { blockCpList[i].Reset(); } }
+        }        
+        
+        // TODO: build CalculateBounceAngle. I am planning for this to be the location where the bounce angle
+        //       will be calculated if collision is detected in CheckForBlockCollision
         void CalculateBounceAngle()
         {
             //string fnId = FnId(clsName, "CheckForBounce");
