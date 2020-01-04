@@ -14,8 +14,6 @@ namespace BallzForWindows01.DrawableParts
     class GameBall : DrawableObject
     {
 
-        
-
         #region local drawing font settings
         Font font;
         Color fontColor = Color.Black;

@@ -42,7 +42,7 @@ namespace BallzForWindows01.GamePhysicsParts
         {
 
         }
-        
+
         public void Update()
         {
             //string fnId = FnId(clsName, "Update");
@@ -81,13 +81,9 @@ namespace BallzForWindows01.GamePhysicsParts
         public void SetEndPoint(PointD p) { _SetEndPoint(p.X, p.Y); }
         public void SetEndPoint(double ex, double ey) { _SetEndPoint(ex, ey); }
 
-
         private bool _InEndRect(double px, double py) { return endMarker.InClickRect(px, py); }
 
-        void _SetStartPoint(double sx, double sy)
-        {
-            startMarker.Place(sx, sy);
-        }
+        void _SetStartPoint(double sx, double sy) { startMarker.Place(sx, sy); }
 
         void _SetEndPoint(double ex, double ey)
         {
@@ -103,7 +99,6 @@ namespace BallzForWindows01.GamePhysicsParts
             hypLen = startPoint.DistanceTo(endPoint);
             adjLen = startPoint.DistanceTo(rightPoint);
         }
-
 
         void SetRotation(PointD startPoint, PointD endPoint)
         {
@@ -128,10 +123,6 @@ namespace BallzForWindows01.GamePhysicsParts
             // southeast
             if (endPoint.X < startPoint.X && south) { rotation = Math.PI - anglePreRotation; return; }
         }
-
-
-
-        
 
         void DrawPointMarkers(Graphics g)
         {

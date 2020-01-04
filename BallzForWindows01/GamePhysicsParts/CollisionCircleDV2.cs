@@ -69,7 +69,7 @@ namespace BallzForWindows01.GamePhysicsParts
         }
 
         // I should probably rework this to just move the points instead of recalculating the points all over again.
-        protected void UpdateCollisionPoints(double x, double y, double radius, double rotation)
+        protected void MoveCollisionPoints(double x, double y, double radius, double rotation)
         {
             PointD cppos = new PointD();
             double tempRot = rotation;

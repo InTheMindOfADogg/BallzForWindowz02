@@ -166,17 +166,7 @@ namespace BallzForWindows01.DrawableParts
 
                 // bounce logic
 
-                //if (collided)
-                //{
-                //    cpHitIdx = circ2.CollisionPointHit2();
-                //    cpIdxHitList = circ2.TriggeredHitPointIdxList();
-                //    SetInfoCpIdxHit(cpIdxHitList);
-                //    if (cpHitIdx > -1)
-                //    {
-                //        Bounce3(cpHitIdx);
-                //    }
-                //    collided = false;
-                //}
+                
                 SetInfoCpIdxHit(cpIdxHitList);
                 if (PublicHitIdxList.Count > 0)
                 {

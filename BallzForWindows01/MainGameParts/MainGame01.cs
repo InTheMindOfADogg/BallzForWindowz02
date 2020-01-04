@@ -24,7 +24,7 @@ namespace BallzForWindows01.MainGameParts
         GameBall ball = null;
         GameBall2 ball2 = null;
 
-        GameBall04 ball4;
+        GameBall04 ball4 = null;
 
         //bool pause = false;
 
@@ -54,7 +54,7 @@ namespace BallzForWindows01.MainGameParts
             //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
             //ballStartX = 300;
             //ballStartY = height / 2 + 50;
-            ballStartX = 700;
+            ballStartX = 500;
             ballStartY = height / 2 + 50;
 
             if (ball != null) { ball.Load(ballStartX, ballStartY); }

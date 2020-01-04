@@ -21,7 +21,7 @@ namespace BallzForWindows01.DrawableParts
         
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
         public PointD Pos { get { return pos; } }
-        public bool Collision { get { return collision; } }
+        //public bool Collision { get { return collision; } }
 
 
         public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
@@ -60,16 +60,16 @@ namespace BallzForWindows01.DrawableParts
         {
             
             Pen p = new Pen(color, 1);
+            
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
             //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
             if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
-            //if (collision) { g.FillRectangle(Brushes.Red, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
             if (collision)
             {
-                SolidBrush collisionBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
-                g.FillRectangle(collisionBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-                collisionBrush.Dispose();
+                SolidBrush fillBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
+                g.FillRectangle(fillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+                fillBrush.Dispose();
             }
             
             p.Dispose();
@@ -78,7 +78,10 @@ namespace BallzForWindows01.DrawableParts
 
         public bool CheckForCollision(PointD pos) { return (collision = cbox.InBox(pos.X, pos.Y)); }
         public bool CheckForCollision(double px, double py) { return (collision = cbox.InBox(px, py)); }
-        //public bool CheckForCollision(CollisionPoint cp) { return (collision = cbox.InBox(cp.pos.X, cp.pos.Y)); }        
+
+        //public bool CheckForCollision(PointD pos) { return (collision = cbox.InBox(pos.X, pos.Y)); }
+        //public bool CheckForCollision(double px, double py) { return (collision = cbox.InBox(px, py)); }
+
         void SetCollisionBox()
         {
             cbox.Set(pos.X - (boxSize.Width / 2), pos.Y - (boxSize.Height / 2), boxSize.Width, boxSize.Height);

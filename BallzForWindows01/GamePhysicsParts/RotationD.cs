@@ -18,7 +18,14 @@ namespace BallzForWindows01.GamePhysicsParts
 
     class RotationD
     {
+
+        public double Rotation { get { return rot; } }
+        
+
+
         double rot = 0;
+
+
 
         public RotationD() { rot = 0; }
         public RotationD(double rotation) { this.rot = rotation; }
