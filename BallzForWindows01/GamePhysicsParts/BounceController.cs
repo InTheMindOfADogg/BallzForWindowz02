@@ -28,7 +28,8 @@ namespace BallzForWindows01.GamePhysicsParts
         RM,
         LB,
         MB,
-        RB
+        RB,
+        None
     }
     class BounceController
     {

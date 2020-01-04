@@ -221,7 +221,6 @@ namespace BallzForWindows01.DrawableParts
             firstPointHit = -1;
             shouldBounce = false;
             hz = HitZones.LA;
-            //lastHz = HitZones.LA;
 
         }
         public void CleanUp()
@@ -235,7 +234,7 @@ namespace BallzForWindows01.DrawableParts
         double testBounceAngle = 0;
         bool shouldBounce = false;
         int firstPointHit = -1;
-        HitZones hz = HitZones.LA;
+        HitZones hz = HitZones.None;
 
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
@@ -269,8 +268,6 @@ namespace BallzForWindows01.DrawableParts
                 {
                     shouldBounce = true;
                     if (firstPointHit < 0) { firstPointHit = i; }
-
-                    //CollisionPoint cp = CollisionPointList[i];
                 }
             }
         }
