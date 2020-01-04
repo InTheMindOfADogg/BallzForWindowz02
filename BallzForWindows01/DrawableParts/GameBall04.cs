@@ -220,7 +220,7 @@ namespace BallzForWindows01.DrawableParts
             bounceAngle = 0;
             firstPointHit = -1;
             shouldBounce = false;
-            hz = HitZones.LA;
+            hz = HitZones.None;
 
         }
         public void CleanUp()
