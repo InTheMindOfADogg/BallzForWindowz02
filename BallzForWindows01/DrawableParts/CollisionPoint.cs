@@ -21,6 +21,7 @@ namespace BallzForWindows01.DrawableParts
         
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
         public PointD Pos { get { return pos; } }
+        public RectangleD Rect { get { return cbox; } }
         //public bool Collision { get { return collision; } }
 
 

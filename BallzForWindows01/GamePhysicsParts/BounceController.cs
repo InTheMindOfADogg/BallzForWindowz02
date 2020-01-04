@@ -47,7 +47,7 @@ namespace BallzForWindows01.GamePhysicsParts
 
         }
 
-        HitZones SetHitZone(PointD ballPos, RectangleD block)
+        public HitZones SetHitZone(PointD ballPos, RectangleD block)
         {
             int lmr;
             int amb;
@@ -57,8 +57,7 @@ namespace BallzForWindows01.GamePhysicsParts
             if (ballPos.Y < block.Top) { amb = (int)AboveMiddleBelow.Above; }
             else if (ballPos.Y > block.Bottom) { amb = (int)AboveMiddleBelow.Below; }
             else amb = (int)AboveMiddleBelow.Middle;            
-            return (HitZones)(lmr + (amb * 3));
-            
+            return (HitZones)(lmr + (amb * 3));            
         }
     }
 }

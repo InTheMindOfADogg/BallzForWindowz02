@@ -17,7 +17,7 @@ namespace BallzForWindows01.DrawableParts
 
         Trajectory03 aimTraj;
         Trajectory03 spinTraj;
-
+        BounceController bc;
         Button01 btnLaunch;
 
         PointD startPosition;
@@ -53,6 +53,7 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.SetXColor(Color.AntiqueWhite);
             aimTraj.NameTag = "aimTraj";
             spinTraj.NameTag = "spinTraj";
+            bc = new BounceController();
         }
 
         new public void Load(double x, double y, double hitBoxSideLength, double radius, double rotation, int collisionPoints)
@@ -120,8 +121,6 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 
-                
-
 
                 if (firstPointHit > -1)
                 {
@@ -162,6 +161,8 @@ namespace BallzForWindows01.DrawableParts
             bounceAngle = 0;
             firstPointHit = -1;
             shouldBounce = false;
+            hz = HitZones.LA;
+            lastHz = HitZones.LA;
 
         }
         public void CleanUp()
@@ -175,7 +176,26 @@ namespace BallzForWindows01.DrawableParts
         double testBounceAngle = 0;
         bool shouldBounce = false;
         int firstPointHit = -1;
-
+        HitZones hz = HitZones.LA;
+        HitZones lastHz = HitZones.LA;
+        public void CheckForCollision(List<CollisionPoint> blockCpList)
+        {
+            CollisionPoint tempcp;
+            for(int i = 0; i < blockCpList.Count; i++)
+            {
+                for(int j = 0; j < CollisionPointList.Count; j++)
+                {
+                    tempcp = CollisionPointList[j];
+                    if(blockCpList[i].CheckForCollision(tempcp.Pos))
+                    {
+                        tempcp.PointHit = true;
+                        hz = bc.SetHitZone(position, blockCpList[i].Rect);
+                        return;
+                    }
+                    tempcp.PointHit = false;
+                }
+            }
+        }
         void CalculateBounceAngle()
         {
             //string fnId = FnId(clsName, "CheckForBounce");
