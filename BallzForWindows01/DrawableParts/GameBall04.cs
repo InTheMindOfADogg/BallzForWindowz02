@@ -71,8 +71,14 @@ namespace BallzForWindows01.DrawableParts
 
             if (!launched)
             {
+                if(adjustingBallPosition)
+                {
+                    position.Set(mousePos);
+                    startPosition.Set(mousePos);
+                }
                 if (adjustingAim) { aimTraj.SetEndPoint(mousePos); }
                 if (adjustingSpin) { spinTraj.SetEndPoint(mousePos); }
+                
                 SetInitialTrajectory();
                 CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
                 CalculateInitialDriftPerSecond();
@@ -117,7 +123,10 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
                 DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
                 DbgFuncs.AddStr($"{fnId} lastTotalPointsHit: {lastTotalPointsHit}");
-                if(firstPointHit > -1) 
+                DbgFuncs.AddStr($"{fnId} testClickInCircle: {testClickInCircle}");
+                DbgFuncs.AddStr($"{fnId} adjustingBallPosition: {adjustingBallPosition}");
+
+                if (firstPointHit > -1) 
                 { 
                     launched = false;
                     aimTraj.Visible = false;
@@ -221,15 +230,8 @@ namespace BallzForWindows01.DrawableParts
             }
         }
 
-        bool PointInCircle(double x, double y)
-        {
-            PointD tempPoint = new PointD(x, y);
-
-
-
-
-            return false;
-        }
+        bool testClickInCircle = false;
+        bool adjustingBallPosition = false;
         void HandleMouseInput(MouseControls mc)
         {
             bool dbgtxt = true;
@@ -250,9 +252,9 @@ namespace BallzForWindows01.DrawableParts
             // Prevents aim and spin boxes from continuing to drag if mouse is not down
             if (mc.LeftButtonState == UpDownState.Up
                 && mc.LastLeftButtonState == UpDownState.Up
-                && (adjustingAim || adjustingSpin))
+                && (adjustingAim || adjustingSpin || adjustingBallPosition))
             {
-                adjustingAim = adjustingSpin = false;
+                adjustingAim = adjustingSpin = adjustingBallPosition = false;
                 return;
             }
 
@@ -260,6 +262,16 @@ namespace BallzForWindows01.DrawableParts
             // Setting up the shot
             if (!launched)
             {
+                // Building logic to move ball before the aim marker is placed (aimTraj.Placed)
+                if(mc.LeftButtonState == UpDownState.Down
+                    && mc.LastLeftButtonState == UpDownState.Up
+                    && !aimTraj.Placed
+                    && InCircle(mc.Position.X, mc.Position.Y))
+                {
+                    testClickInCircle = true;
+                    adjustingBallPosition = true;
+                    return;
+                }
 
                 // Place aim marker
                 if (!aimTraj.Placed
