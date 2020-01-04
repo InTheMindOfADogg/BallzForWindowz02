@@ -60,7 +60,7 @@ namespace BallzForWindows01.MainGameParts
             if (ball2 != null) { ball2.Load(ballStartX, ballStartY); }
             if (ball4 != null)
             {
-                ball4.Load(ballStartX, ballStartY, 2, 15, 0, 5);
+                ball4.Load(ballStartX, ballStartY, 2, 10, 0, 5);
                 ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
             }
                 

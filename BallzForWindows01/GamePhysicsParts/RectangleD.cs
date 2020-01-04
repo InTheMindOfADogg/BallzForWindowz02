@@ -29,6 +29,11 @@ namespace BallzForWindows01.GamePhysicsParts
         public double CenterX { get { return (x + width / 2); } }
         public double CenterY { get { return (y + height / 2); } }
 
+        public double Left { get { return x; } }
+        public double Right { get { return x + width; } }
+        public double Top { get { return y; } }
+        public double Bottom { get { return y + height; } }
+
         public RectangleD() { Set(0, 0, 0, 0); }
         public RectangleD(double x, double y, double width, double height) { Set(x, y, width, height); }
         public void Set(double x, double y, double width, double height)

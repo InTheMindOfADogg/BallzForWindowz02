@@ -72,14 +72,14 @@ namespace BallzForWindows01.DrawableParts
 
             if (!launched)
             {
-                if(adjustingPosition)
+                if (adjustingPosition)
                 {
                     position.Set(mousePos);
                     startPosition.Set(mousePos);
                 }
                 if (adjustingAim) { aimTraj.SetEndPoint(mousePos); }
                 if (adjustingSpin) { spinTraj.SetEndPoint(mousePos); }
-                
+
                 SetInitialTrajectory();
                 CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
                 CalculateInitialDriftPerSecond();
@@ -94,18 +94,14 @@ namespace BallzForWindows01.DrawableParts
                 position.X = position.X + speed * Math.Cos(rotation);
                 position.Y = position.Y + speed * Math.Sin(rotation);
 
-                if (bounceAngle != 0) 
-                { 
+                if (bounceAngle != 0)
+                {
                     lastBounceAngle = bounceAngle;
                     bounceAngle = 0;
                 }
-                if(totalPointsHit > 0) 
-                { 
-                    lastTotalPointsHit = totalPointsHit;
-                    totalPointsHit = 0;
-                }
-                
-                
+
+
+
             }
 
             MoveCollisionPoints(position.X, position.Y, radius, rotation);
@@ -118,17 +114,17 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
                 DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
                 DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
+                DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
+                DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
                 dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
-                DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
-                DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
-                DbgFuncs.AddStr($"{fnId} lastTotalPointsHit: {lastTotalPointsHit}");
-                //DbgFuncs.AddStr($"{fnId} testClickInCircle: {testClickInCircle}");
-                //DbgFuncs.AddStr($"{fnId} adjustingPosition: {adjustingPosition}");
+                
+                
 
-                if (firstPointHit > -1) 
-                { 
+
+                if (firstPointHit > -1)
+                {
                     launched = false;
                     aimTraj.Visible = false;
                     spinTraj.Visible = false;
@@ -165,8 +161,8 @@ namespace BallzForWindows01.DrawableParts
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
-            lastTotalPointsHit = 0;
-            totalPointsHit = 0;
+            shouldBounce = false;
+
         }
         public void CleanUp()
         {
@@ -179,8 +175,7 @@ namespace BallzForWindows01.DrawableParts
         double testBounceAngle = 0;
         bool shouldBounce = false;
         int firstPointHit = -1;
-        int totalPointsHit = 0;
-        int lastTotalPointsHit = 0;
+
         void CalculateBounceAngle()
         {
             //string fnId = FnId(clsName, "CheckForBounce");
@@ -188,13 +183,9 @@ namespace BallzForWindows01.DrawableParts
             {
                 if (CollisionPointList[i].PointHit)
                 {
-                    totalPointsHit++;
                     shouldBounce = true;
-                    if(firstPointHit < 0)
-                    {
-                        firstPointHit = i;
-                    }
-                    
+                    if (firstPointHit < 0) { firstPointHit = i; }
+
                     //CollisionPoint cp = CollisionPointList[i];
                 }
             }
@@ -205,10 +196,10 @@ namespace BallzForWindows01.DrawableParts
         void SetInitialTrajectory() { startingRotation = rotation = aimTraj.Rotation; }
         void CalculateDriftFactor(double aim, double spin)
         {
-            string fnId = FnId(clsName, "CalculateDriftFactor");
+            //string fnId = FnId(clsName, "CalculateDriftFactor");
             //dbgPrintAngle(fnId, "aim", aim);
             //dbgPrintAngle(fnId, "spin", spin);
-            DbgFuncs.AddStr($"{fnId} Calculating drift factor");
+            //DbgFuncs.AddStr($"{fnId} Calculating drift factor");
             RotationDirection defautRotationDirection = (aim < spin) ? RotationDirection.Clockwise : RotationDirection.CounterClockwise;
             double defaultDifference = (aim < spin) ? spin - aim : aim - spin;
             double oppositeDifference = (2 * Math.PI) - defaultDifference;
@@ -263,11 +254,11 @@ namespace BallzForWindows01.DrawableParts
             if (!launched)
             {
                 // Building logic to move ball before the aim marker is placed (aimTraj.Placed)
-                if(mc.LeftButtonState == UpDownState.Down
+                if (mc.LeftButtonState == UpDownState.Down
                     && mc.LastLeftButtonState == UpDownState.Up
                     && !aimTraj.Placed
                     && InCircle(mc.Position.X, mc.Position.Y))
-                {                    
+                {
                     adjustingPosition = true;
                     return;
                 }
