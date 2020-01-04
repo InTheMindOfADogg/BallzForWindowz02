@@ -10,35 +10,29 @@ namespace BallzForWindows01.GamePhysicsParts
 
     class CircleDV3 : DrawableObject
     {
+
         protected PointD position;
         protected double radius = 0;
         protected double rotation = 0;
 
         public CircleDV3()
         {
-            _Init(0, 0, 20, 0);
-        }
-        public CircleDV3(double x, double y, double radius, double rotation = 0)
-        {
-            _Init(x, y, radius, rotation);
+            //_Init(0, 0, 20, 0);
+            clsName = "CircleDV3";
+            position = new PointD(30, 30);
+            radius = 15;
+            rotation = 0;
         }
         
         protected void Load(double x, double y, double radius, double rotation)
         {
-            //_Load(x, y, radius, rotation);
             position.Set(x, y);
             this.radius = radius;
             this.rotation = rotation;
         }
-        
 
-        void _Init(double x, double y, double radius, double rotation)
-        {
-            clsName = "CircleDV3";
-            position = new PointD(x, y);
-            this.radius = radius;
-            this.rotation = rotation;
-        }
+        public void SetCircleColor(Color c) { SetColor(c); }
+
         
         protected void DrawCircle(Graphics g)
         {
@@ -50,10 +44,22 @@ namespace BallzForWindows01.GamePhysicsParts
             p.Dispose();
         }
 
-        public void SetCircleColor(Color c) { SetColor(c); }
+        
+
+        
 
     }
 }
+
+#region removed _Init and steps into constructor 2020-01-04
+//void _Init(double x, double y, double radius, double rotation)
+//{
+//    clsName = "CircleDV3";
+//    position = new PointD(x, y);
+//    this.radius = radius;
+//    this.rotation = rotation;
+//}
+#endregion removed _Init and steps into constructor 2020-01-04
 
 #region removed _Load and moved into public Load 2020-01-04
 //void _Load(double x, double y, double radius, double rotation)
