@@ -20,6 +20,7 @@ namespace BallzForWindows01.DrawableParts
         bool pointHit = false;
         
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
+        public bool Collision { get { return collision; } set { collision = value; } }
         public PointD Pos { get { return pos; } }
         public RectangleD Rect { get { return cbox; } }
         //public bool Collision { get { return collision; } }
@@ -76,9 +77,16 @@ namespace BallzForWindows01.DrawableParts
             p.Dispose();
 
         }
+        public void Reset()
+        {
+            pointHit = false;
+            collision = false;
+        }
 
-        public bool CheckForCollision(PointD pos) { return (collision = cbox.InBox(pos.X, pos.Y)); }
-        public bool CheckForCollision(double px, double py) { return (collision = cbox.InBox(px, py)); }
+        public bool CheckForCollision(PointD pos) { return _CheckForCollision(pos.X, pos.Y); }
+        public bool CheckForCollision(double px, double py) { return _CheckForCollision(px,py); }        
+        bool _CheckForCollision(double x, double y) { return collision = cbox.InBox(x, y); }
+
 
         //public bool CheckForCollision(PointD pos) { return (collision = cbox.InBox(pos.X, pos.Y)); }
         //public bool CheckForCollision(double px, double py) { return (collision = cbox.InBox(px, py)); }

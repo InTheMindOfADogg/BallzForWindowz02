@@ -63,7 +63,7 @@ namespace BallzForWindows01.DrawableParts
             PositionLaunchButton();
         }
 
-        public void Update(MouseControls mc)
+        public void Update(MouseControls mc, List<CollisionPoint> blockCpList)
         {
             bool dbgtxt = true;
             string fnId = FnId(clsName, "Update");
@@ -85,12 +85,18 @@ namespace BallzForWindows01.DrawableParts
                 CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
                 CalculateInitialDriftPerSecond();
             }
+
+            CheckForBlockCollision(blockCpList);
+
             ApplyDriftPerSecond(gtimer.TotalSeconds);
+            
             if (launched)
             {
                 gtimer.Update();
                 // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
                 CalculateBounceAngle();
+                
+
                 rotation += bounceAngle;
                 position.X = position.X + speed * Math.Cos(rotation);
                 position.Y = position.Y + speed * Math.Sin(rotation);
@@ -100,9 +106,6 @@ namespace BallzForWindows01.DrawableParts
                     lastBounceAngle = bounceAngle;
                     bounceAngle = 0;
                 }
-
-
-
             }
 
             MoveCollisionPoints(position.X, position.Y, radius, rotation);
@@ -120,18 +123,75 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
-                
-
-                if (firstPointHit > -1)
-                {
-                    launched = false;
-                    aimTraj.Visible = false;
-                    spinTraj.Visible = false;
-                }
+                DbgFuncs.AddStr($"{fnId} hz: {hz}");
+                DbgFuncs.AddStr($"{fnId} lastHz: {lastHz}");
+                if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
             }
-
-
         }
+        //public void Update(MouseControls mc)
+        //{
+        //    bool dbgtxt = true;
+        //    string fnId = FnId(clsName, "Update");
+        //    HandleMouseInput(mc);
+
+        //    if (dbgtxt) DbgFuncs.AddStr($"{fnId} launched: {launched}");
+
+        //    if (!launched)
+        //    {
+        //        if (adjustingPosition)
+        //        {
+        //            position.Set(mousePos);
+        //            startPosition.Set(mousePos);
+        //        }
+        //        if (adjustingAim) { aimTraj.SetEndPoint(mousePos); }
+        //        if (adjustingSpin) { spinTraj.SetEndPoint(mousePos); }
+
+        //        SetInitialTrajectory();
+        //        CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
+        //        CalculateInitialDriftPerSecond();
+        //    }
+        //    ApplyDriftPerSecond(gtimer.TotalSeconds);
+        //    if (launched)
+        //    {
+        //        gtimer.Update();
+        //        // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
+        //        CalculateBounceAngle();
+        //        rotation += bounceAngle;
+        //        position.X = position.X + speed * Math.Cos(rotation);
+        //        position.Y = position.Y + speed * Math.Sin(rotation);
+        //        if (bounceAngle != 0)
+        //        {
+        //            lastBounceAngle = bounceAngle;
+        //            bounceAngle = 0;
+        //        }
+        //    }
+        //    MoveCollisionPoints(position.X, position.Y, radius, rotation);
+        //    if (dbgtxt && DrawDbgTxt)
+        //    {
+        //        //gtimer.DbgTxt();
+        //        dbgPrintAngle(fnId, "driftFactor", driftFactor);
+        //        dbgPrintAngle(fnId, "rotation", rotation);
+        //        dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
+        //        DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
+        //        DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
+        //        DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
+        //        DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
+        //        dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
+        //        dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
+        //        dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
+
+        //        DbgFuncs.AddStr($"{fnId} hz: {hz}");
+        //        DbgFuncs.AddStr($"{fnId} lastHz: {lastHz}");
+
+
+        //        if (firstPointHit > -1)
+        //        {
+        //            launched = false;
+        //            aimTraj.Visible = false;
+        //            spinTraj.Visible = false;
+        //        }
+        //    }
+        //}
         new public void Draw(Graphics g)
         {
             base.Draw(g);
@@ -178,24 +238,45 @@ namespace BallzForWindows01.DrawableParts
         int firstPointHit = -1;
         HitZones hz = HitZones.LA;
         HitZones lastHz = HitZones.LA;
-        public void CheckForCollision(List<CollisionPoint> blockCpList)
+        public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
-            CollisionPoint tempcp;
-            for(int i = 0; i < blockCpList.Count; i++)
+            //CollisionPoint tempcp;
+            for (int i = 0; i < blockCpList.Count; i++)
             {
-                for(int j = 0; j < CollisionPointList.Count; j++)
+                
+                for (int j = 0; j < CollisionPointList.Count; j++)
                 {
-                    tempcp = CollisionPointList[j];
-                    if(blockCpList[i].CheckForCollision(tempcp.Pos))
+                    //tempcp = CollisionPointList[j];
+                    if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
                     {
-                        tempcp.PointHit = true;
+                        CollisionPointList[j].PointHit = true;
                         hz = bc.SetHitZone(position, blockCpList[i].Rect);
                         return;
                     }
-                    tempcp.PointHit = false;
+                    CollisionPointList[j].PointHit = false;
                 }
             }
         }
+        //public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
+        //{
+        //    CollisionPoint tempcp;
+        //    for (int i = 0; i < blockCpList.Count; i++)
+        //    {
+
+        //        for (int j = 0; j < CollisionPointList.Count; j++)
+        //        {
+        //            tempcp = CollisionPointList[j];
+        //            if (blockCpList[i].CheckForCollision(tempcp.Pos))
+        //            {
+        //                tempcp.PointHit = true;
+        //                hz = bc.SetHitZone(position, blockCpList[i].Rect);
+        //                return;
+        //            }
+        //            tempcp.PointHit = false;
+        //        }
+        //    }
+        //}
+        public void ClearBlockCollision(List<CollisionPoint> blockCpList) { for (int i = 0; i < blockCpList.Count; i++) { blockCpList[i].Reset(); } }
         void CalculateBounceAngle()
         {
             //string fnId = FnId(clsName, "CheckForBounce");

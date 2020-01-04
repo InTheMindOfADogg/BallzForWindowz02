@@ -86,12 +86,12 @@ namespace BallzForWindows01.MainGameParts
             if (ball2 != null) { ball2.Update(); }
 
             // GameBall04 ball4 has mouse controls built into Update function
-            if (ball4 != null) { ball4.Update(mc); }
+            if (ball4 != null) { ball4.Update(mc, cplist); }
 
 
             if (ball != null) { UpdateCollisionPointList(); }
             if (ball2 != null) { UpdateCollisionPointList2(); }
-            if (ball4 != null) { UpdateCollisionPointList(ball4); }
+            //if (ball4 != null) { UpdateCollisionPointList(ball4); }
             
             DrawToBuffer();
         }
@@ -140,27 +140,29 @@ namespace BallzForWindows01.MainGameParts
             }
         }
 
+        ///
         // UpdateCollisionPointList for GameBall04 ball4
-        void UpdateCollisionPointList(GameBall04 b)
-        {
-            CollisionPoint tempcp;
-            int ballCpListCount = b.CollisionPointList.Count;
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                for (int j = 0; j < ballCpListCount; j++)
-                {
-                    tempcp = b.CollisionPointList[j];
-                    if (cplist[i].CheckForCollision(tempcp.Pos))
-                    {
-                        tempcp.PointHit = true;
-                        return;
-                        //continue;
-                    }
-                    tempcp.PointHit = false;
-                }
-            }
-        }
-
+        //void UpdateCollisionPointList(GameBall04 b)
+        //{
+        //    CollisionPoint tempcp;
+        //    int ballCpListCount = b.CollisionPointList.Count;
+        //    for (int i = 0; i < cplist.Count; i++)
+        //    {
+        //        for (int j = 0; j < ballCpListCount; j++)
+        //        {
+        //            tempcp = b.CollisionPointList[j];
+        //            if (cplist[i].CheckForCollision(tempcp.Pos))
+        //            {
+        //                tempcp.PointHit = true;
+        //                return;
+        //                //continue;
+        //            }
+        //            tempcp.PointHit = false;
+        //        }
+        //    }
+        //}
+        
+        ///         
         // UpdateCollisionPointList3 for ball 3
         //void UpdateCollisionPointList3()
         //{
