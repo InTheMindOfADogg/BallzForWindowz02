@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BallzForWindows01.Structs
 {
+    
     public enum RotationDirection
     {
         Clockwise,

@@ -9,6 +9,9 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     using static AssistFunctions;
     using DrawableParts;
+    using Structs;
+
+    
 
     class Trajectory03
     {
@@ -18,12 +21,17 @@ namespace BallzForWindows01.GamePhysicsParts
         public double Rotation { get { return rotation; } }
 
         public bool Visible { get { return visible; } set { visible = value; } }
+        public bool ShowStartMakrer { get { return showStartMarker; } set { showStartMarker = value; } }
+        public bool ShowEndMarker { get { return showEndMarker; } set { showEndMarker = value; } }
+
 
         string clsName = "Trajectory03";
         string nameTag = "";
 
         XMarker2 startMarker;
         XMarker2 endMarker;
+        bool showStartMarker = true;
+        bool showEndMarker = true;
 
         double rotation;
         double oppLen, hypLen, adjLen, anglePreRotation;
@@ -58,8 +66,9 @@ namespace BallzForWindows01.GamePhysicsParts
         public void Draw(Graphics g)
         {
             if (!visible) { return; }
-            startMarker.Draw(g);
-            endMarker.Draw(g);
+
+            if (showStartMarker) { startMarker.Draw(g); }
+            if (showEndMarker) { endMarker.Draw(g); }
         }
         public void Reset()
         {
@@ -86,7 +95,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public void SetEndPoint(PointD p) { _SetEndPoint(p.X, p.Y); }
         public void SetEndPoint(double ex, double ey) { _SetEndPoint(ex, ey); }
 
-        private bool _InEndRect(double px, double py) { return endMarker.InClickRect(px, py); }
+        bool _InEndRect(double px, double py) { return endMarker.InClickRect(px, py); }
 
         void _SetStartPoint(double sx, double sy) { startMarker.Place(sx, sy); }
 

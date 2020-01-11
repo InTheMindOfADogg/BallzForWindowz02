@@ -53,6 +53,9 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.SetXColor(Color.AntiqueWhite);
             aimTraj.NameTag = "aimTraj";
             spinTraj.NameTag = "spinTraj";
+            aimTraj.ShowStartMakrer = false;
+            spinTraj.ShowStartMakrer = false;
+            
             bc = new BounceController();
         }
 
@@ -124,9 +127,11 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
+                //if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
             }
+            if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
+
         //public void Update(MouseControls mc)
         //{
         //    bool dbgtxt = true;
@@ -191,6 +196,7 @@ namespace BallzForWindows01.DrawableParts
         //        }
         //    }
         //}
+        
         new public void Draw(Graphics g)
         {
             base.Draw(g);
