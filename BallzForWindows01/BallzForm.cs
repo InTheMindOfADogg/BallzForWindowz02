@@ -27,6 +27,7 @@ namespace BallzForWindows01
     {
         MouseControls mcontrols = new MouseControls();
         KeyboardControls01 kcontrols = new KeyboardControls01();
+        bool keyEventInFrame = false;
         MainGame01 ballzGame01;
 
         public BallzForm()
@@ -41,6 +42,7 @@ namespace BallzForWindows01
             #region Keyboard Control Events
             KeyDown += BallzForm_KeyDown;
             KeyUp += BallzForm_KeyUp;
+            
             #endregion Keyboard Control Events
 
         }
@@ -49,12 +51,12 @@ namespace BallzForWindows01
         #region Keyboard events
         private void BallzForm_KeyDown(object sender, KeyEventArgs e)
         {
-            kcontrols.Update(e, KeyState.Down);
+            kcontrols.ReadKeyEvents(e, KeyState.Down);
         }
 
         private void BallzForm_KeyUp(object sender, KeyEventArgs e)
         {
-            kcontrols.Update(e, KeyState.Up);
+            kcontrols.ReadKeyEvents(e, KeyState.Up);            
         }
         #endregion Keyboard events
 
@@ -96,16 +98,16 @@ namespace BallzForWindows01
         {
             while (this.Created)
             {
+                
+                kcontrols.Update();
                 GameLogic();
                 RenderScene();
                 FrameCleanUp();
-                Application.DoEvents();
+                Application.DoEvents();                
             }
             CleanUp();
 
         }
-
-
         private void GameLogic()    //Update
         {
             ballzGame01.Update(mcontrols, kcontrols);   // update game and draw to back buffer

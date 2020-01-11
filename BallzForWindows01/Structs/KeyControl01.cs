@@ -31,7 +31,12 @@ namespace BallzForWindows01.Structs
         public KeyState State { get { return state; } }
         public KeyState LastState { get { return lastState; } }
         public KeyAction Action { get { return action; } }
+        public KeyAction LastAction { get { return lastAction; } }
 
+        
+
+        public bool EventThisFrame { get { return eventThisFrame; } }
+        public bool DefaultState { get { return defaultState; } }
 
 
         int idx = 0;
@@ -40,18 +45,46 @@ namespace BallzForWindows01.Structs
         KeyState state = KeyState.Up;
         KeyState lastState = KeyState.Up;
         KeyAction action = KeyAction.None;
+        KeyAction lastAction = KeyAction.None;
+
+        bool eventThisFrame = false;
+        bool defaultState = false;
 
         public KeyControl01(int keyValue, int idx) { _Init((Keys)keyValue, idx); }
-        public KeyControl01(Keys key, int idx) { _Init(key, idx); }        
+        public KeyControl01(Keys key, int idx) { _Init(key, idx); }
 
-        public void Update(KeyState currentState)
+        public void ReadCurrentState(KeyState currentState)
         {
             lastState = state;
             state = currentState;
+            lastAction = action;
             SetKeyAction();
-
+            eventThisFrame = true;
+            defaultState = false;
         }
+
         
+        public void CheckForReset()
+        {
+            
+            if (state == KeyState.Up && lastState != KeyState.Up && action == KeyAction.Released)
+            {
+                lastState = state;
+                lastAction = action;
+                SetKeyAction();
+                eventThisFrame = false;
+                return;
+            }
+            if(state == KeyState.Up && lastState == KeyState.Up)
+            {
+                defaultState = true;
+                lastAction = action;
+                SetKeyAction();
+                return;
+            }
+        }
+
+
         void _Init(Keys key, int idx)
         {
             this.idx = idx;
@@ -60,16 +93,43 @@ namespace BallzForWindows01.Structs
             state = KeyState.Up;
             lastState = KeyState.Up;
             action = KeyAction.None;
+            lastAction = KeyAction.None;
 
         }
 
         void SetKeyAction()
         {
+
+            if (state == KeyState.Up && lastState == KeyState.Up) { action = KeyAction.None; return; }
             if (state == KeyState.Down && lastState == KeyState.Up) { action = KeyAction.Pressed; return; }
             if (state == KeyState.Down && lastState == KeyState.Down) { action = KeyAction.Held; return; }
             if (state == KeyState.Up && lastState == KeyState.Down) { action = KeyAction.Released; return; }
-            action = KeyAction.None;
         }
 
     }
 }
+
+
+
+#region CheckForReset previous version
+//public void CheckForReset()
+//{
+//    if(!resetNextFrame && action == KeyAction.Released && state == KeyState.Up)
+//    {
+//        resetNextFrame = true;
+//        return;
+//    }
+//    if(resetNextFrame && action == KeyAction.Released && state == KeyState.Up)
+//    {
+//        resetCount++;
+//        lastState = state; 
+//        state = KeyState.Up;
+//        lastAction = action;
+//        SetKeyAction();
+//        resetNextFrame = false;
+//        defaultState = true;
+//        //action = lastAction = KeyAction.None;
+//        return;
+//    }
+//}
+#endregion CheckForReset previous version

@@ -19,19 +19,34 @@ namespace BallzForWindows01.Structs
         string clsName = "KeyboardControls01";
 
         List<KeyControl01> trackedKeys = new List<KeyControl01>();
+
         public KeyboardControls01()
         {
             AddTrackedKey(Keys.Space);
         }
 
-        
-        public void Update(KeyEventArgs e, KeyState keyState)
+
+        public void ReadKeyEvents(KeyEventArgs e, KeyState keyState)
         {
             for (int i = 0; i < trackedKeys.Count; i++)
             {
-                trackedKeys[i].Update(keyState);
+                if (trackedKeys[i].Value == e.KeyValue)
+                {
+                    trackedKeys[i].ReadCurrentState(keyState);
+                }
+
             }
         }
+        public void Update()
+        {
+            DbgPrint();
+            for (int i = 0; i < trackedKeys.Count; i++)
+            {
+                if (!trackedKeys[i].DefaultState) { trackedKeys[i].CheckForReset(); }
+
+            }
+        }
+
 
         public void DbgPrint()
         {
@@ -39,7 +54,14 @@ namespace BallzForWindows01.Structs
 
             for (int i = 0; i < trackedKeys.Count; i++)
             {
-                DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].Value}) state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} action: {trackedKeys[i].Action}");
+                //DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].Value}) state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} action/lastAction: {trackedKeys[i].Action}/{trackedKeys[i].LastAction}");
+                DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].Value})");
+                DbgFuncs.AddStr($"{fnId} state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState}");
+                DbgFuncs.AddStr($"{fnId} action/lastAction: {trackedKeys[i].Action}/{trackedKeys[i].LastAction}");
+                DbgFuncs.AddStr($"{fnId} EventThisFrame: {trackedKeys[i].EventThisFrame}");
+                DbgFuncs.AddStr($"{fnId} DefaultState: {trackedKeys[i].DefaultState}");
+
+
             }
 
         }
