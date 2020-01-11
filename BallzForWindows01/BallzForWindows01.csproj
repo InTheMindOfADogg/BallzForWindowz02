@@ -52,7 +52,7 @@
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="DrawableParts\GameBall04.cs" />
-    <Compile Include="DrawableParts\GameBall2.cs" />
+    <Compile Include="Deprecated\GameBall2.cs" />
     <Compile Include="Deprecated\GameBall3.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="DrawableParts\BasicBlock01.cs" />
     <Compile Include="DrawableParts\Button01.cs" />
     <Compile Include="DrawableParts\DrawableObject.cs" />
-    <Compile Include="DrawableParts\GameBall.cs" />
+    <Compile Include="Deprecated\GameBall.cs" />
     <Compile Include="DrawableParts\XMarker.cs" />
     <Compile Include="GamePhysicsParts\FlightPath.cs" />
     <Compile Include="GamePhysicsParts\PointD.cs" />

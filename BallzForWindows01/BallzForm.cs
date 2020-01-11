@@ -27,7 +27,7 @@ namespace BallzForWindows01
     {
         MouseControls mcontrols = new MouseControls();
         KeyboardControls01 kcontrols = new KeyboardControls01();
-        bool keyEventInFrame = false;
+        //bool keyEventInFrame = false;
         MainGame01 ballzGame01;
 
         public BallzForm()
