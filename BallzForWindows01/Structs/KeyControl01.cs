@@ -57,7 +57,6 @@ namespace BallzForWindows01.Structs
         {
             lastState = state;
             state = currentState;
-            lastAction = action;
             SetKeyAction();
             eventThisFrame = true;
             defaultState = false;
@@ -69,18 +68,20 @@ namespace BallzForWindows01.Structs
         public void CheckForReset()
         {
             if (state == KeyState.Up && lastState != KeyState.Up)
-            {
+            {                
                 if (!resetNextFrame) { resetNextFrame = true; return; }
                 eventThisFrame = false;
+                // At this point this is [Up/Down], [Released/[Held or Pressed]]                
                 lastState = state;
-                lastAction = action;
                 SetKeyAction();
+                // At this point this is [Up/Up] [None/Released].
+                //AssistFunctions.cwl($"state/lastState: [{state}/{lastState}] action/lastAction: [{action}/{lastAction}]");
                 return;
             }
             if (state == KeyState.Up && lastState == KeyState.Up)
             {
                 defaultState = true;
-                lastAction = action;
+                //lastAction = action;
                 SetKeyAction();
                 return;
             }
@@ -97,12 +98,11 @@ namespace BallzForWindows01.Structs
             lastState = KeyState.Up;
             action = KeyAction.None;
             lastAction = KeyAction.None;
-
         }
 
         void SetKeyAction()
         {
-
+            lastAction = action;
             if (state == KeyState.Up && lastState == KeyState.Up) { action = KeyAction.None; return; }
             if (state == KeyState.Down && lastState == KeyState.Up) { action = KeyAction.Pressed; return; }
             if (state == KeyState.Down && lastState == KeyState.Down) { action = KeyAction.Held; return; }

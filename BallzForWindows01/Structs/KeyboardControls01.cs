@@ -46,7 +46,7 @@ namespace BallzForWindows01.Structs
                 { 
                     trackedKeys[i].CheckForReset();
                     
-                    //cwl($"state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} [{trackedKeys[i].Action}/{trackedKeys[i].LastAction}]");     // For debugging
+                    cwl($"state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} [{trackedKeys[i].Action}/{trackedKeys[i].LastAction}]");     // For debugging
                 }
 
             }
