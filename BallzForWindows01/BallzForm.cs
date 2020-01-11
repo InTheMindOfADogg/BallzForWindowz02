@@ -45,17 +45,18 @@ namespace BallzForWindows01
 
         }
 
-        
 
+        #region Keyboard events
         private void BallzForm_KeyDown(object sender, KeyEventArgs e)
         {
-            kcontrols.Update(e, KeyboardEventType.KeyDown);
+            kcontrols.Update(e, KeyState.Down);
         }
-        
+
         private void BallzForm_KeyUp(object sender, KeyEventArgs e)
         {
-            kcontrols.Update(e, KeyboardEventType.KeyUp);
+            kcontrols.Update(e, KeyState.Up);
         }
+        #endregion Keyboard events
 
         #region mouse events
         private void BallzForm_MouseUp(object sender, MouseEventArgs e)
@@ -84,7 +85,7 @@ namespace BallzForWindows01
             this.Name = "BallzForm";
             this.Text = "Ballz Game01";
             this.StartPosition = FormStartPosition.CenterScreen;
-            
+
         }
         public void LoadGame()
         {

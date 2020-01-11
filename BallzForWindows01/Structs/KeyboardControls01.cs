@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 namespace BallzForWindows01.Structs
 {
+    using static AssistFunctions;
     public enum KeyboardEventType
     {
         KeyDown,
@@ -15,30 +16,48 @@ namespace BallzForWindows01.Structs
 
     class KeyboardControls01
     {
+        string clsName = "KeyboardControls01";
 
         List<KeyControl01> trackedKeys = new List<KeyControl01>();
         public KeyboardControls01()
         {
-
-        }
-        public void Update(KeyEventArgs e, KeyboardEventType t)
-        {
-
-            
+            AddTrackedKey(Keys.Space);
         }
 
-
-        public void AddTrackedKey(int keyCode)
+        
+        public void Update(KeyEventArgs e, KeyState keyState)
         {
-            if (CheckIfKeyTracked(keyCode)) { return; }     // prevent adding key twice
-            trackedKeys.Add(new KeyControl01(keyCode, trackedKeys.Count));
-        }
-
-        bool CheckIfKeyTracked(int keyCode)
-        {
-            for(int i = 0; i < trackedKeys.Count; i++)
+            for (int i = 0; i < trackedKeys.Count; i++)
             {
-                if(trackedKeys[i].KeyCode == keyCode) { return true; }
+                trackedKeys[i].Update(keyState);
+            }
+        }
+
+        public void DbgPrint()
+        {
+            string fnId = FnId(clsName, "DbgPrint");
+
+            for (int i = 0; i < trackedKeys.Count; i++)
+            {
+                DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].Value}) state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} action: {trackedKeys[i].Action}");
+            }
+
+        }
+
+
+        public void AddTrackedKey(int keyValue) { _AddTrackedKey(keyValue); }
+        public void AddTrackedKey(Keys key) { _AddTrackedKey((int)key); }
+
+        void _AddTrackedKey(int keyValue)
+        {
+            if (CheckIfKeyTracked(keyValue)) { return; }     // prevent adding key twice
+            trackedKeys.Add(new KeyControl01(keyValue, trackedKeys.Count));
+        }
+        bool CheckIfKeyTracked(int keyValue)
+        {
+            for (int i = 0; i < trackedKeys.Count; i++)
+            {
+                if (trackedKeys[i].Value == keyValue) { return true; }
             }
             return false;
         }
