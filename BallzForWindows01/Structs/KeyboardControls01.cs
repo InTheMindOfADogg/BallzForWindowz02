@@ -40,13 +40,13 @@ namespace BallzForWindows01.Structs
         }
         public void Update()
         {
-            DbgPrint();
+            //DbgPrint();
             for (int i = 0; i < trackedKeys.Count; i++)
             {
                 if (!trackedKeys[i].DefaultState) 
                 { 
                     trackedKeys[i].CheckForReset();                    
-                    cwl($"state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} [{trackedKeys[i].Action}/{trackedKeys[i].LastAction}]");     // For debugging
+                    //cwl($"state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} [{trackedKeys[i].Action}/{trackedKeys[i].LastAction}]");     // For debugging
                 }
 
             }
@@ -58,9 +58,8 @@ namespace BallzForWindows01.Structs
             {
                 if(trackedKeys[i].Key == key)
                 {
-                    if (trackedKeys[i].Action == KeyAction.Pressed) return true;
-                }
-                
+                    if (trackedKeys[i].Action == KeyAction.Pressed) { return true; }
+                }                
             }
             return false;
         }
@@ -69,7 +68,6 @@ namespace BallzForWindows01.Structs
         public void DbgPrint()
         {
             string fnId = FnId(clsName, "DbgPrint");
-
             for (int i = 0; i < trackedKeys.Count; i++)
             {
                 DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].Value})");
@@ -77,9 +75,6 @@ namespace BallzForWindows01.Structs
                 DbgFuncs.AddStr($"{fnId} action/lastAction: {trackedKeys[i].Action}/{trackedKeys[i].LastAction}");
                 DbgFuncs.AddStr($"{fnId} EventThisFrame: {trackedKeys[i].EventThisFrame}");
                 DbgFuncs.AddStr($"{fnId} DefaultState: {trackedKeys[i].DefaultState}");
-                
-
-
             }
 
         }
