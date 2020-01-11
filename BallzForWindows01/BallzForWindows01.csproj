@@ -87,8 +87,8 @@
     <Compile Include="DrawableParts\Button01.cs" />
     <Compile Include="DrawableParts\DrawableObject.cs" />
     <Compile Include="Deprecated\GameBall.cs" />
-    <Compile Include="DrawableParts\XMarker.cs" />
-    <Compile Include="GamePhysicsParts\FlightPath.cs" />
+    <Compile Include="Deprecated\XMarker.cs" />
+    <Compile Include="Deprecated\FlightPath.cs" />
     <Compile Include="GamePhysicsParts\PointD.cs" />
     <Compile Include="MainGameParts\GameParts01.cs" />
     <Compile Include="MainGameParts\MainGame01.cs" />
