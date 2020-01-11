@@ -61,21 +61,23 @@ namespace BallzForWindows01.Structs
             SetKeyAction();
             eventThisFrame = true;
             defaultState = false;
+            resetNextFrame = false;
         }
 
-        
+
+        bool resetNextFrame = false;
         public void CheckForReset()
         {
-            
-            if (state == KeyState.Up && lastState != KeyState.Up && action == KeyAction.Released)
+            if (state == KeyState.Up && lastState != KeyState.Up)
             {
+                if (!resetNextFrame) { resetNextFrame = true; return; }
+                eventThisFrame = false;
                 lastState = state;
                 lastAction = action;
                 SetKeyAction();
-                eventThisFrame = false;
                 return;
             }
-            if(state == KeyState.Up && lastState == KeyState.Up)
+            if (state == KeyState.Up && lastState == KeyState.Up)
             {
                 defaultState = true;
                 lastAction = action;
@@ -84,6 +86,7 @@ namespace BallzForWindows01.Structs
             }
         }
 
+        
 
         void _Init(Keys key, int idx)
         {
@@ -110,6 +113,26 @@ namespace BallzForWindows01.Structs
 }
 
 
+#region CheckForReset previous version
+//public void CheckForReset()
+//{
+//    if (state == KeyState.Up && lastState != KeyState.Up && action == KeyAction.Released)
+//    {
+//        eventThisFrame = false;
+//        lastState = state;
+//        lastAction = action;
+//        SetKeyAction();                
+//        return;
+//    }
+//    if(state == KeyState.Up && lastState == KeyState.Up)
+//    {
+//        defaultState = true;
+//        lastAction = action;
+//        SetKeyAction();
+//        return;
+//    }
+//}
+#endregion CheckForReset previous version
 
 #region CheckForReset previous version
 //public void CheckForReset()
