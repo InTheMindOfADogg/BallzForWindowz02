@@ -31,15 +31,13 @@ namespace BallzForWindows01.GamePhysicsParts
         RB,
         None
     }
+
+
     class BounceController
     {
-        //LeftMiddleRight lmr;
-        //AboveMiddleBelow amb;
         
         public BounceController()
         {
-            //lmr = LeftMiddleRight.Left;
-            //amb = AboveMiddleBelow.Above;
 
         }
 
@@ -50,14 +48,17 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public HitZones SetHitZone(PointD ballPos, RectangleD block)
         {
-            int lmr;
-            int amb;
+            int lmr = (int)LeftMiddleRight.Middle;
+            int amb = (int)AboveMiddleBelow.Middle;
+            
             if (ballPos.X < block.Left) { lmr = (int)LeftMiddleRight.Left; }
             else if (ballPos.X > block.Right) { lmr = (int)LeftMiddleRight.Right; }
-            else lmr = (int)LeftMiddleRight.Middle;
+            //else lmr = (int)LeftMiddleRight.Middle;
+
             if (ballPos.Y < block.Top) { amb = (int)AboveMiddleBelow.Above; }
             else if (ballPos.Y > block.Bottom) { amb = (int)AboveMiddleBelow.Below; }
-            else amb = (int)AboveMiddleBelow.Middle;            
+            //else amb = (int)AboveMiddleBelow.Middle;            
+            
             return (HitZones)(lmr + (amb * 3));            
         }
     }

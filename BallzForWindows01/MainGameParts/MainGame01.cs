@@ -78,7 +78,7 @@ namespace BallzForWindows01.MainGameParts
             cplist.Add(tempcp);
         }
 
-        public void Update(MouseControls mc)
+        public void Update(MouseControls mc, KeyboardControls01 kc)
         {
             // GameBall and GameBall2 do not have mouse controls built into Update
             UpdateMouseControls(mc);
