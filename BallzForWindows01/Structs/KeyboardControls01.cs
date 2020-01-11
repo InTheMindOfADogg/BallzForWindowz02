@@ -56,7 +56,11 @@ namespace BallzForWindows01.Structs
         {
             for(int i = 0; i < trackedKeys.Count; i++)
             {
-                if (trackedKeys[i].Action == KeyAction.Pressed) return true;
+                if(trackedKeys[i].Key == key)
+                {
+                    if (trackedKeys[i].Action == KeyAction.Pressed) return true;
+                }
+                
             }
             return false;
         }
