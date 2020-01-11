@@ -99,13 +99,11 @@ namespace BallzForWindows01
             
             while (this.Created)
             {
-
                 kcontrols.Update();
                 HandleTopLevelKeyboardCommands();
                 GameLogic();
                 RenderScene();
                 FrameCleanUp();
-
                 Application.DoEvents();
                 if(exitProgram) { break; }
             }
