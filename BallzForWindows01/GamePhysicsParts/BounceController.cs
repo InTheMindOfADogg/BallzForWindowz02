@@ -37,8 +37,7 @@ namespace BallzForWindows01.GamePhysicsParts
     {
         
         public BounceController()
-        {
-            // testing
+        {            
         }
 
         public void CalculateBounce()
