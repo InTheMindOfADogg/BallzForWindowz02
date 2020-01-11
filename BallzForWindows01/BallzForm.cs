@@ -96,17 +96,31 @@ namespace BallzForWindows01
         }
         public void GameLoop()
         {
+            
             while (this.Created)
             {
-                
+
                 kcontrols.Update();
+                HandleTopLevelKeyboardCommands();
                 GameLogic();
                 RenderScene();
                 FrameCleanUp();
-                Application.DoEvents();                
+
+                Application.DoEvents();
+                if(exitProgram) { break; }
             }
             CleanUp();
 
+        }
+
+        bool exitProgram = false;
+        private void HandleTopLevelKeyboardCommands()
+        {
+            
+            if(kcontrols.KeyPressed(Keys.Escape))
+            {
+                exitProgram = true;
+            }
         }
         private void GameLogic()    //Update
         {

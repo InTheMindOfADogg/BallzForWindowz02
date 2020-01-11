@@ -66,15 +66,16 @@ namespace BallzForWindows01.Structs
 
         bool resetNextFrame = false;
         public void CheckForReset()
-        {
+        {            
             if (state == KeyState.Up && lastState != KeyState.Up)
-            {                
+            {     
+                
                 if (!resetNextFrame) { resetNextFrame = true; return; }
                 eventThisFrame = false;
                 // At this point this is [Up/Down], [Released/[Held or Pressed]]                
                 lastState = state;
-                SetKeyAction();
                 // At this point this is [Up/Up] [None/Released].
+                SetKeyAction();
                 //AssistFunctions.cwl($"state/lastState: [{state}/{lastState}] action/lastAction: [{action}/{lastAction}]");
                 return;
             }

@@ -23,6 +23,7 @@ namespace BallzForWindows01.Structs
         public KeyboardControls01()
         {
             AddTrackedKey(Keys.Space);
+            AddTrackedKey(Keys.Escape);
         }
 
 
@@ -44,12 +45,20 @@ namespace BallzForWindows01.Structs
             {
                 if (!trackedKeys[i].DefaultState) 
                 { 
-                    trackedKeys[i].CheckForReset();
-                    
+                    trackedKeys[i].CheckForReset();                    
                     cwl($"state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} [{trackedKeys[i].Action}/{trackedKeys[i].LastAction}]");     // For debugging
                 }
 
             }
+        }
+
+        public bool KeyPressed(Keys key)
+        {
+            for(int i = 0; i < trackedKeys.Count; i++)
+            {
+                if (trackedKeys[i].Action == KeyAction.Pressed) return true;
+            }
+            return false;
         }
 
 
