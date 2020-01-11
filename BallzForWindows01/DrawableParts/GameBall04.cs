@@ -66,7 +66,7 @@ namespace BallzForWindows01.DrawableParts
             PositionLaunchButton();
         }
 
-        public void Update(MouseControls mc, List<CollisionPoint> blockCpList)
+        public void Update(MouseControls mc, KeyboardControls01 kc, List<CollisionPoint> blockCpList)
         {
             bool dbgtxt = true;
             string fnId = FnId(clsName, "Update");
