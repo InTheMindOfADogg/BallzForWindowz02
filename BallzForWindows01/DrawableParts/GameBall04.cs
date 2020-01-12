@@ -56,7 +56,7 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.NameTag = "spinTraj";
             aimTraj.ShowStartMakrer = false;
             spinTraj.ShowStartMakrer = false;
-            
+
             bc = new BounceController();
         }
 
@@ -94,13 +94,13 @@ namespace BallzForWindows01.DrawableParts
             CheckForBlockCollision(blockCpList);
 
             ApplyDriftPerSecond(gtimer.TotalSeconds);
-            
+
             if (launched)
             {
                 gtimer.Update();
                 // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
                 CalculateBounceAngle();
-                
+
 
                 rotation += bounceAngle;
                 position.X = position.X + speed * Math.Cos(rotation);
@@ -129,11 +129,11 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                //if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
+                
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
-        
+
         new public void Draw(Graphics g)
         {
             base.Draw(g);
@@ -186,7 +186,7 @@ namespace BallzForWindows01.DrawableParts
         {
             for (int i = 0; i < blockCpList.Count; i++)
             {
-                
+
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
                     if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
@@ -198,8 +198,8 @@ namespace BallzForWindows01.DrawableParts
                     CollisionPointList[j].PointHit = false;
                 }
             }
-        }        
-        
+        }
+
         // TODO: build CalculateBounceAngle. I am planning for this to be the location where the bounce angle
         //       will be calculated if collision is detected in CheckForBlockCollision
         void CalculateBounceAngle()
@@ -249,14 +249,10 @@ namespace BallzForWindows01.DrawableParts
         }
 
         void HandleKeyboardInput(KeyboardControls01 kc)
-        {            
-            if(kc.KeyPressed(Keys.Space))
+        {
+            if (kc.KeyPressed(Keys.Space))
             {
-                
-                if(!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin))
-                {
-                    LaunchBall();
-                }
+                if (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) { LaunchBall(); }
             }
         }
         void HandleMouseInput(MouseControls mc)

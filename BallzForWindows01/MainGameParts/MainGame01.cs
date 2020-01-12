@@ -18,16 +18,15 @@ namespace BallzForWindows01.MainGameParts
     class MainGame01
     {
         int width, height;
+
         Bitmap backbuffer = null;
 
         List<BasicBlock01> blockList;
 
         GameBall04 ball4 = null;
 
-        //bool pause = false;
-
-
         List<CollisionPoint> cplist = new List<CollisionPoint>();
+
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
             width = gameWindowWidth;
@@ -62,22 +61,30 @@ namespace BallzForWindows01.MainGameParts
             AddCollisionPoint(450, 550, 25);
             AddCollisionPoint(333, 500, 25);
         }
+        public void Update(MouseControls mc, KeyboardControls01 kc)
+        {
+            // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
+            if (ball4 != null) { ball4.Update(mc, kc, cplist); }
+            DrawToBuffer();
+        }
+        public void Draw(Graphics g)
+        {
+            g.DrawImage(backbuffer, new PointF(0, 0));
+            backbuffer.Dispose();
+        }
+        public void CleanUp()
+        {
+            if (ball4 != null) { ball4.CleanUp(); }
+            CleanUpBlockList();
+        }
+
+
         void AddCollisionPoint(double x, double y, double sideLength)
         {
             CollisionPoint tempcp = new CollisionPoint();
             tempcp.Load(x, y, sideLength);
             cplist.Add(tempcp);
         }
-
-        public void Update(MouseControls mc, KeyboardControls01 kc)
-        {
-            // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
-            if (ball4 != null) { ball4.Update(mc, kc, cplist); }           
-
-            DrawToBuffer();
-        }
-
-        
         private void DrawToBuffer()
         {
             backbuffer = new Bitmap(width, height);
@@ -85,7 +92,6 @@ namespace BallzForWindows01.MainGameParts
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
-
 
             if (ball4 != null) { ball4.Draw(g); }
 
@@ -95,12 +101,6 @@ namespace BallzForWindows01.MainGameParts
             sb.Dispose();
             g.Dispose();
         }
-        public void Draw(Graphics g)
-        {
-            g.DrawImage(backbuffer, new PointF(0, 0));
-            backbuffer.Dispose();
-        }
-
         void DrawCollisionPointList(Graphics g)
         {
             for (int i = 0; i < cplist.Count; i++)
@@ -151,12 +151,7 @@ namespace BallzForWindows01.MainGameParts
         }
         #endregion BlockList Functions
 
-        public void CleanUp()
-        {
-            if (ball4 != null) { ball4.CleanUp(); }
-            CleanUpBlockList();
 
-        }
 
 
     }
