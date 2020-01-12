@@ -27,7 +27,7 @@ namespace BallzForWindows01
     {
         MouseControls mcontrols = new MouseControls();
         KeyboardControls01 kcontrols = new KeyboardControls01();
-        bool keyEventInFrame = false;
+        //bool keyEventInFrame = false;
         MainGame01 ballzGame01;
 
         public BallzForm()
@@ -53,7 +53,6 @@ namespace BallzForWindows01
         {
             kcontrols.ReadKeyEvents(e, KeyState.Down);
         }
-
         private void BallzForm_KeyUp(object sender, KeyEventArgs e)
         {
             kcontrols.ReadKeyEvents(e, KeyState.Up);            
