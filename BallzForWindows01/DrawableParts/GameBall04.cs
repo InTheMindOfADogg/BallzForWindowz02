@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace BallzForWindows01.DrawableParts
 {
@@ -55,7 +56,7 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.NameTag = "spinTraj";
             aimTraj.ShowStartMakrer = false;
             spinTraj.ShowStartMakrer = false;
-            
+
             bc = new BounceController();
         }
 
@@ -66,11 +67,12 @@ namespace BallzForWindows01.DrawableParts
             PositionLaunchButton();
         }
 
-        public void Update(MouseControls mc, List<CollisionPoint> blockCpList)
+        public void Update(MouseControls mc, KeyboardControls01 kc, List<CollisionPoint> blockCpList)
         {
             bool dbgtxt = true;
             string fnId = FnId(clsName, "Update");
             HandleMouseInput(mc);
+            HandleKeyboardInput(kc);
 
             if (dbgtxt) DbgFuncs.AddStr($"{fnId} launched: {launched}");
 
@@ -92,13 +94,13 @@ namespace BallzForWindows01.DrawableParts
             CheckForBlockCollision(blockCpList);
 
             ApplyDriftPerSecond(gtimer.TotalSeconds);
-            
+
             if (launched)
             {
                 gtimer.Update();
                 // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
                 CalculateBounceAngle();
-                
+
 
                 rotation += bounceAngle;
                 position.X = position.X + speed * Math.Cos(rotation);
@@ -127,76 +129,11 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                //if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
+                
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
 
-        //public void Update(MouseControls mc)
-        //{
-        //    bool dbgtxt = true;
-        //    string fnId = FnId(clsName, "Update");
-        //    HandleMouseInput(mc);
-
-        //    if (dbgtxt) DbgFuncs.AddStr($"{fnId} launched: {launched}");
-
-        //    if (!launched)
-        //    {
-        //        if (adjustingPosition)
-        //        {
-        //            position.Set(mousePos);
-        //            startPosition.Set(mousePos);
-        //        }
-        //        if (adjustingAim) { aimTraj.SetEndPoint(mousePos); }
-        //        if (adjustingSpin) { spinTraj.SetEndPoint(mousePos); }
-
-        //        SetInitialTrajectory();
-        //        CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
-        //        CalculateInitialDriftPerSecond();
-        //    }
-        //    ApplyDriftPerSecond(gtimer.TotalSeconds);
-        //    if (launched)
-        //    {
-        //        gtimer.Update();
-        //        // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
-        //        CalculateBounceAngle();
-        //        rotation += bounceAngle;
-        //        position.X = position.X + speed * Math.Cos(rotation);
-        //        position.Y = position.Y + speed * Math.Sin(rotation);
-        //        if (bounceAngle != 0)
-        //        {
-        //            lastBounceAngle = bounceAngle;
-        //            bounceAngle = 0;
-        //        }
-        //    }
-        //    MoveCollisionPoints(position.X, position.Y, radius, rotation);
-        //    if (dbgtxt && DrawDbgTxt)
-        //    {
-        //        //gtimer.DbgTxt();
-        //        dbgPrintAngle(fnId, "driftFactor", driftFactor);
-        //        dbgPrintAngle(fnId, "rotation", rotation);
-        //        dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
-        //        DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
-        //        DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
-        //        DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
-        //        DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
-        //        dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
-        //        dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
-        //        dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
-
-        //        DbgFuncs.AddStr($"{fnId} hz: {hz}");
-        //        DbgFuncs.AddStr($"{fnId} lastHz: {lastHz}");
-
-
-        //        if (firstPointHit > -1)
-        //        {
-        //            launched = false;
-        //            aimTraj.Visible = false;
-        //            spinTraj.Visible = false;
-        //        }
-        //    }
-        //}
-        
         new public void Draw(Graphics g)
         {
             base.Draw(g);
@@ -249,7 +186,7 @@ namespace BallzForWindows01.DrawableParts
         {
             for (int i = 0; i < blockCpList.Count; i++)
             {
-                
+
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
                     if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
@@ -261,8 +198,8 @@ namespace BallzForWindows01.DrawableParts
                     CollisionPointList[j].PointHit = false;
                 }
             }
-        }        
-        
+        }
+
         // TODO: build CalculateBounceAngle. I am planning for this to be the location where the bounce angle
         //       will be calculated if collision is detected in CheckForBlockCollision
         void CalculateBounceAngle()
@@ -311,6 +248,13 @@ namespace BallzForWindows01.DrawableParts
             }
         }
 
+        void HandleKeyboardInput(KeyboardControls01 kc)
+        {
+            if (kc.KeyPressed(Keys.Space))
+            {
+                if (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) { LaunchBall(); }
+            }
+        }
         void HandleMouseInput(MouseControls mc)
         {
             bool dbgtxt = true;
@@ -394,11 +338,18 @@ namespace BallzForWindows01.DrawableParts
                     //&& InLaunchButtonRect(mc.X, mc.Y)
                     && btnLaunch.InBoundingRect(mc.X, mc.Y))
                 {
-                    launched = true;
-                    gtimer.Start();
+                    //launched = true;
+                    //gtimer.Start();
+                    LaunchBall();
                 }
             }
 
+        }
+
+        void LaunchBall()
+        {
+            launched = true;
+            gtimer.Start();
         }
 
         void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
@@ -415,6 +366,73 @@ namespace BallzForWindows01.DrawableParts
 
     }
 }
+
+#region old Update function
+//public void Update(MouseControls mc)
+//{
+//    bool dbgtxt = true;
+//    string fnId = FnId(clsName, "Update");
+//    HandleMouseInput(mc);
+
+//    if (dbgtxt) DbgFuncs.AddStr($"{fnId} launched: {launched}");
+
+//    if (!launched)
+//    {
+//        if (adjustingPosition)
+//        {
+//            position.Set(mousePos);
+//            startPosition.Set(mousePos);
+//        }
+//        if (adjustingAim) { aimTraj.SetEndPoint(mousePos); }
+//        if (adjustingSpin) { spinTraj.SetEndPoint(mousePos); }
+
+//        SetInitialTrajectory();
+//        CalculateDriftFactor(aimTraj.Rotation, spinTraj.Rotation);
+//        CalculateInitialDriftPerSecond();
+//    }
+//    ApplyDriftPerSecond(gtimer.TotalSeconds);
+//    if (launched)
+//    {
+//        gtimer.Update();
+//        // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
+//        CalculateBounceAngle();
+//        rotation += bounceAngle;
+//        position.X = position.X + speed * Math.Cos(rotation);
+//        position.Y = position.Y + speed * Math.Sin(rotation);
+//        if (bounceAngle != 0)
+//        {
+//            lastBounceAngle = bounceAngle;
+//            bounceAngle = 0;
+//        }
+//    }
+//    MoveCollisionPoints(position.X, position.Y, radius, rotation);
+//    if (dbgtxt && DrawDbgTxt)
+//    {
+//        //gtimer.DbgTxt();
+//        dbgPrintAngle(fnId, "driftFactor", driftFactor);
+//        dbgPrintAngle(fnId, "rotation", rotation);
+//        dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
+//        DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
+//        DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
+//        DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
+//        DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
+//        dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
+//        dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
+//        dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
+
+//        DbgFuncs.AddStr($"{fnId} hz: {hz}");
+//        DbgFuncs.AddStr($"{fnId} lastHz: {lastHz}");
+
+
+//        if (firstPointHit > -1)
+//        {
+//            launched = false;
+//            aimTraj.Visible = false;
+//            spinTraj.Visible = false;
+//        }
+//    }
+//}
+#endregion old Update function
 
 #region GameBall04 full backup 2020-01-04 before continuing to build bounce logic
 //namespace BallzForWindows01.DrawableParts
