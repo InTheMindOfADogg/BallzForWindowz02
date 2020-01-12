@@ -58,6 +58,8 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.ShowStartMakrer = false;
 
             bc = new BounceController();
+
+            speed = startingSpeed = 1.0;
         }
 
         new public void Load(double x, double y, double hitBoxSideLength, double radius, double rotation, int collisionPoints)
