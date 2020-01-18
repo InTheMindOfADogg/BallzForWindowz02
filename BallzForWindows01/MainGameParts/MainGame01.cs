@@ -56,16 +56,16 @@ namespace BallzForWindows01.MainGameParts
 
             if (ball4 != null)
             {
-                ball4.Load(ballStartX, ballStartY, 2, 10, 0, 5);
+                ball4.Load(ballStartX, ballStartY, 2, 10, 0, 7);
                 ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
             }
 
 
-            AddCollisionPoint(300, 570, 25);
-            AddCollisionPoint(300, 370, 25);
-            AddCollisionPoint(400, 500, 25);
-            AddCollisionPoint(450, 550, 25);
-            AddCollisionPoint(333, 500, 25);
+            //AddCollisionPoint(300, 570, 25);
+            //AddCollisionPoint(300, 370, 25);
+            //AddCollisionPoint(400, 500, 25);
+            //AddCollisionPoint(450, 550, 25);
+            //AddCollisionPoint(333, 500, 25);
 
             cline.Load(550, 500, 50, 0, 5); // cline1 yellowish color
             cplist.AddRange(cline.CpList);
@@ -125,29 +125,33 @@ namespace BallzForWindows01.MainGameParts
             backbuffer = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(backbuffer);
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
-            Pen p = new Pen(Color.Black);
+            //Pen p = new Pen(Color.Black);
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
 
             if (ball4 != null) { ball4.Draw(g); }
 
             //DrawCollisionPointList(g);
-            DrawCollisionPointList(g, p, sb);
 
 
 
-            cline.Draw(g);
-            cline2.Draw(g);
+            cline.Draw(g, false);
+            cline2.Draw(g, false);
+            
 
             DbgFuncs.DrawDbgStrList(g);
 
-            sb.Dispose();
-            p.Dispose();
+            sb.Dispose();            
             g.Dispose();
         }
-        void DrawCollisionPointList(Graphics g, Pen p, SolidBrush sb)
+        void DrawCollisionPointList(Graphics g)
         {
+            if(cplist.Count == 0) { return; }
+            Pen p = new Pen(Color.Black);
+            SolidBrush sb = new SolidBrush(Color.Black);
             for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }
+            p.Dispose();
+            sb.Dispose();
         }
 
         

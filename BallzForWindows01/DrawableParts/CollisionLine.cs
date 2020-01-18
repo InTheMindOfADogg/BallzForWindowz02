@@ -70,24 +70,23 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
-        public void Draw(Graphics g)
+        public void Draw(Graphics g, bool showCp = false)
         {
-            Pen pen = new Pen(color, thickness);
-            g.DrawLine(pen, (float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y);
+            Pen pen = new Pen(color, thickness);            
+            g.DrawLine(pen, p1.fX, p1.fY, p2.fX, p2.fY);
+            if (showCp) { DrawCollisionPoints(g); }
             pen.Dispose();
 
-            //// Collision point drawing being handled in MainGame01 at this time. (2020-01-18)
-            //DrawCollisionPoints(g);
+            
         }
-
-        //// Collision point drawing being handled in MainGame01 at this time. (2020-01-18)
-        //void DrawCollisionPoints(Graphics g)
-        //{
-        //    for (int i = 0; i < cpList.Count; i++)
-        //    {
-        //        cpList[i].Draw(g);
-        //    }
-        //}
+        void DrawCollisionPoints(Graphics g)
+        {
+            Pen p = new Pen(Color.Black);
+            SolidBrush sb = new SolidBrush(Color.Black);
+            for (int i = 0; i < cpList.Count; i++){cpList[i].Draw(g, p, sb);}
+            p.Dispose();
+            sb.Dispose();
+        }
     }
 
 

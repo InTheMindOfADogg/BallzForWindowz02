@@ -38,9 +38,9 @@ namespace BallzForWindows01.DrawableParts
 
 
         public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
-        public CollisionPoint(double x, double y, double cbSideLength) { _Init(x, y, cbSideLength, cbSideLength, Color.FromArgb(255, 175, 30, 50)); }
+        //public CollisionPoint(double x, double y, double cbSideLength) { _Init(x, y, cbSideLength, cbSideLength, Color.FromArgb(255, 175, 30, 50)); }
         public CollisionPoint(double x, double y, double cbSideLength, Color c) { _Init(x, y, cbSideLength, cbSideLength, c); }
-        public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight) { _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50)); }
+        //public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight) { _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50)); }
         public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight, Color c) { _Init(x, y, cboxWidth, cboxHeight, c); }
 
         public void Load(double x, double y) { _Load(x, y, 25, 25); } // just using 25 as default for now, might change later
