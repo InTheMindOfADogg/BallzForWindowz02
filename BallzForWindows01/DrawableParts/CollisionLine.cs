@@ -76,27 +76,31 @@ namespace BallzForWindows01.DrawableParts
             g.DrawLine(pen, (float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y);
             pen.Dispose();
 
-            //cp.Draw(g);
-            DrawCollisionPoints(g);
+            //// Collision point drawing being handled in MainGame01 at this time. (2020-01-18)
+            //DrawCollisionPoints(g);
         }
 
-        public void CheckCollision(double px, double py)
-        {
-            for (int i = 0; i < cpList.Count; i++)
-            {
-                collision = cpList[i].CheckForCollision(px, py);
-                //DbgFuncs.AddStr($"CollisionLine.CollisionPoint[{i}] collision: {cpList[i].Collision}");
-            }
-        }
-
-        void DrawCollisionPoints(Graphics g)
-        {
-            for (int i = 0; i < cpList.Count; i++)
-            {
-                cpList[i].Draw(g);
-            }
-        }
+        //// Collision point drawing being handled in MainGame01 at this time. (2020-01-18)
+        //void DrawCollisionPoints(Graphics g)
+        //{
+        //    for (int i = 0; i < cpList.Count; i++)
+        //    {
+        //        cpList[i].Draw(g);
+        //    }
+        //}
     }
 
 
 }
+
+
+#region CheckCollision old function. Currently being handled in MainGame01 at this time (2020-01-18)
+//// Collision checks are being handled in MainGame01 at this time. (2020-01-18)
+//public void CheckCollision(double px, double py)
+//{
+//    for (int i = 0; i < cpList.Count; i++)
+//    {
+//        collision = cpList[i].CheckForCollision(px, py);
+//    }
+//}
+#endregion CheckCollision old function. Currently being handled in MainGame01 at this time (2020-01-18)

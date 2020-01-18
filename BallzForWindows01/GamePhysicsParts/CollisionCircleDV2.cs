@@ -13,7 +13,6 @@ namespace BallzForWindows01.GamePhysicsParts
 
         // Properties
         public List<CollisionPoint> CollisionPointList { get { return cplist; } }
-        //public double MiddleCPIdx { get { return middleCpidx; } }
 
 
         List<CollisionPoint> cplist;
@@ -53,11 +52,17 @@ namespace BallzForWindows01.GamePhysicsParts
                 if (i == 0) { cpColor = dfltColorCollisionPoints; }
             }
         }
-        public void Draw(Graphics g)
-        {
-            DrawCircle(g);
-            DrawCollisionPoints(g);
-        }
+
+        //public void Draw(Graphics g)
+        //{
+        //    DrawCircle(g);
+        //    DrawCollisionPoints(g);
+        //}
+        //public void Draw(Graphics g, Pen p, SolidBrush sb)
+        //{
+        //    DrawCircle(g, p, sb);
+        //    DrawCollisionPoints(g, p, sb);
+        //}
 
         CollisionPoint CreateCollisionPoint(double x, double y, double boxSize, double radius, double rotation, Color c)
         {
@@ -86,15 +91,25 @@ namespace BallzForWindows01.GamePhysicsParts
             //DebugTextCollisionCircle();
         }
 
-        
+        //protected void DrawCollisionPoints(Graphics g)
+        //{
+        //    // Version 1
+        //    //for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g); }
 
-        protected void DrawCollisionPoints(Graphics g)
+        //    // Version 2
+        //    Pen p = new Pen(Color.Red);
+        //    SolidBrush sb = new SolidBrush(Color.Red);
+        //    for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }
+        //    p.Dispose();
+        //    sb.Dispose();
+        //}
+        protected void DrawCollisionPoints(Graphics g, Pen p, SolidBrush sb)
         {
-            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g); }
+            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }            
         }
 
 
-        
+
 
     }
 

@@ -26,24 +26,19 @@ namespace BallzForWindows01.DrawableParts
             startPoint = new PointD();
             endPoint = new PointD();
             rot = new RotationD();
-
             SetColor(140, 150, 225, 50);    // set line color. green color
-
             cplist = new List<CollisionPoint>();
 
         }
 
-        bool negativeSpaceBt = false;
         public void Load(double startx, double starty, double length, double rotation, int thickness, double spaceBtCp)
         {
-            
 
             // make sure that the line is atleast 1 unit long
             if (length < 1) { length = 1; }
-            if (spaceBtCp == 0) { spaceBtCp = length; }            
+            if (spaceBtCp == 0) { spaceBtCp = length; }
             if (spaceBtCp < 0)
             {
-                negativeSpaceBt = true;
                 spaceBtCp *= -1;
                 rotation += Math.PI;
             }
@@ -61,13 +56,12 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
-        int numOfCp = 0;
-        double remainingLength = 0;     // Remaining length not covered by cp (if first cp is placed at start of line and rest are spaced using spaceBtCp)
-        double distributeSpacePerCp = 0;
-        double actualSpaceBt = 0;
-
         void AddCollisionPoints(double distance, double space)
         {
+            int numOfCp = 0;
+            double remainingLength = 0;     // Remaining length not covered by cp (if first cp is placed at start of line and rest are spaced using spaceBtCp)
+            double distributeSpacePerCp = 0;
+            double actualSpaceBt = 0;
             numOfCp = (int)(distance / space);
             remainingLength = length - (numOfCp * space);
             if (remainingLength > 0)
@@ -92,45 +86,59 @@ namespace BallzForWindows01.DrawableParts
         public void Update()
         {
             string fnId = AssistFunctions.FnId(clsName, "Update");
-            string cpstr = "";
             DbgFuncs.AddStr(fnId, $"length: {length}");
             DbgFuncs.AddStr(fnId, $"startPoint: {startPoint.ToString()}");
             DbgFuncs.AddStr(fnId, $"endPoint: {endPoint.ToString()}");
-            DbgFuncs.AddStr(fnId, $"numOfCp: {numOfCp}");
-            //DbgFuncs.AddStr(fnId, $"additionalNumOfCp: {additionalNumOfCp}");
-            DbgFuncs.AddStr(fnId, $"spaceBtCp: {spaceBtCp}");
-            DbgFuncs.AddStr(fnId, $"remainingLength: {remainingLength}");
-            DbgFuncs.AddStr(fnId, $"distributeSpacePerCp: {distributeSpacePerCp}");
-            DbgFuncs.AddStr(fnId, $"actualSpaceBt: {actualSpaceBt}");
             DbgFuncs.AddStr(fnId, $"cplist.Count: {cplist.Count}");
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                cpstr += cplist[i].Pos.ToString() + ", ";
-            }
-            DbgFuncs.AddStr(fnId, $"cpstr: {cpstr}");
+            CollisionPoint.ListCollisionPoints(fnId, cplist);
         }
 
 
         public void Draw(Graphics g)
         {
             Pen pen = new Pen(color, thickness);
+            SolidBrush sb = new SolidBrush(Color.Black);
             g.DrawLine(pen, startPoint.fX, startPoint.fY, endPoint.fX, endPoint.fY);
-            DrawCollisionPoints(g);
+            // Collision point drawing being handled in MainGame01 at this time. (2020-01-18)
+
+            // Drawing collision points. Version 2
+            //DrawCollisionPoints(g, pen);
+
+            // Drawing collision points. Version 3
+            DrawCollisionPoints(g, pen, sb);
+
+
             pen.Dispose();
+            sb.Dispose();
         }
 
+        
 
-        void DrawCollisionPoints(Graphics g)
+        #region DrawCollisionPoints Version 3
+        void DrawCollisionPoints(Graphics g, Pen p, SolidBrush sb)
         {
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                cplist[i].Draw(g);
-            }
+            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }
         }
-
+        #endregion DrawCollisionPoints Version 3
     }
 }
 
+#region DrawCollisionPoints Version 2
+//void DrawCollisionPoints(Graphics g, Pen p)
+//{
+//    Color originalPenColor = p.Color;
+//    p.Color = Color.Red;
+//    SolidBrush collisionFillBrush = new SolidBrush(Color.FromArgb(25, Color.Red));
+//    SolidBrush pointHitFillBrush = new SolidBrush(Color.FromArgb(25, Color.Green));
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        cplist[i].Draw(g, p, collisionFillBrush, pointHitFillBrush);
+//    }
+//    collisionFillBrush.Dispose();
+//    pointHitFillBrush.Dispose();
+//    p.Color = originalPenColor;
+//}
+#endregion DrawCollisionPoints Version 2
 
 #region AddCollisionPoints previous versions
 ////adding 1 to number of cp when first calculating numOfCp

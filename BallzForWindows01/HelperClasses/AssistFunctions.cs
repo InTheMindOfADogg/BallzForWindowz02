@@ -23,6 +23,8 @@ namespace BallzForWindows01
             DbgFuncs.AddStr($"{fnId} {text}: {angle:N3} ({(angle * 180 / Math.PI):N3})");
         }
         public static string FnId(string clsName, string fnName) { return $"[{clsName}.{fnName}]"; }
+
+        
     }
 
 }

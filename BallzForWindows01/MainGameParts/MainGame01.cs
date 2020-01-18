@@ -71,24 +71,25 @@ namespace BallzForWindows01.MainGameParts
             cplist.AddRange(cline.CpList);
 
             // Test increasing length so that length so that there is a remaining length not covered by cp
-            
+
             //cline2.Load(550, 550, 50, 0, 5, 30);
             TESTLoadCollisionLine02();  // cline2 is greenish color
             cplist.AddRange(cline2.CpList);
-            
-            
+
+
         }
-        
+
         void TESTLoadCollisionLine02()
         {
-            double 
-                startx = 550, 
-                starty = 550, 
-                length = 50, 
-                rotation = 0, 
-                spaceBtCp = -100;
-            int 
+            double
+                startx = 550,
+                starty = 550,
+                length = 50,
+                rotation = 0,
+                spaceBtCp = -10;
+            int
                 thickness = 5;
+
             cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
         }
         public void Update(MouseControls mc, KeyboardControls01 kc)
@@ -124,28 +125,32 @@ namespace BallzForWindows01.MainGameParts
             backbuffer = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(backbuffer);
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
+            Pen p = new Pen(Color.Black);
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
 
             if (ball4 != null) { ball4.Draw(g); }
 
             //DrawCollisionPointList(g);
+            DrawCollisionPointList(g, p, sb);
+
+
 
             cline.Draw(g);
             cline2.Draw(g);
 
             DbgFuncs.DrawDbgStrList(g);
+
             sb.Dispose();
+            p.Dispose();
             g.Dispose();
         }
-        void DrawCollisionPointList(Graphics g)
+        void DrawCollisionPointList(Graphics g, Pen p, SolidBrush sb)
         {
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                cplist[i].Draw(g);
-            }
+            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }
         }
 
+        
         #region BlockList Functions
         private void LoadBlockList()
         {
@@ -193,6 +198,40 @@ namespace BallzForWindows01.MainGameParts
 
     }
 }
+
+#region previous versions of DrawCollisionPointList
+// DrawCollisionPointList - creates all resources needed in function
+//void DrawCollisionPointList(Graphics g)
+//{
+//    Pen p = new Pen(Color.Red);
+//    SolidBrush collisionFillBrush = new SolidBrush(Color.FromArgb(25, Color.Red));
+//    SolidBrush pointHitFillBrush = new SolidBrush(Color.FromArgb(25, Color.Green));
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        //cplist[i].Draw(g);
+//        cplist[i].Draw(g, p, collisionFillBrush, pointHitFillBrush);
+//    }
+//    p.Dispose();
+//    collisionFillBrush.Dispose();
+//    pointHitFillBrush.Dispose();
+//}
+
+
+//void DrawCollisionPointList(Graphics g, SolidBrush sb)
+//{
+//    Pen p = new Pen(Color.Red);
+//    SolidBrush collisionFillBrush = new SolidBrush(Color.FromArgb(25, Color.Red));
+//    SolidBrush pointHitFillBrush = new SolidBrush(Color.FromArgb(25, Color.Green));
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        //cplist[i].Draw(g);
+//        cplist[i].Draw(g, p, collisionFillBrush, pointHitFillBrush);
+//    }
+//    p.Dispose();
+//    collisionFillBrush.Dispose();
+//    pointHitFillBrush.Dispose();
+//}
+#endregion previous versions of DrawCollisionPointList
 
 #region UpdateCollisionPointList functions (only used in GameBall1 and GameBall2)
 
@@ -707,6 +746,7 @@ namespace BallzForWindows01.MainGameParts
 //    }
 //}
 #endregion full back up before removing gameball1 and gameball2
+
 #region built collision detection checking into GameBall04.Update. 2020-01-04
 // UpdateCollisionPointList for GameBall04 ball4
 //void UpdateCollisionPointList(GameBall04 b)

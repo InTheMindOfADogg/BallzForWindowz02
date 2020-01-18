@@ -11,6 +11,17 @@ namespace BallzForWindows01.DrawableParts
 
     class CollisionPoint : DrawableObject
     {
+        public static void ListCollisionPoints(string callingFnId, List<CollisionPoint> cplist)
+        {
+            string cpstr = "";
+            for (int i = 0; i < cplist.Count; i++)
+            {
+                cpstr += cplist[i].Pos.ToString() + ", ";
+            }
+            DbgFuncs.AddStr(callingFnId, $"cpstr: {cpstr}");
+        }
+
+
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
         public bool Collision { get { return collision; } set { collision = value; } }
         public PointD Pos { get { return pos; } }
@@ -44,22 +55,61 @@ namespace BallzForWindows01.DrawableParts
         }
 
         public void Update(double x, double y) { }
-        public void Draw(Graphics g)
+
+        #region  previous Draw versions
+        //public void Draw(Graphics g)
+        //{
+        //    if (!visible) { return; }
+        //    Pen p = new Pen(color, 1);
+        //    g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
+        //    g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+        //    //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
+        //    if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+        //    if (collision)
+        //    {
+        //        SolidBrush fillBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
+        //        g.FillRectangle(fillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+        //        fillBrush.Dispose();
+        //    }
+        //    p.Dispose();
+        //}        
+
+        //public void Draw(Graphics g, Pen p, SolidBrush collisionFillBrush, SolidBrush pointHitFillBrush)
+        //{
+        //    if (!visible) { return; }
+        //    g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
+        //    g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+        //    if (pointHit) { g.FillRectangle(pointHitFillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+        //    if (collision) { g.FillRectangle(collisionFillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+        //}
+
+
+        #endregion previous Draw versions
+        
+        public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
             if (!visible) { return; }
-            Pen p = new Pen(color, 1);
+            
+            p.Color = color;
+            p.Width = 1;
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-            //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
-            if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+            
+            if (pointHit)
+            {
+                sb.Color = Color.Green;
+                g.FillRectangle(sb, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);            
+            }
             if (collision)
             {
-                SolidBrush fillBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
-                g.FillRectangle(fillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-                fillBrush.Dispose();
+                sb.Color = Color.FromArgb(25, 200, 10, 10);
+                g.FillRectangle(sb, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+                
             }
-            p.Dispose();
         }
+
+        
+
         public void Reset()
         {
             pointHit = false;

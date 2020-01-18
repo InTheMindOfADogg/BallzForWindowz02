@@ -136,12 +136,21 @@ namespace BallzForWindows01.DrawableParts
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
 
-        new public void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
-            base.Draw(g);
+            Pen p = new Pen(Color.Black);
+            SolidBrush sb = new SolidBrush(Color.Black);
+
+            //base.Draw(g, p, sb);            
+            DrawCollisionPoints(g, p, sb);
+            DrawCircle(g, p, sb);
+
             btnLaunch.Draw(g);
             aimTraj.Draw(g);
             spinTraj.Draw(g);
+
+            p.Dispose();
+            sb.Dispose();
         }
         public void Reset()
         {
