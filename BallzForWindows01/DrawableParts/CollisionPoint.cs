@@ -40,7 +40,7 @@ namespace BallzForWindows01.DrawableParts
         public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
         //public CollisionPoint(double x, double y, double cbSideLength) { _Init(x, y, cbSideLength, cbSideLength, Color.FromArgb(255, 175, 30, 50)); }
         public CollisionPoint(double x, double y, double cbSideLength, Color c) { _Init(x, y, cbSideLength, cbSideLength, c); }
-        //public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight) { _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50)); }
+        public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight) { _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50)); }
         public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight, Color c) { _Init(x, y, cboxWidth, cboxHeight, c); }
 
         public void Load(double x, double y) { _Load(x, y, 25, 25); } // just using 25 as default for now, might change later
@@ -53,39 +53,20 @@ namespace BallzForWindows01.DrawableParts
             boxSize.Set(cboxWidth, cboxHeight);
             SetCollisionBox();
         }
+        public void Set(double x, double y)
+        {
+            pos.Set(x, y);
+            SetCollisionBox();
+        }
+
+        // Move - not tested. created 2020-01-18
+        //public void Move(double distance, double angle)
+        //{
+        //    pos.Move(distance, angle);
+        //}
 
         public void Update(double x, double y) { }
 
-        #region  previous Draw versions
-        //public void Draw(Graphics g)
-        //{
-        //    if (!visible) { return; }
-        //    Pen p = new Pen(color, 1);
-        //    g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
-        //    g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-        //    //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
-        //    if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
-        //    if (collision)
-        //    {
-        //        SolidBrush fillBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
-        //        g.FillRectangle(fillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-        //        fillBrush.Dispose();
-        //    }
-        //    p.Dispose();
-        //}        
-
-        //public void Draw(Graphics g, Pen p, SolidBrush collisionFillBrush, SolidBrush pointHitFillBrush)
-        //{
-        //    if (!visible) { return; }
-        //    g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
-        //    g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-        //    if (pointHit) { g.FillRectangle(pointHitFillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
-        //    if (collision) { g.FillRectangle(collisionFillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
-        //}
-
-
-        #endregion previous Draw versions
-        
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
             if (!visible) { return; }
@@ -107,8 +88,6 @@ namespace BallzForWindows01.DrawableParts
                 
             }
         }
-
-        
 
         public void Reset()
         {
@@ -145,6 +124,34 @@ namespace BallzForWindows01.DrawableParts
         }
     }
 }
+
+#region  previous Draw versions
+//public void Draw(Graphics g)
+//{
+//    if (!visible) { return; }
+//    Pen p = new Pen(color, 1);
+//    g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
+//    g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+//    //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
+//    if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+//    if (collision)
+//    {
+//        SolidBrush fillBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
+//        g.FillRectangle(fillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+//        fillBrush.Dispose();
+//    }
+//    p.Dispose();
+//}        
+
+//public void Draw(Graphics g, Pen p, SolidBrush collisionFillBrush, SolidBrush pointHitFillBrush)
+//{
+//    if (!visible) { return; }
+//    g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
+//    g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
+//    if (pointHit) { g.FillRectangle(pointHitFillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+//    if (collision) { g.FillRectangle(collisionFillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight); }
+//}
+#endregion previous Draw versions
 
 #region 2020-01-01 Moved _Set into Set since there is only one version of Set at this time
 //void _Set(double x, double y, double cboxWidth, double cboxHeight)
