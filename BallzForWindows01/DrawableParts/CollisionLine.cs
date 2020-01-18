@@ -12,6 +12,8 @@ namespace BallzForWindows01.DrawableParts
     class CollisionLine : DrawableObject
     {
 
+        public List<CollisionPoint> CpList { get { return cpList; } }
+
         PointD p1, p2;
         double rot = 0;
         double length = 0;
@@ -43,8 +45,8 @@ namespace BallzForWindows01.DrawableParts
             SetEndPoint();
 
             // loading cps
-            cp1.Load(p1.X, p1.Y);
-            cp2.Load(p2.X, p2.Y);
+            cp1.Load(p1.X, p1.Y, this.thickness);
+            cp2.Load(p2.X, p2.Y, this.thickness);
             cpList.Add(cp1);
             cpList.Add(cp2);
         }

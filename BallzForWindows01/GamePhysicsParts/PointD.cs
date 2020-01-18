@@ -27,6 +27,11 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public void Set(PointD p) { x = p.x; y = p.y; }
         public void Set(double x, double y) { this.x = x; this.y = y; }
+        public void Set(PointD startPoint, double rotation, double distance)
+        {
+            x = startPoint.x + distance * Math.Cos(rotation);
+            y = startPoint.y + distance * Math.Sin(rotation);
+        }
         public void Zero() { x = y = 0; }
 
         public double DistanceTo(double toPointX, double toPointY)

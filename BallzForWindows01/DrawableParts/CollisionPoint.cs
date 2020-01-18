@@ -15,7 +15,7 @@ namespace BallzForWindows01.DrawableParts
         public bool Collision { get { return collision; } set { collision = value; } }
         public PointD Pos { get { return pos; } }
         public RectangleD Rect { get { return cbox; } }
-        
+
 
 
         PointD pos;
@@ -23,7 +23,7 @@ namespace BallzForWindows01.DrawableParts
         RectangleD cbox;    // collision box
         bool collision = false;
 
-        bool pointHit = false;        
+        bool pointHit = false;
 
 
         public CollisionPoint() { _Init(0, 0, 0, 0, Color.FromArgb(255, 255, 0, 200)); }
@@ -31,22 +31,23 @@ namespace BallzForWindows01.DrawableParts
         public CollisionPoint(double x, double y, double cbSideLength, Color c) { _Init(x, y, cbSideLength, cbSideLength, c); }
         public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight) { _Init(x, y, cboxWidth, cboxHeight, Color.FromArgb(255, 175, 30, 50)); }
         public CollisionPoint(double x, double y, double cboxWidth, double cboxHeight, Color c) { _Init(x, y, cboxWidth, cboxHeight, c); }
-        
+
         public void Load(double x, double y) { _Load(x, y, 25, 25); } // just using 25 as default for now, might change later
         public void Load(double x, double y, double cboxSideLength) { _Load(x, y, cboxSideLength, cboxSideLength); }
-        
 
-        public void Set(double x, double y, double cboxWidth, double cboxHeight) 
+
+        public void Set(double x, double y, double cboxWidth, double cboxHeight)
         {
             pos.Set(x, y);
             boxSize.Set(cboxWidth, cboxHeight);
             SetCollisionBox();
         }
-        
+
         public void Update(double x, double y) { }
         public void Draw(Graphics g)
-        {            
-            Pen p = new Pen(color, 1);            
+        {
+            if (!visible) { return; }
+            Pen p = new Pen(color, 1);
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
             //if (pointHit) { g.FillRectangle(Brushes.Green, cbox.fX, cbox.fY, cbox.fWidth * 10, cbox.fHeight * 10); }  // makes points larger for viewing
@@ -56,7 +57,7 @@ namespace BallzForWindows01.DrawableParts
                 SolidBrush fillBrush = new SolidBrush(Color.FromArgb(25, 200, 10, 10));
                 g.FillRectangle(fillBrush, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
                 fillBrush.Dispose();
-            }            
+            }
             p.Dispose();
         }
         public void Reset()
@@ -87,7 +88,7 @@ namespace BallzForWindows01.DrawableParts
         }
 
         bool _CheckForCollision(double x, double y) { return collision = cbox.InBox(x, y); }
-        
+
         void SetCollisionBox()
         {
             cbox.Set(pos.X - (boxSize.Width / 2), pos.Y - (boxSize.Height / 2), boxSize.Width, boxSize.Height);

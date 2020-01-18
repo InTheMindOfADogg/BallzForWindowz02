@@ -27,6 +27,9 @@ namespace BallzForWindows01.MainGameParts
 
         List<CollisionPoint> cplist = new List<CollisionPoint>();
 
+        CollisionLine cline;
+        CollisionLine02 cline2;
+
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
             width = gameWindowWidth;
@@ -35,6 +38,9 @@ namespace BallzForWindows01.MainGameParts
 
             ball4 = new GameBall04(new Size(width, height));
             if (ball4 != null) { ball4.DrawDbgTxt = true; }
+
+            cline = new CollisionLine();
+            cline2 = new CollisionLine02();
 
         }
         public void Load()
@@ -60,15 +66,43 @@ namespace BallzForWindows01.MainGameParts
             AddCollisionPoint(400, 500, 25);
             AddCollisionPoint(450, 550, 25);
             AddCollisionPoint(333, 500, 25);
+
+            cline.Load(550, 500, 50, 0, 5); // cline1 yellowish color
+            cplist.AddRange(cline.CpList);
+
+            // Test increasing length so that length so that there is a remaining length not covered by cp
+            
+            //cline2.Load(550, 550, 50, 0, 5, 30);
+            TESTLoadCollisionLine02();  // cline2 is greenish color
+            cplist.AddRange(cline2.CpList);
+            
+            
+        }
+        
+        void TESTLoadCollisionLine02()
+        {
+            double 
+                startx = 550, 
+                starty = 550, 
+                length = 50, 
+                rotation = 0, 
+                spaceBtCp = -100;
+            int 
+                thickness = 5;
+            cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
         }
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
+
+            cline2.Update();
+
             DrawToBuffer();
         }
         public void Draw(Graphics g)
         {
+            // Add drawing in DrawToBuffer
             g.DrawImage(backbuffer, new PointF(0, 0));
             backbuffer.Dispose();
         }
@@ -95,7 +129,10 @@ namespace BallzForWindows01.MainGameParts
 
             if (ball4 != null) { ball4.Draw(g); }
 
-            DrawCollisionPointList(g);
+            //DrawCollisionPointList(g);
+
+            cline.Draw(g);
+            cline2.Draw(g);
 
             DbgFuncs.DrawDbgStrList(g);
             sb.Dispose();

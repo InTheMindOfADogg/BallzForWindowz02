@@ -20,9 +20,6 @@ namespace BallzForWindows01.GamePhysicsParts
     {
 
         public double Rotation { get { return rot; } }
-        
-
-
         double rot = 0;
 
 
@@ -31,6 +28,13 @@ namespace BallzForWindows01.GamePhysicsParts
         public RotationD(double rotation) { this.rot = rotation; }
 
         public void Set(double rotation) { this.rot = rotation; }
+        public PointD PointDFrom(PointD startPoint, double distance)
+        {
+            PointD tmp = new PointD();
+            tmp.X = startPoint.X + distance * Math.Cos(rot);
+            tmp.Y = startPoint.Y + distance * Math.Sin(rot);
+            return tmp;
+        }
         
         // Not tested in this location yet, but this is code from Trajectory03
         public void Set(PointD startPoint, PointD endPoint)
