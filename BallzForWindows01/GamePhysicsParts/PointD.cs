@@ -27,21 +27,30 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public void Set(PointD p) { x = p.x; y = p.y; }
         public void Set(double x, double y) { this.x = x; this.y = y; }
+        public void Set(PointD startPoint, double rotation, double distance)
+        {
+            x = startPoint.x + distance * Math.Cos(rotation);
+            y = startPoint.y + distance * Math.Sin(rotation);
+        }
+
+
+        public void Move(double distance, double rotation)
+        {
+            x = x + distance * Math.Cos(rotation);
+            y = y + distance * Math.Sin(rotation);
+        }
         public void Zero() { x = y = 0; }
 
-        public double DistanceTo(double toPointX, double toPointY)
-        {
-            return _DistanceTo(toPointX, toPointY);
-        }
-        public double DistanceTo(PointD toPoint)
-        {
-            return _DistanceTo(toPoint.X, toPoint.Y);
-        }
-
-       
-
+        public double DistanceTo(double toPointX, double toPointY) { return _DistanceTo(toPointX, toPointY); }
+        public double DistanceTo(PointD toPoint) { return _DistanceTo(toPoint.X, toPoint.Y); }
         public PointD HalfWayTo(double endx, double endy) { return _HalfWayTo(endx, endy); }
         public PointD HalfWayTo(PointD endp) { return _HalfWayTo(endp.X, endp.Y); }
+
+
+        public override string ToString() { return $"{{X={x}, Y={y}}}"; }
+        public Point ToPoint() { return new Point((int)x, (int)y); }
+        public PointF ToPointF() { return new PointF((float)x, (float)y); }
+
         private PointD _HalfWayTo(double endx, double endy)
         {
             PointD midp = new PointD();
@@ -49,12 +58,6 @@ namespace BallzForWindows01.GamePhysicsParts
             midp.Y = y + ((endy - y) / 2);
             return midp;
         }
-
-        public override string ToString() { return $"{{X={x}, Y={y}}}"; }
-        public Point ToPoint() { return new Point((int)x, (int)y); }
-        public PointF ToPointF() { return new PointF((float)x, (float)y); }
-
-
         double _DistanceTo(double toPointX, double toPointY)
         {
             double xdiff = x - toPointX;

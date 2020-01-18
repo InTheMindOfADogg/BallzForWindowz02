@@ -12,6 +12,8 @@ namespace BallzForWindows01.DrawableParts
     class CollisionLine : DrawableObject
     {
 
+        public List<CollisionPoint> CpList { get { return cpList; } }
+
         PointD p1, p2;
         double rot = 0;
         double length = 0;
@@ -43,8 +45,8 @@ namespace BallzForWindows01.DrawableParts
             SetEndPoint();
 
             // loading cps
-            cp1.Load(p1.X, p1.Y);
-            cp2.Load(p2.X, p2.Y);
+            cp1.Load(p1.X, p1.Y, this.thickness);
+            cp2.Load(p2.X, p2.Y, this.thickness);
             cpList.Add(cp1);
             cpList.Add(cp2);
         }
@@ -68,33 +70,36 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
-        public void Draw(Graphics g)
+        public void Draw(Graphics g, bool showCp = false)
         {
-            Pen pen = new Pen(color, thickness);
-            g.DrawLine(pen, (float)p1.X, (float)p1.Y, (float)p2.X, (float)p2.Y);
+            Pen pen = new Pen(color, thickness);            
+            g.DrawLine(pen, p1.fX, p1.fY, p2.fX, p2.fY);
+            if (showCp) { DrawCollisionPoints(g); }
             pen.Dispose();
 
-            //cp.Draw(g);
-            DrawCollisionPoints(g);
+            
         }
-
-        public void CheckCollision(double px, double py)
-        {
-            for (int i = 0; i < cpList.Count; i++)
-            {
-                collision = cpList[i].CheckForCollision(px, py);
-                //DbgFuncs.AddStr($"CollisionLine.CollisionPoint[{i}] collision: {cpList[i].Collision}");
-            }
-        }
-
         void DrawCollisionPoints(Graphics g)
         {
-            for (int i = 0; i < cpList.Count; i++)
-            {
-                cpList[i].Draw(g);
-            }
+            Pen p = new Pen(Color.Black);
+            SolidBrush sb = new SolidBrush(Color.Black);
+            for (int i = 0; i < cpList.Count; i++){cpList[i].Draw(g, p, sb);}
+            p.Dispose();
+            sb.Dispose();
         }
     }
 
 
 }
+
+
+#region CheckCollision old function. Currently being handled in MainGame01 at this time (2020-01-18)
+//// Collision checks are being handled in MainGame01 at this time. (2020-01-18)
+//public void CheckCollision(double px, double py)
+//{
+//    for (int i = 0; i < cpList.Count; i++)
+//    {
+//        collision = cpList[i].CheckForCollision(px, py);
+//    }
+//}
+#endregion CheckCollision old function. Currently being handled in MainGame01 at this time (2020-01-18)

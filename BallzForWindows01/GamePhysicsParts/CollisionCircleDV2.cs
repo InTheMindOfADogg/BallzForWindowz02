@@ -13,7 +13,6 @@ namespace BallzForWindows01.GamePhysicsParts
 
         // Properties
         public List<CollisionPoint> CollisionPointList { get { return cplist; } }
-        //public double MiddleCPIdx { get { return middleCpidx; } }
 
 
         List<CollisionPoint> cplist;
@@ -21,84 +20,80 @@ namespace BallzForWindows01.GamePhysicsParts
         double cpBoxSideLength = 2;
         Color dfltColorCollisionPoints = Color.FromArgb(255, 175, 30, 50);
 
-        double middleCpidx = 0;
-        bool[] cpHitArr = null;
+        double middleCpidx = 0;        
 
         double spaceBetween = 0;
-        //double firstCpAngle = 0;
+
+
+        // Temp vars, make sure to set these before using, the values will change often.
+        PointD tempcppos = new PointD();
+        double tempRot = 0;
 
         public CollisionCircleDV2() : base()
         {
             clsName = "CollisionCircleDV2";
             cplist = new List<CollisionPoint>();
         }
+
         public void Load(double x, double y, double cpBoxSideLength, double radius, double rotation, int collisionPointCount)
         {
             base.Load(x, y, radius, rotation);
-
-            cpCount = collisionPointCount;
-            this.cpBoxSideLength = cpBoxSideLength;
-            if (cpCount % 2 == 0) { cpCount++; }      // adds 1 collision point if there is an even number
+            // adds 1 collision point if there is an even number (aka, makes sure there is an odd number of collision points)
+            cpCount = (collisionPointCount % 2 == 0) ? collisionPointCount + 1 : collisionPointCount;
+            this.cpBoxSideLength = cpBoxSideLength;            
             middleCpidx = (int)(((double)cpCount / 2.0) + 0.5) - 1;
-            cpHitArr = new bool[cpCount];
-            double tempRot = rotation;
-            tempRot = 0;    // for testing            
             spaceBetween = (Math.PI / 2) / ((double)cpCount / 2.0);
-            tempRot -= (spaceBetween * middleCpidx);    // adjusting first point so that the points line up on front of ball
+            //tempRot = rotation - (spaceBetween * middleCpidx);   // adjusting first point so that the points line up on front of ball
+
             Color cpColor = Color.Blue;
             for (int i = 0; i < cpCount; i++)
             {
-                cplist.Add(CreateCollisionPoint(position.X, position.Y, this.cpBoxSideLength, radius, tempRot, cpColor));
-                tempRot += spaceBetween;
+                //cplist.Add(CreateCollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
+                cplist.Add(new CollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
                 if (i == 0) { cpColor = dfltColorCollisionPoints; }
             }
         }
-        public void Draw(Graphics g)
+                
+        protected void MoveCollisionPoints(double x, double y, double rotation)
         {
-            DrawCircle(g);
-            DrawCollisionPoints(g);
-        }
-
-        CollisionPoint CreateCollisionPoint(double x, double y, double boxSize, double radius, double rotation, Color c)
-        {
-            PointD cppos = new PointD();
-            cppos.X = (x + radius * Math.Cos(rotation));
-            cppos.Y = (y + radius * Math.Sin(rotation));
-            CollisionPoint cp = new CollisionPoint(x, y, boxSize, boxSize, c);
-            return cp;
-        }
-
-        // I should probably rework this to just move the points instead of recalculating the points all over again.
-        protected void MoveCollisionPoints(double x, double y, double radius, double rotation)
-        {
-            PointD cppos = new PointD();
-            double tempRot = rotation;
-            spaceBetween = (Math.PI / 2) / ((double)cpCount / 2.0);
-            tempRot -= (spaceBetween * middleCpidx);
-
+            tempRot = rotation - (spaceBetween * middleCpidx);
             for (int i = 0; i < cplist.Count; i++)
             {
-                cppos.X = x + radius * Math.Cos(tempRot);
-                cppos.Y = y + radius * Math.Sin(tempRot);
-                cplist[i].Set(cppos.X, cppos.Y, cpBoxSideLength, cpBoxSideLength);
+                tempcppos.X = x + radius * Math.Cos(tempRot);
+                tempcppos.Y = y + radius * Math.Sin(tempRot);
+                cplist[i].Set(tempcppos.X, tempcppos.Y, cpBoxSideLength, cpBoxSideLength);
                 tempRot += spaceBetween;
             }
             //DebugTextCollisionCircle();
         }
 
-        
-
-        protected void DrawCollisionPoints(Graphics g)
+        protected void DrawCollisionPoints(Graphics g, Pen p, SolidBrush sb)
         {
-            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g); }
+            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }            
         }
 
 
-        
+
 
     }
 
 }
+
+#region MoveCollisionPoints previous version
+//protected void MoveCollisionPoints(double x, double y, double radius, double rotation)
+//{
+//    tempRot = rotation - (spaceBetween * middleCpidx);
+//    for (int i = 0; i < cplist.Count; i++)
+//    {
+//        tempcppos.X = x + radius * Math.Cos(tempRot);
+//        tempcppos.Y = y + radius * Math.Sin(tempRot);
+//        cplist[i].Set(tempcppos.X, tempcppos.Y, cpBoxSideLength, cpBoxSideLength);
+//        tempRot += spaceBetween;
+//    }
+//    //DebugTextCollisionCircle();
+//}
+#endregion MoveCollisionPoints previous version
+
 
 #region 0 refs as of 2020-01-04
 //public List<int> TriggeredHitPointIdxList()

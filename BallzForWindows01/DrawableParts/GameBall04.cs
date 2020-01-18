@@ -58,6 +58,8 @@ namespace BallzForWindows01.DrawableParts
             spinTraj.ShowStartMakrer = false;
 
             bc = new BounceController();
+
+            speed = startingSpeed = 1.5;
         }
 
         new public void Load(double x, double y, double hitBoxSideLength, double radius, double rotation, int collisionPoints)
@@ -66,6 +68,7 @@ namespace BallzForWindows01.DrawableParts
             startPosition.Set(x, y);
             PositionLaunchButton();
         }
+
 
         public void Update(MouseControls mc, KeyboardControls01 kc, List<CollisionPoint> blockCpList)
         {
@@ -103,8 +106,16 @@ namespace BallzForWindows01.DrawableParts
 
 
                 rotation += bounceAngle;
-                position.X = position.X + speed * Math.Cos(rotation);
-                position.Y = position.Y + speed * Math.Sin(rotation);
+
+                //position.X = position.X + speed * Math.Cos(rotation);
+                //position.Y = position.Y + speed * Math.Sin(rotation);
+
+                //deltaX = speed * Math.Cos(rotation);
+                //deltaY = speed * Math.Sin(rotation);
+                //position.X = position.X + deltaX;
+                //position.Y = position.Y + deltaY;
+
+                position.Move(speed, rotation);
 
                 if (bounceAngle != 0)
                 {
@@ -113,7 +124,9 @@ namespace BallzForWindows01.DrawableParts
                 }
             }
 
-            MoveCollisionPoints(position.X, position.Y, radius, rotation);
+            //MoveCollisionPoints(position.X, position.Y, radius, rotation);
+            MoveCollisionPoints(position.X, position.Y, rotation);
+            
 
             if (dbgtxt && DrawDbgTxt)
             {
@@ -134,12 +147,21 @@ namespace BallzForWindows01.DrawableParts
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
 
-        new public void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
-            base.Draw(g);
+            Pen p = new Pen(Color.Black);
+            SolidBrush sb = new SolidBrush(Color.Black);
+
+            //base.Draw(g, p, sb);            
+            DrawCollisionPoints(g, p, sb);
+            DrawCircle(g, p, sb);
+
             btnLaunch.Draw(g);
             aimTraj.Draw(g);
             spinTraj.Draw(g);
+
+            p.Dispose();
+            sb.Dispose();
         }
         public void Reset()
         {
