@@ -108,6 +108,7 @@ namespace BallzForWindows01.MainGameParts
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
             cline.Update(Math.PI / 90);
+            //cline.Update();
             cline2.Update();
 
             DrawToBuffer();
@@ -146,7 +147,7 @@ namespace BallzForWindows01.MainGameParts
 
 
 
-            cline.Draw(g, false);
+            cline.Draw(g, true);
             cline2.Draw(g, false);
             
 

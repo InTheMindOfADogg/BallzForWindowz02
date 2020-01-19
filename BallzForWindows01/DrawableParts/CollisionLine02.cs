@@ -37,16 +37,10 @@ namespace BallzForWindows01.DrawableParts
             // make sure that the line is atleast 1 unit long
             if (length < 1) { length = 1; }
             if (spaceBtCp == 0) { spaceBtCp = length; }
-            if (spaceBtCp < 0)
-            {
-                spaceBtCp *= -1;
-                rotation += Math.PI;
-            }
+            if (spaceBtCp < 0) { spaceBtCp *= -1; rotation += Math.PI; }
             if (spaceBtCp > length / 2) { spaceBtCp = length / 2; }
 
-
-            this.startPoint.X = startx;
-            this.startPoint.Y = starty;
+            startPoint.Set(startx, starty);
             this.length = length;
             this.rot.Set(rotation);
             this.endPoint = rot.PointDFrom(startPoint, this.length);
@@ -64,10 +58,7 @@ namespace BallzForWindows01.DrawableParts
             double actualSpaceBt = 0;
             numOfCp = (int)(distance / space);
             remainingLength = length - (numOfCp * space);
-            if (remainingLength > 0)
-            {
-                distributeSpacePerCp = (remainingLength / numOfCp);
-            }
+            if (remainingLength > 0){distributeSpacePerCp = (remainingLength / numOfCp);}
             actualSpaceBt = space + distributeSpacePerCp;
             PointD tmp;
             double tmpdist = 0;
