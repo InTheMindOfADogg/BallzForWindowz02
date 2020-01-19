@@ -19,7 +19,6 @@ namespace BallzForWindows01.DrawableParts
         Trajectory03 aimTraj;
         Trajectory03 spinTraj;
         BounceController bc;
-        //Button01 btnLaunch;
         Button02 btnLaunch2;
 
         PointD startPosition;
@@ -46,7 +45,6 @@ namespace BallzForWindows01.DrawableParts
         {
             clsName = "GameBall04";
             this.gameScreenSize = gameScreenSize;
-            //btnLaunch = new Button01();
             btnLaunch2 = new Button02();
 
             startPosition = new PointD();
@@ -159,7 +157,6 @@ namespace BallzForWindows01.DrawableParts
             DrawCollisionPoints(g, p, sb);
             DrawCircle(g, p, sb);
 
-            //btnLaunch.Draw(g);
             btnLaunch2.Draw(g);
             aimTraj.Draw(g);
             spinTraj.Draw(g);
@@ -194,7 +191,6 @@ namespace BallzForWindows01.DrawableParts
         }
         public void CleanUp()
         {
-            //btnLaunch.CleanUp();
             btnLaunch2.CleanUp();
         }
 
@@ -299,7 +295,6 @@ namespace BallzForWindows01.DrawableParts
             if (!launched)
             {
                 // Logic to move ball before the aim marker is placed (aimTraj.Placed)
-                //if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position.X, mc.Position.Y)) { adjustingPosition = true; return; }
                 if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position)) { adjustingPosition = true; return; }
 
                 // Place aim marker
@@ -327,7 +322,6 @@ namespace BallzForWindows01.DrawableParts
                 #endregion 2020-01-19 might not need this. going to try commenting it out
 
                 // Launch the ball and start the timer (when launch button is clicked)
-                //if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch.InBoundingRect(mc.X, mc.Y)) { LaunchBall(); }
                 if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch2.InBox(mc.Position)) { LaunchBall(); }
             }
 
@@ -355,7 +349,6 @@ namespace BallzForWindows01.DrawableParts
             size.Height = 40;
             position.X = gameScreenSize.Width / 2 - size.Width / 2;
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
-            //btnLaunch.Load(position.X, position.Y, size.Width, size.Height, "Launch");
             btnLaunch2.Load(position.X, position.Y, size.Width, size.Height, "Launch");
         }
 
