@@ -27,7 +27,7 @@ namespace BallzForWindows01.MainGameParts
 
         List<CollisionPoint> cplist = new List<CollisionPoint>();
 
-        //CollisionLine cline;
+        CollisionLine cline;
         CollisionLine02 cline2;
 
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
@@ -39,7 +39,7 @@ namespace BallzForWindows01.MainGameParts
             ball4 = new GameBall04(new Size(width, height));
             if (ball4 != null) { ball4.DrawDbgTxt = true; }
 
-            //cline = new CollisionLine();
+            cline = new CollisionLine();
             cline2 = new CollisionLine02();
 
         }
@@ -67,13 +67,25 @@ namespace BallzForWindows01.MainGameParts
             //AddCollisionPoint(450, 550, 25);
             //AddCollisionPoint(333, 500, 25);
 
-            //cline.Load(550, 500, 50, 0, 5); // cline1 yellowish color
-            //cplist.AddRange(cline.CpList);
+            TESTLoadCollisionLine01();  // cline is yellowish color
 
             TESTLoadCollisionLine02();  // cline2 is greenish color
             
 
 
+        }
+        void TESTLoadCollisionLine01()
+        {
+            double
+                startx = 550,
+                starty = 550,
+                length = 50,
+                rotation = 0;
+            int
+                thickness = 5;
+
+            cline.Load(startx, starty, length, rotation, thickness);
+            cplist.AddRange(cline.CpList);
         }
         void TESTLoadCollisionLine02()
         {
@@ -95,6 +107,7 @@ namespace BallzForWindows01.MainGameParts
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
+            cline.Update(Math.PI / 90);
             cline2.Update();
 
             DrawToBuffer();
@@ -133,7 +146,7 @@ namespace BallzForWindows01.MainGameParts
 
 
 
-            //cline.Draw(g, false);
+            cline.Draw(g, false);
             cline2.Draw(g, false);
             
 

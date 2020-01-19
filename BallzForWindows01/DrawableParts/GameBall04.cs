@@ -126,7 +126,7 @@ namespace BallzForWindows01.DrawableParts
 
             //MoveCollisionPoints(position.X, position.Y, radius, rotation);
             MoveCollisionPoints(position.X, position.Y, rotation);
-            
+
 
             if (dbgtxt && DrawDbgTxt)
             {
@@ -142,7 +142,7 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                
+
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
@@ -274,29 +274,23 @@ namespace BallzForWindows01.DrawableParts
         {
             if (kc.KeyPressed(Keys.Space))
             {
-                if (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) { LaunchBall(); }
+                if (ReadyForLaunch()) { LaunchBall(); return; }
             }
         }
+
+
         void HandleMouseInput(MouseControls mc)
         {
-            bool dbgtxt = true;
-            string fnId = $"[{clsName}.HandleMouseInput]";
-            if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LeftButtonState: {mc.LeftButtonState}");
-            if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LastLeftButtonState: {mc.LastLeftButtonState}");
+            //bool dbgtxt = true;
+            //string fnId = $"[{clsName}.HandleMouseInput]";
+            //if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LeftButtonState: {mc.LeftButtonState}");
+            //if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LastLeftButtonState: {mc.LastLeftButtonState}");
 
             mousePos.Set(mc.X, mc.Y);
-
-            // Reset game screen
-            if (mc.RightButtonState == UpDownState.Down && mc.LastRightButtonState == UpDownState.Up)
-            {
-                Reset();
-                return;
-            }
+            if (mc.RightButtonClicked()) { Reset(); return; }
 
             // Prevents aim and spin boxes from continuing to drag if mouse is not down
-            if (mc.LeftButtonState == UpDownState.Up
-                && mc.LastLeftButtonState == UpDownState.Up
-                && (adjustingAim || adjustingSpin || adjustingPosition))
+            if ((adjustingAim || adjustingSpin || adjustingPosition) && mc.LeftButtonUp())
             {
                 adjustingAim = adjustingSpin = adjustingPosition = false;
                 return;
@@ -306,74 +300,57 @@ namespace BallzForWindows01.DrawableParts
             // Setting up the shot
             if (!launched)
             {
-                // Building logic to move ball before the aim marker is placed (aimTraj.Placed)
-                if (mc.LeftButtonState == UpDownState.Down
-                    && mc.LastLeftButtonState == UpDownState.Up
-                    && !aimTraj.Placed
-                    && InCircle(mc.Position.X, mc.Position.Y))
+                // Logic to move ball before the aim marker is placed (aimTraj.Placed)
+                if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position.X, mc.Position.Y))
                 {
                     adjustingPosition = true;
                     return;
                 }
 
                 // Place aim marker
-                if (!aimTraj.Placed
-                    && mc.LeftButtonState == UpDownState.Down
-                    && mc.LastLeftButtonState == UpDownState.Up)
-                {
-                    aimTraj.SetStartPoint(position);
-                    aimTraj.SetEndPoint(mc.Position);
-
-                    spinTraj.SetStartPoint(position);
-                    PointD spinStartPos = new PointD();
-                    spinStartPos = position.HalfWayTo(mc.Position.X, mc.Position.Y);
-                    spinTraj.SetEndPoint(spinStartPos);
-
-                    return;
-                }
+                if (!aimTraj.Placed && mc.LeftButtonClicked()) { PlaceAimMarker(mc); return; }
 
                 // Adjust aim or spin
-                if (aimTraj.Placed
-                    && (!adjustingAim || !adjustingSpin)
-                    && mc.LeftButtonState == UpDownState.Down
-                    && mc.LastLeftButtonState == UpDownState.Up)
+                if (CanAdjustAimOrSpin() && mc.LeftButtonClicked())
                 {
-
                     if (aimTraj.InEndRect(mc.X, mc.Y)) { adjustingAim = true; return; }
                     if (spinTraj.InEndRect(mc.X, mc.Y)) { adjustingSpin = true; return; }
-
                 }
 
+
+                #region 2020-01-19 might not need this. going to try commenting it out. will remove later if no issued occur
+                /// I added a condition before here to stop adjusting aim, spin, and ball position if left button is up.
+                /// That condition up top should make this one no longer needed.
                 // Stop adjusting aim or spin
-                if ((adjustingAim || adjustingSpin)
-                    && mc.LeftButtonState == UpDownState.Up
-                    && mc.LastLeftButtonState == UpDownState.Down)
-                {
-                    adjustingAim = adjustingSpin = false;
-                    return;
-                }
+                //if ((adjustingAim || adjustingSpin)
+                //    && mc.LeftButtonState == UpDownState.Up
+                //    && mc.LastLeftButtonState == UpDownState.Down)
+                //{
+                //    adjustingAim = adjustingSpin = false;
+                //    return;
+                //}
+                #endregion 2020-01-19 might not need this. going to try commenting it out
 
                 // Launch the ball and start the timer (when launch button is clicked)
-                if ((!adjustingAim && !adjustingSpin)
-                    && mc.LastLeftButtonState == UpDownState.Up
-                    && mc.LeftButtonState == UpDownState.Down
-                    //&& InLaunchButtonRect(mc.X, mc.Y)
-                    && btnLaunch.InBoundingRect(mc.X, mc.Y))
-                {
-                    //launched = true;
-                    //gtimer.Start();
-                    LaunchBall();
-                }
+                if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch.InBoundingRect(mc.X, mc.Y)) { LaunchBall(); }
             }
 
         }
+        void PlaceAimMarker(MouseControls mc)
+        {
+            aimTraj.SetStartPoint(position);
+            aimTraj.SetEndPoint(mc.Position);
 
+            spinTraj.SetStartPoint(position);
+            PointD spinStartPos = new PointD();
+            spinStartPos = position.HalfWayTo(mc.Position.X, mc.Position.Y);
+            spinTraj.SetEndPoint(spinStartPos);
+        }
         void LaunchBall()
         {
             launched = true;
             gtimer.Start();
         }
-
         void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
         {
             Point position = new Point();
@@ -386,6 +363,15 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
+        // Condition checks
+        bool ReadyForLaunch() { return (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) ? true : false; }
+        bool CanAdjustAimOrSpin() { return (aimTraj.Placed && (!adjustingAim || !adjustingSpin)) ? true : false; }
+
+        #region might try adding in mouse controls to condition checks later.
+        // Might try adding in mouse control later. Only thing here would be I would like to see the mouse button
+        // being used in the handle mouse controls (so I can see what mouse button triggers the action)
+        //bool CanAdjustAimOrSpin(MouseControls mc) { return ((aimTraj.Placed && (!adjustingAim || !adjustingSpin)) && mc.LeftButtonClicked()) ? true : false; }
+        #endregion might try adding in mouse controls to condition checks later.
     }
 }
 

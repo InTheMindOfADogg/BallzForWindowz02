@@ -72,7 +72,6 @@ namespace BallzForWindows01.DrawableParts
             SetClickRectangle(position.X, position.Y, box.Width, box.Height, true);
             placed = true;
             visible = true;
-
         }
 
         public bool InClickRect(PointD p) { return box.InBox(p.X, p.Y); }
