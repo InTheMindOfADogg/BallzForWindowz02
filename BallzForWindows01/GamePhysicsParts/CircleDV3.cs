@@ -39,6 +39,7 @@ namespace BallzForWindows01.GamePhysicsParts
             g.DrawEllipse(p, (float)position.fX - ((float)radius), position.fY - ((float)radius), (float)radius * 2, (float)radius * 2);   // draw ball outline
         }
 
+        protected bool InCircle(PointD p) { return position.DistanceTo(p.X, p.Y) < radius ? true : false; }
         protected bool InCircle(double x, double y) { return position.DistanceTo(x, y) < radius ? true : false; }
 
         public void SetCircleColor(Color c) { SetColor(c); }

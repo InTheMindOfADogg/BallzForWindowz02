@@ -7,6 +7,7 @@ using System.Drawing;
 
 namespace BallzForWindows01.DrawableParts
 {
+    using GamePhysicsParts;
     class Button01 : DrawableObject
     {
 
@@ -38,11 +39,8 @@ namespace BallzForWindows01.DrawableParts
         public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
         public string Text { get { return text; } set { text = value; } }
 
-        public Button01()
-        {
-            _Init();
-        }
-        
+        public Button01() { _Init(); }
+
         public void Load(int x, int y, string buttonText) { _Load(x, y, 0, 0, buttonText); }
         public void Load(int x, int y, int width, int height) { _Load(x, y, width, height); }
         public void Load(int x, int y, int width, int height, string buttonText) { _Load(x, y, width, height, buttonText); }
@@ -56,6 +54,13 @@ namespace BallzForWindows01.DrawableParts
 
         public void CleanUp() { if (font != null) { font.Dispose(); } }
 
+
+        public bool InBoundingRect(PointD p)
+        {
+
+            return (p.X > clickRectangle.X && p.X < clickRectangle.X + clickRectangle.Width
+                    && p.Y > clickRectangle.Y && p.Y < clickRectangle.Y + clickRectangle.Height);
+        }
         public bool InBoundingRect(int posx, int posy)
         {
             return (posx > clickRectangle.X && posx < clickRectangle.X + clickRectangle.Width

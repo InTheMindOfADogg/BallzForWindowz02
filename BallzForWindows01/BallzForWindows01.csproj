@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebugParts\DbgPath.cs" />
+    <Compile Include="DrawableParts\Button02.cs" />
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionLine02.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />

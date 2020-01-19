@@ -19,7 +19,8 @@ namespace BallzForWindows01.DrawableParts
         Trajectory03 aimTraj;
         Trajectory03 spinTraj;
         BounceController bc;
-        Button01 btnLaunch;
+        //Button01 btnLaunch;
+        Button02 btnLaunch2;
 
         PointD startPosition;
         PointD mousePos;
@@ -45,7 +46,9 @@ namespace BallzForWindows01.DrawableParts
         {
             clsName = "GameBall04";
             this.gameScreenSize = gameScreenSize;
-            btnLaunch = new Button01();
+            //btnLaunch = new Button01();
+            btnLaunch2 = new Button02();
+
             startPosition = new PointD();
             mousePos = new PointD();
             gtimer = new GameTimer();
@@ -156,7 +159,8 @@ namespace BallzForWindows01.DrawableParts
             DrawCollisionPoints(g, p, sb);
             DrawCircle(g, p, sb);
 
-            btnLaunch.Draw(g);
+            //btnLaunch.Draw(g);
+            btnLaunch2.Draw(g);
             aimTraj.Draw(g);
             spinTraj.Draw(g);
 
@@ -190,7 +194,8 @@ namespace BallzForWindows01.DrawableParts
         }
         public void CleanUp()
         {
-            btnLaunch.CleanUp();
+            //btnLaunch.CleanUp();
+            btnLaunch2.CleanUp();
         }
 
         #region building bounce logic. Started 2020-01-01
@@ -272,10 +277,7 @@ namespace BallzForWindows01.DrawableParts
 
         void HandleKeyboardInput(KeyboardControls01 kc)
         {
-            if (kc.KeyPressed(Keys.Space))
-            {
-                if (ReadyForLaunch()) { LaunchBall(); return; }
-            }
+            if (kc.KeyPressed(Keys.Space)) { if (ReadyForLaunch()) { LaunchBall(); return; } }
         }
 
 
@@ -290,22 +292,15 @@ namespace BallzForWindows01.DrawableParts
             if (mc.RightButtonClicked()) { Reset(); return; }
 
             // Prevents aim and spin boxes from continuing to drag if mouse is not down
-            if ((adjustingAim || adjustingSpin || adjustingPosition) && mc.LeftButtonUp())
-            {
-                adjustingAim = adjustingSpin = adjustingPosition = false;
-                return;
-            }
+            if (AdjustingAimSpinOrPos() && mc.LeftButtonUp()) { StopAdjusting(); return; }
 
 
             // Setting up the shot
             if (!launched)
             {
                 // Logic to move ball before the aim marker is placed (aimTraj.Placed)
-                if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position.X, mc.Position.Y))
-                {
-                    adjustingPosition = true;
-                    return;
-                }
+                //if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position.X, mc.Position.Y)) { adjustingPosition = true; return; }
+                if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position)) { adjustingPosition = true; return; }
 
                 // Place aim marker
                 if (!aimTraj.Placed && mc.LeftButtonClicked()) { PlaceAimMarker(mc); return; }
@@ -332,7 +327,8 @@ namespace BallzForWindows01.DrawableParts
                 #endregion 2020-01-19 might not need this. going to try commenting it out
 
                 // Launch the ball and start the timer (when launch button is clicked)
-                if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch.InBoundingRect(mc.X, mc.Y)) { LaunchBall(); }
+                //if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch.InBoundingRect(mc.X, mc.Y)) { LaunchBall(); }
+                if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch2.InBox(mc.Position)) { LaunchBall(); }
             }
 
         }
@@ -359,13 +355,15 @@ namespace BallzForWindows01.DrawableParts
             size.Height = 40;
             position.X = gameScreenSize.Width / 2 - size.Width / 2;
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
-            btnLaunch.Load(position.X, position.Y, size.Width, size.Height, "Launch");
+            //btnLaunch.Load(position.X, position.Y, size.Width, size.Height, "Launch");
+            btnLaunch2.Load(position.X, position.Y, size.Width, size.Height, "Launch");
         }
 
-
+        void StopAdjusting() { adjustingAim = adjustingSpin = adjustingPosition = false; }
         // Condition checks
         bool ReadyForLaunch() { return (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) ? true : false; }
         bool CanAdjustAimOrSpin() { return (aimTraj.Placed && (!adjustingAim || !adjustingSpin)) ? true : false; }
+        bool AdjustingAimSpinOrPos() { return (adjustingAim || adjustingSpin || adjustingPosition) ? true : false; }
 
         #region might try adding in mouse controls to condition checks later.
         // Might try adding in mouse control later. Only thing here would be I would like to see the mouse button
