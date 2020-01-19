@@ -247,12 +247,12 @@ namespace BallzForWindows01.DrawableParts
             //dbgPrintAngle(fnId, "spin", spin);
             //DbgFuncs.AddStr($"{fnId} Calculating drift factor");
             RotationDirection defautRotationDirection = (aim < spin) ? RotationDirection.Clockwise : RotationDirection.CounterClockwise;
-            double defaultDifference = (aim < spin) ? spin - aim : aim - spin;
-            double oppositeDifference = (2 * Math.PI) - defaultDifference;
-            RotationDirection oppositeRotationDirection = (aim < spin) ? RotationDirection.CounterClockwise : RotationDirection.Clockwise;
-            RotationDirection shortestRotationDirection = (defaultDifference < oppositeDifference) ? defautRotationDirection : oppositeRotationDirection;
-            double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;
-            double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));
+            double defaultDifference = (aim < spin) ? spin - aim : aim - spin;      // get positive difference
+            double oppositeDifference = (2 * Math.PI) - defaultDifference;          // find remainder of 360 - (positive difference between aim and spin)
+            RotationDirection oppositeRotationDirection = (aim < spin) ? RotationDirection.CounterClockwise : RotationDirection.Clockwise;  // set opposite direction. Might rework later.
+            RotationDirection shortestRotationDirection = (defaultDifference < oppositeDifference) ? defautRotationDirection : oppositeRotationDirection;   // set which rot direction is shortest
+            double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;      // set shortest rot distance number
+            double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));    // calculate drift factor
             driftFactor = rslt;
         }
         void CalculateInitialDriftPerSecond() { initialDriftPerSecond = driftFactor / 100; }
