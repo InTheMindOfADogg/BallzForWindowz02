@@ -86,7 +86,7 @@
       <DependentUpon>DebugForm01.cs</DependentUpon>
     </Compile>
     <Compile Include="DrawableParts\BasicBlock01.cs" />
-    <Compile Include="DrawableParts\Button01.cs" />
+    <Compile Include="Deprecated\Button01.cs" />
     <Compile Include="DrawableParts\DrawableObject.cs" />
     <Compile Include="Deprecated\GameBall.cs" />
     <Compile Include="Deprecated\XMarker.cs" />
