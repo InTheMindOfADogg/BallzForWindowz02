@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
 using BallzForWindows01.DrawableParts;
-using BallzForWindows01.DebugForm;
 using BallzForWindows01.MainGameParts;
 using BallzForWindows01.Structs;
 
@@ -31,6 +30,7 @@ namespace BallzForWindows01
 
         public BallzForm()
         {
+            DbgFuncs.Init();
             InitializeForm();
             #region Mouse Control Events
             MouseMove += BallzForm_MouseMove;
@@ -41,7 +41,7 @@ namespace BallzForWindows01
             #region Keyboard Control Events
             KeyDown += BallzForm_KeyDown;
             KeyUp += BallzForm_KeyUp;
-            
+
             #endregion Keyboard Control Events
 
         }
@@ -55,7 +55,7 @@ namespace BallzForWindows01
 
         private void BallzForm_KeyUp(object sender, KeyEventArgs e)
         {
-            kcontrols.ReadKeyEvents(e, KeyState.Up);            
+            kcontrols.ReadKeyEvents(e, KeyState.Up);
         }
         #endregion Keyboard events
 
@@ -95,7 +95,7 @@ namespace BallzForWindows01
         }
         public void GameLoop()
         {
-            
+
             while (this.Created)
             {
                 kcontrols.Update();
@@ -104,7 +104,7 @@ namespace BallzForWindows01
                 RenderScene();
                 FrameCleanUp();
                 Application.DoEvents();
-                if(exitProgram) { break; }
+                if (exitProgram) { break; }
             }
             CleanUp();
 
@@ -113,11 +113,7 @@ namespace BallzForWindows01
         bool exitProgram = false;
         private void HandleTopLevelKeyboardCommands()
         {
-            
-            if(kcontrols.KeyPressed(Keys.Escape))
-            {
-                exitProgram = true;
-            }
+            if (kcontrols.KeyPressed(Keys.Escape)) { exitProgram = true; }
         }
         private void GameLogic()    //Update
         {
@@ -130,14 +126,12 @@ namespace BallzForWindows01
             g.Dispose();
 
         }
-        private void FrameCleanUp()
-        {
-            DbgFuncs.FrameCleanUp();
-        }
+        private void FrameCleanUp() { DbgFuncs.FrameCleanUp(); }
 
         private void CleanUp()
         {
             ballzGame01.CleanUp();
+            DbgFuncs.CleanUp();
         }
 
         #region Clearing string list test 2019-10-12

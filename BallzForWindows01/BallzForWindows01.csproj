@@ -79,12 +79,6 @@
       <DependentUpon>BallzForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\DbgFuncs.cs" />
-    <Compile Include="DebugForm\DebugForm01.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DebugForm\DebugForm01.Designer.cs">
-      <DependentUpon>DebugForm01.cs</DependentUpon>
-    </Compile>
     <Compile Include="DrawableParts\BasicBlock01.cs" />
     <Compile Include="Deprecated\Button01.cs" />
     <Compile Include="DrawableParts\DrawableObject.cs" />
@@ -103,9 +97,6 @@
     <Compile Include="Structs\MyTimer.cs" />
     <EmbeddedResource Include="BallzForm.resx">
       <DependentUpon>BallzForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DebugForm\DebugForm01.resx">
-      <DependentUpon>DebugForm01.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
