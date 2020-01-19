@@ -25,8 +25,8 @@ namespace BallzForWindows01
         public static void AddStr(string str) { dbgStrList.Add(str); }
         public static void AddStr(string fnId, string str) { dbgStrList.Add($"{fnId} {str}"); }
         static Font CreateFont() { return new Font("Arial", 12, FontStyle.Regular/*, GraphicsUnit.Pixel*/); }
-        #region DrawDbgStrList versions
 
+        #region DrawDbgStrList versions
         // Creating font every frame
         //public static void DrawDbgStrList(Graphics g)
         //{
@@ -65,6 +65,8 @@ namespace BallzForWindows01
             }
         }
         #endregion DrawDbgStrList versions
+
+        // Remove all strings that were drawn to the screen last frame.
         public static void FrameCleanUp()
         {
             if (dbgStrList != null && dbgStrList.Count > 0)
