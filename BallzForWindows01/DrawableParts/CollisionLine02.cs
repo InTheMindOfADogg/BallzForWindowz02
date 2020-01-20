@@ -12,13 +12,13 @@ namespace BallzForWindows01.DrawableParts
     {
         public List<CollisionPoint> CpList { get { return cplist; } }
 
-        PointD startPoint, endPoint;
-        RotationD rot;
-        int thickness = 5;
-        double length = 0;
-        double spaceBtCp = 10;
+        protected PointD startPoint, endPoint;
+        protected RotationD rot;
+        protected int thickness = 5;
+        protected double length = 0;
+        protected double spaceBtCp = 10;
 
-        List<CollisionPoint> cplist;// = new List<CollisionPoint>();
+        protected List<CollisionPoint> cplist;// = new List<CollisionPoint>();
 
         public CollisionLine02()
         {
@@ -83,7 +83,7 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
-        public void Update()
+        public virtual void Update()
         {
             //string fnId = AssistFunctions.FnId(clsName, "Update");
             //DbgFuncs.AddStr(fnId, $"length: {length}");

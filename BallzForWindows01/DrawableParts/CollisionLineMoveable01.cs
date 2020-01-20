@@ -18,8 +18,18 @@ namespace BallzForWindows01.DrawableParts
             SetColor(255, 150, 50, 100);
         }
 
-        
 
+        // TODO: adjust collision points with line.
+        public void Update(double adjustRotation = 0)
+        {
+            string fnId = AssistFunctions.FnId(clsName, "Update");
+            if (adjustRotation != 0)
+            {
+                rot.Adjust(adjustRotation);
+                endPoint = rot.PointDFrom(startPoint, length);
+            }
+            DbgFuncs.AddStr($"{fnId} rot(deg): {(rot.AsDegrees):N2}");
+        }
 
     }
 }

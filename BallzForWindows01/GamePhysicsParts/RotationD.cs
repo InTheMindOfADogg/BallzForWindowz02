@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BallzForWindows01.GamePhysicsParts
 {
     // Created 2020-01-01
-    
+
     // TODO in this class:
     // add Heading (from EnumsFile)
     // functions to set heading
@@ -18,6 +18,7 @@ namespace BallzForWindows01.GamePhysicsParts
 
     class RotationD
     {
+        public double AsDegrees { get { return (rot * 180 / Math.PI); } }
 
         public double Rotation { get { return rot; } }
         double rot = 0;
@@ -27,7 +28,17 @@ namespace BallzForWindows01.GamePhysicsParts
         public RotationD() { rot = 0; }
         public RotationD(double rotation) { this.rot = rotation; }
 
-        public void Set(double rotation) { this.rot = rotation; }
+        /// <summary>
+        /// Adds adjustRotation amount to current rotation
+        /// </summary>
+        /// <param name="adjustRotation"></param>
+        public void Adjust(double adjustRotation)
+        {
+            rot += adjustRotation;
+            rot = rot % (2 * Math.PI);
+            if (rot < 0) { rot += (2 * Math.PI); }
+        }
+
         public PointD PointDFrom(PointD startPoint, double distance)
         {
             PointD tmp = new PointD();
@@ -35,7 +46,7 @@ namespace BallzForWindows01.GamePhysicsParts
             tmp.Y = startPoint.Y + distance * Math.Sin(rot);
             return tmp;
         }
-        
+        public void Set(double rotation) { this.rot = rotation; }
         // Not tested in this location yet, but this is code from Trajectory03
         public void Set(PointD startPoint, PointD endPoint)
         {

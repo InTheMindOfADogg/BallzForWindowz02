@@ -128,7 +128,7 @@ namespace BallzForWindows01.MainGameParts
             //cline.Update();
             cline2.Update();
 
-            clm.Update();
+            clm.Update(Math.PI / 90);
 
             DrawToBuffer();
         }
