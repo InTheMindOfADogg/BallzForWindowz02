@@ -31,9 +31,17 @@ namespace BallzForWindows01.DrawableParts
 
         }
 
+        /// <summary>
+        /// Negative space between (spaceBtCp) makes line extend in oppisite direction.
+        /// </summary>
+        /// <param name="startx"></param>
+        /// <param name="starty"></param>
+        /// <param name="length"></param>
+        /// <param name="rotation"></param>
+        /// <param name="thickness"></param>
+        /// <param name="spaceBtCp"></param>
         public void Load(double startx, double starty, double length, double rotation, int thickness, double spaceBtCp)
         {
-
             // make sure that the line is atleast 1 unit long
             if (length < 1) { length = 1; }
             if (spaceBtCp == 0) { spaceBtCp = length; }

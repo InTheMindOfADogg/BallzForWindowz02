@@ -29,6 +29,7 @@ namespace BallzForWindows01.MainGameParts
 
         CollisionLine cline;
         CollisionLine02 cline2;
+        CollisionLineMoveable01 clm;
 
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
@@ -41,6 +42,7 @@ namespace BallzForWindows01.MainGameParts
 
             cline = new CollisionLine();
             cline2 = new CollisionLine02();
+            clm = new CollisionLineMoveable01();
 
         }
         public void Load()
@@ -70,7 +72,8 @@ namespace BallzForWindows01.MainGameParts
             TESTLoadCollisionLine01();  // cline is yellowish color
 
             TESTLoadCollisionLine02();  // cline2 is greenish color
-            
+
+            TESTLoadCollisionMoveable01();  // clm is dark red color
 
 
         }
@@ -90,7 +93,20 @@ namespace BallzForWindows01.MainGameParts
         void TESTLoadCollisionLine02()
         {
             double
-                startx = 550,
+                startx = 550, starty = 550,
+                length = 50,
+                rotation = 0,
+                spaceBtCp = -10;    
+            int
+                thickness = 5;
+
+            cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
+            cplist.AddRange(cline2.CpList);
+        }
+        void TESTLoadCollisionMoveable01()
+        {
+            double
+                startx = 650,
                 starty = 550,
                 length = 50,
                 rotation = 0,
@@ -98,8 +114,9 @@ namespace BallzForWindows01.MainGameParts
             int
                 thickness = 5;
 
-            cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
-            cplist.AddRange(cline2.CpList);
+            clm.Load(startx, starty, length, rotation, thickness, spaceBtCp);
+            
+            cplist.AddRange(clm.CpList);
         }
 
         public void Update(MouseControls mc, KeyboardControls01 kc)
@@ -110,6 +127,8 @@ namespace BallzForWindows01.MainGameParts
             cline.Update(Math.PI / 90);
             //cline.Update();
             cline2.Update();
+
+            clm.Update();
 
             DrawToBuffer();
         }
@@ -149,6 +168,7 @@ namespace BallzForWindows01.MainGameParts
 
             cline.Draw(g, true);
             cline2.Draw(g, false);
+            clm.Draw(g, false);
             
 
             DbgFuncs.DrawDbgStrList(g);
