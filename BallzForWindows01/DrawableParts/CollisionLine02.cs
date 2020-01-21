@@ -75,8 +75,9 @@ namespace BallzForWindows01.DrawableParts
             for (int i = 0; i < numOfCp + 1; i++)
             {
                 tmp = rot.PointDFrom(startPoint, tmpdist);
-                //cplist.Add(new CollisionPoint(tmp.X, tmp.Y, thickness, Color.Red));
-                // did thickness * 2 to make box larger than line. Need to create function to scale with thickness probably. Need to test idea. Maybe padding of 5 for detection zone before the actual line.
+                
+                // 2020-01-21
+                // did thickness * 2 to make collision box larger than line. Need to create function to scale with thickness probably. Need to test idea. Maybe padding of 5 for detection zone before the actual line.
                 cplist.Add(new CollisionPoint(tmp.X, tmp.Y, thickness * 2, Color.Red));
 
                 cplist[cplist.Count - 1].DistanceFromOrigin = tmpdist;
