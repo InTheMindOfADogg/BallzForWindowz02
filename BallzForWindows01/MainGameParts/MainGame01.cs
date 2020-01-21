@@ -119,16 +119,18 @@ namespace BallzForWindows01.MainGameParts
             cplist.AddRange(clm.CpList);
         }
 
+        double lineRotationSpeed = 0.005;
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
-            cline.Update(Math.PI / 90);
+            cline.Update(lineRotationSpeed);
             //cline.Update();
-            cline2.Update();
+            //cline2.Update();
 
-            clm.Update(Math.PI / 90);
+
+            clm.Update(lineRotationSpeed);
 
             DrawToBuffer();
         }
@@ -166,9 +168,9 @@ namespace BallzForWindows01.MainGameParts
 
 
 
-            cline.Draw(g, true);
+            cline.Draw(g, false);
             cline2.Draw(g, false);
-            clm.Draw(g, false);
+            clm.Draw(g, true);
             
 
             DbgFuncs.DrawDbgStrList(g);

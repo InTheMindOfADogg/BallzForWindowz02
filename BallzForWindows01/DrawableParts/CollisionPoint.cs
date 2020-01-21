@@ -11,15 +11,7 @@ namespace BallzForWindows01.DrawableParts
 
     class CollisionPoint : DrawableObject
     {
-        public static void ListCollisionPoints(string callingFnId, List<CollisionPoint> cplist)
-        {
-            string cpstr = "";
-            for (int i = 0; i < cplist.Count; i++)
-            {
-                cpstr += cplist[i].Pos.ToString() + ", ";
-            }
-            DbgFuncs.AddStr(callingFnId, $"cpstr: {cpstr}");
-        }
+        
 
 
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
@@ -58,14 +50,17 @@ namespace BallzForWindows01.DrawableParts
             pos.Set(x, y);
             SetCollisionBox();
         }
+        public void Set(PointD p)
+        {
+            pos.Set(p);
+            SetCollisionBox();
+        }
 
-        // Move - not tested. created 2020-01-18
-        //public void Move(double distance, double angle)
-        //{
-        //    pos.Move(distance, angle);
-        //}
 
-        public void Update(double x, double y) { }
+        public void Update() 
+        {
+            
+        }
 
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
@@ -93,6 +88,16 @@ namespace BallzForWindows01.DrawableParts
         {
             pointHit = false;
             collision = false;
+        }
+
+        public static void ListCollisionPoints(string callingFnId, List<CollisionPoint> cplist)
+        {
+            string cpstr = "";
+            for (int i = 0; i < cplist.Count; i++)
+            {
+                cpstr += cplist[i].Pos.ToString() + ", ";
+            }
+            DbgFuncs.AddStr(callingFnId, $"cpstr: {cpstr}");
         }
 
         public bool CheckForCollision(PointD pos) { return _CheckForCollision(pos.X, pos.Y); }

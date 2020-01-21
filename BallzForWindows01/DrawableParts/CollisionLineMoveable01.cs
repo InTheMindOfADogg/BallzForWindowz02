@@ -19,6 +19,7 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
+        
         // TODO: adjust collision points with line.
         public void Update(double adjustRotation = 0)
         {
@@ -27,8 +28,24 @@ namespace BallzForWindows01.DrawableParts
             {
                 rot.Adjust(adjustRotation);
                 endPoint = rot.PointDFrom(startPoint, length);
+
+                AdjustCollisionPoints();
+                
             }
             DbgFuncs.AddStr($"{fnId} rot(deg): {(rot.AsDegrees):N2}");
+
+            
+            
+        }
+
+        PointD tempPos = new PointD();
+        void AdjustCollisionPoints()
+        {
+            for(int i = 0; i < cplist.Count; i++)
+            {
+                tempPos = rot.PointDFrom(startPoint, startPoint.DistanceTo(cplist[i].Pos));
+                cplist[i].Set(tempPos);
+            }
         }
 
     }
