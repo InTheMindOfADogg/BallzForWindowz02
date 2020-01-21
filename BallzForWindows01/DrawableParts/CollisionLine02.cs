@@ -12,7 +12,11 @@ namespace BallzForWindows01.DrawableParts
     {
         public List<CollisionPoint> CpList { get { return cplist; } }
 
-        protected PointD startPoint, endPoint;
+        protected PointD startPoint, endPoint; 
+
+        // 2020-01-21 Thinking about adding origin here that will be the point of rotation
+        //protected PointD origin;
+        
         protected RotationD rot;
         protected int thickness = 5;
         protected double length = 0;
@@ -25,6 +29,7 @@ namespace BallzForWindows01.DrawableParts
             clsName = "CollisionLine02";
             startPoint = new PointD();
             endPoint = new PointD();
+            //origin = new PointD();
             rot = new RotationD();
             SetColor(140, 150, 225, 50);    // set line color. green color
             cplist = new List<CollisionPoint>();
@@ -49,6 +54,7 @@ namespace BallzForWindows01.DrawableParts
             if (spaceBtCp > length / 2) { spaceBtCp = length / 2; }
 
             startPoint.Set(startx, starty);
+            //origin.Set(startPoint);
             this.length = length;
             this.rot.Set(rotation);
             this.endPoint = rot.PointDFrom(startPoint, this.length);
