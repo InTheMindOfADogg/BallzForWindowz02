@@ -27,9 +27,10 @@ namespace BallzForWindows01.MainGameParts
 
         List<CollisionPoint> cplist = new List<CollisionPoint>();
 
-        CollisionLine cline;
+        //CollisionLine cline;
         CollisionLine02 cline2;
         CollisionLineMoveable01 clm;
+        CollisionLineMoveable01 clm2;
 
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
@@ -40,9 +41,10 @@ namespace BallzForWindows01.MainGameParts
             ball4 = new GameBall04(new Size(width, height));
             if (ball4 != null) { ball4.DrawDbgTxt = true; }
 
-            cline = new CollisionLine();
+            //cline = new CollisionLine();
             cline2 = new CollisionLine02();
             clm = new CollisionLineMoveable01();
+            clm2 = new CollisionLineMoveable01();
 
         }
         public void Load()
@@ -61,35 +63,38 @@ namespace BallzForWindows01.MainGameParts
                 ball4.Load(ballStartX, ballStartY, 2, 10, 0, 7);
                 ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
             }
-
-
+            
             //AddCollisionPoint(300, 570, 25);
             //AddCollisionPoint(300, 370, 25);
             //AddCollisionPoint(400, 500, 25);
             //AddCollisionPoint(450, 550, 25);
             //AddCollisionPoint(333, 500, 25);
 
-            TESTLoadCollisionLine01();  // cline is yellowish color
+            //TESTLoadCollisionLine01();  // cline is yellowish color
 
             TESTLoadCollisionLine02();  // cline2 is greenish color
 
             TESTLoadCollisionMoveable01();  // clm is dark red color
+            
+            TESTLoadCollisionMoveable02();  // clm2 is bright yellowish color
 
 
         }
-        void TESTLoadCollisionLine01()
-        {
-            double
-                startx = 550,
-                starty = 550,
-                length = 50,
-                rotation = 0;
-            int
-                thickness = 5;
+        //void TESTLoadCollisionLine01()
+        //{
+        //    double
+        //        startx = 550,
+        //        starty = 550,
+        //        length = 50,
+        //        rotation = 0;
+        //    int
+        //        thickness = 5;
 
-            cline.Load(startx, starty, length, rotation, thickness);
-            cplist.AddRange(cline.CpList);
-        }
+        //    cline.Load(startx, starty, length, rotation, thickness);
+        //    cplist.AddRange(cline.CpList);
+        //}
+        
+        
         void TESTLoadCollisionLine02()
         {
             double
@@ -118,6 +123,22 @@ namespace BallzForWindows01.MainGameParts
             
             cplist.AddRange(clm.CpList);
         }
+        void TESTLoadCollisionMoveable02()
+        {
+            double
+                startx = 550,
+                starty = 550,
+                length = 50,
+                rotation = 0,
+                spaceBtCp = 10;
+            int
+                thickness = 5;
+
+            clm2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
+            clm2.Color = Color.FromArgb(255, 250, 200, 150);
+
+            cplist.AddRange(clm2.CpList);
+        }
 
         double lineRotationSpeed = 0.005;
         public void Update(MouseControls mc, KeyboardControls01 kc)
@@ -125,21 +146,24 @@ namespace BallzForWindows01.MainGameParts
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
-            cline.Update(lineRotationSpeed);
+            //cline.Update(lineRotationSpeed);
             //cline.Update();
             //cline2.Update();
 
 
             clm.Update(lineRotationSpeed);
+            clm2.Update(-lineRotationSpeed);
 
             DrawToBuffer();
         }
+
+        
         public void Draw(Graphics g)
         {
             // Add drawing in DrawToBuffer
             g.DrawImage(backbuffer, new PointF(0, 0));
             backbuffer.Dispose();
-        }
+        }   // Add drawing in DrawToBuffer
         public void CleanUp()
         {
             if (ball4 != null) { ball4.CleanUp(); }
@@ -153,6 +177,8 @@ namespace BallzForWindows01.MainGameParts
             tempcp.Load(x, y, sideLength);
             cplist.Add(tempcp);
         }
+        
+        // Add drawing in DrawToBuffer
         private void DrawToBuffer()
         {
             backbuffer = new Bitmap(width, height);
@@ -168,9 +194,10 @@ namespace BallzForWindows01.MainGameParts
 
 
 
-            cline.Draw(g, false);
+            //cline.Draw(g, false);
             cline2.Draw(g, false);
             clm.Draw(g, true);
+            clm2.Draw(g, false);
             
 
             DbgFuncs.DrawDbgStrList(g);

@@ -10,7 +10,10 @@ namespace BallzForWindows01.DrawableParts
     using GamePhysicsParts;
     class CollisionLine02 : DrawableObject
     {
+
         public List<CollisionPoint> CpList { get { return cplist; } }
+
+        public Color Color { get { return color; } set { color = value; } }
 
         protected PointD startPoint, endPoint; 
 

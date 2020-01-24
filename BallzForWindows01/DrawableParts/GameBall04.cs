@@ -108,14 +108,6 @@ namespace BallzForWindows01.DrawableParts
 
                 rotation += bounceAngle;
 
-                //position.X = position.X + speed * Math.Cos(rotation);
-                //position.Y = position.Y + speed * Math.Sin(rotation);
-
-                //deltaX = speed * Math.Cos(rotation);
-                //deltaY = speed * Math.Sin(rotation);
-                //position.X = position.X + deltaX;
-                //position.Y = position.Y + deltaY;
-
                 position.Move(speed, rotation);
 
                 if (bounceAngle != 0)
