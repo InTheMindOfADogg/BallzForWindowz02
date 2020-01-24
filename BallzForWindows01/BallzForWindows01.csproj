@@ -58,6 +58,7 @@
     <Compile Include="Deprecated\GameBall2.cs" />
     <Compile Include="Deprecated\GameBall3.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
+    <Compile Include="GameModes\GameScreenBase.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
     <Compile Include="Deprecated\CircleD.cs" />
     <Compile Include="Deprecated\CircleDV2.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="Deprecated\XMarker.cs" />
     <Compile Include="Deprecated\FlightPath.cs" />
     <Compile Include="GamePhysicsParts\PointD.cs" />
-    <Compile Include="MainGameParts\GameParts01.cs" />
+    <Compile Include="Deprecated\GameParts01.cs" />
     <Compile Include="MainGameParts\MainGame01.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Structs\KeyboardControls01.cs" />
     <Compile Include="Structs\KeyControl01.cs" />
     <Compile Include="Structs\MouseControls.cs" />
-    <Compile Include="Structs\MyTimer.cs" />
+    <Compile Include="Deprecated\MyTimer.cs" />
     <EmbeddedResource Include="BallzForm.resx">
       <DependentUpon>BallzForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -121,9 +122,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameModes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
