@@ -58,7 +58,6 @@
     <Compile Include="Deprecated\GameBall2.cs" />
     <Compile Include="Deprecated\GameBall3.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
-    <Compile Include="GameModes\GameScreenBase.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
     <Compile Include="Deprecated\CircleD.cs" />
     <Compile Include="Deprecated\CircleDV2.cs" />

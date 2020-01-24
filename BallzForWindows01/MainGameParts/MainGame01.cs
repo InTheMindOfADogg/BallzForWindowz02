@@ -11,7 +11,7 @@ using System.Timers;
 
 namespace BallzForWindows01.MainGameParts
 {
-    using static AssistFunctions;
+    //using static AssistFunctions;
     using DrawableParts;
     using Structs;
 
