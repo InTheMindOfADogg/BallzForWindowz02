@@ -10,13 +10,15 @@ namespace BallzForWindows01.GamePhysicsParts
     {
         Left,
         Middle,
-        Right
+        Right,
+        Count
     }
     public enum AboveMiddleBelow
     {
         Above,
         Middle,
-        Below
+        Below,
+        Count
     }
     public enum HitZones
     {
@@ -58,6 +60,14 @@ namespace BallzForWindows01.GamePhysicsParts
             else if (ballPos.Y > block.Bottom) { amb = (int)AboveMiddleBelow.Below; }
             
             return (HitZones)(lmr + (amb * 3));            
+        }
+        public LeftMiddleRight ColumnHit(HitZones hz)
+        {
+            return (LeftMiddleRight)((int)hz % (int)LeftMiddleRight.Count);
+        }
+        public AboveMiddleBelow RowHit(HitZones hz)
+        {
+            return (AboveMiddleBelow)((int)hz / (int)AboveMiddleBelow.Count);
         }
     }
 }

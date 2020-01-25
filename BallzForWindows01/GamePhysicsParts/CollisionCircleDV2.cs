@@ -45,11 +45,13 @@ namespace BallzForWindows01.GamePhysicsParts
             spaceBetween = (Math.PI / 2) / ((double)cpCount / 2.0);
             //tempRot = rotation - (spaceBetween * middleCpidx);   // adjusting first point so that the points line up on front of ball
 
+            // Add the collision points. The cpColor before the loop is setting the color of the first collision point added.
             Color cpColor = Color.Blue;
             for (int i = 0; i < cpCount; i++)
             {
                 //cplist.Add(CreateCollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
                 cplist.Add(new CollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
+                // Set the remaing collision points' color to the default color for collision points.
                 if (i == 0) { cpColor = dfltColorCollisionPoints; }
             }
         }

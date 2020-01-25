@@ -55,8 +55,8 @@ namespace BallzForWindows01.MainGameParts
 
             //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
 
-            ballStartX = 500;
-            ballStartY = height / 2 + 50;
+            ballStartX = 525;
+            ballStartY = height / 2 - 50;
 
             if (ball4 != null)
             {
@@ -140,7 +140,7 @@ namespace BallzForWindows01.MainGameParts
             cplist.AddRange(clm2.CpList);
         }
 
-        double lineRotationSpeed = 0.005;
+        double lineRotationSpeed = 0; //0.005;
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
@@ -195,9 +195,9 @@ namespace BallzForWindows01.MainGameParts
 
 
             //cline.Draw(g, false);
-            cline2.Draw(g, false);
-            clm.Draw(g, true);
-            clm2.Draw(g, false);
+            cline2.Draw(g, true);   // green
+            clm.Draw(g, true);      // dark red
+            clm2.Draw(g, true);     // yellowish color
             
 
             DbgFuncs.DrawDbgStrList(g);

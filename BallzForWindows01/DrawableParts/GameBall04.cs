@@ -14,6 +14,10 @@ namespace BallzForWindows01.DrawableParts
 
     class GameBall04 : CollisionCircleDV2
     {
+
+        //public bool Launched { get { return launched; } }
+
+
         Size gameScreenSize;
 
         Trajectory03 aimTraj;
@@ -135,6 +139,8 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
+                DbgFuncs.AddStr($"{fnId} rowHit: {rowHit}");
+                DbgFuncs.AddStr($"{fnId} columnHit: {columnHit}");
 
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
@@ -177,6 +183,8 @@ namespace BallzForWindows01.DrawableParts
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
+            rowHit = -1;
+            columnHit = -1;
             shouldBounce = false;
             hz = HitZones.None;
 
@@ -193,6 +201,8 @@ namespace BallzForWindows01.DrawableParts
         bool shouldBounce = false;
         int firstPointHit = -1;
         HitZones hz = HitZones.None;
+        int rowHit = -1;
+        int columnHit = -1;
 
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
@@ -222,10 +232,21 @@ namespace BallzForWindows01.DrawableParts
             //string fnId = FnId(clsName, "CheckForBounce");
             for (int i = 0; i < CollisionPointList.Count; i++)
             {
+                // if a collision point on the ball registers a hit, do bounce stuff
                 if (CollisionPointList[i].PointHit)
                 {
                     shouldBounce = true;
-                    if (firstPointHit < 0) { firstPointHit = i; }
+                    // Only sets the first point hit if there is no other point hit at the time. -1 is value I am using for no point hit. // commented out atm 2020-01-25
+                    // This is current the trigger in update to indicate the ball has hit something.
+                    //if (firstPointHit < 0) { firstPointHit = i; }
+                    firstPointHit = i;
+
+                    rowHit = (int)bc.RowHit(hz);
+                    columnHit = (int)bc.ColumnHit(hz);
+
+
+
+
                 }
             }
         }
@@ -262,13 +283,10 @@ namespace BallzForWindows01.DrawableParts
                 updatedAtSeconds = elapsedSeconds;
             }
         }
-
         void HandleKeyboardInput(KeyboardControls01 kc)
         {
             if (kc.KeyPressed(Keys.Space)) { if (ReadyForLaunch()) { LaunchBall(); return; } }
         }
-
-
         void HandleMouseInput(MouseControls mc)
         {
             //bool dbgtxt = true;
