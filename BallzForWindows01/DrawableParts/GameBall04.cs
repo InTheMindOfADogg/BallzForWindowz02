@@ -141,6 +141,8 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
                 DbgFuncs.AddStr($"{fnId} rowHit: {rowHit}");
                 DbgFuncs.AddStr($"{fnId} columnHit: {columnHit}");
+                DbgFuncs.AddStr($"{fnId} collisionPointsChecked / collisionPointsTotal: {collisionPointsChecked} / {collisionPointsTotal}");
+                DbgFuncs.AddStr($"{fnId} totalCollisionChecks: {totalCollisionChecks}");
 
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
@@ -180,6 +182,8 @@ namespace BallzForWindows01.DrawableParts
             aimTraj.Reset();
             spinTraj.Reset();
 
+            ResetPointsHit();
+
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
@@ -187,6 +191,8 @@ namespace BallzForWindows01.DrawableParts
             columnHit = -1;
             shouldBounce = false;
             hz = HitZones.None;
+
+            
 
         }
         public void CleanUp()
@@ -204,16 +210,31 @@ namespace BallzForWindows01.DrawableParts
         int rowHit = -1;
         int columnHit = -1;
 
+        int collisionPointsChecked = 0;     // debug check
+        int collisionPointsTotal = 0;       // debug check
+        int totalCollisionChecks = 0;       // debug check
+
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
         // CollisionPoint rectangle.
         public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
+            collisionPointsChecked = 0;     // debug check
+            collisionPointsTotal = blockCpList.Count;   // debug check
+            totalCollisionChecks = 0;   // debug check
+
             for (int i = 0; i < blockCpList.Count; i++)
             {
 
+                if (position.DistanceTo(blockCpList[i].Pos) > radius * 3) 
+                {
+                    blockCpList[i].Collision = false;
+                    continue; 
+                }
+                collisionPointsChecked++;
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
+                    totalCollisionChecks++;
                     if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
                     {
                         CollisionPointList[j].PointHit = true;
@@ -250,6 +271,8 @@ namespace BallzForWindows01.DrawableParts
                 }
             }
         }
+
+        void ResetPointsHit() { for (int i = 0; i < CollisionPointList.Count; i++) { CollisionPointList[i].PointHit = false; } }
 
         #endregion building bounce logic. Started 2020-01-01
 
