@@ -71,6 +71,7 @@ namespace BallzForWindows01.DrawableParts
         {
             base.Load(x, y, hitBoxSideLength, radius, rotation, collisionPoints);
             startPosition.Set(x, y);
+            ccDistance = radius * 2;    // set collision check distance
             PositionLaunchButton();
         }
 
@@ -124,6 +125,7 @@ namespace BallzForWindows01.DrawableParts
             //MoveCollisionPoints(position.X, position.Y, radius, rotation);
             MoveCollisionPoints(position.X, position.Y, rotation);
 
+            ccEndPoint = position.PointFrom(rotation, ccDistance);
 
             if (dbgtxt && DrawDbgTxt)
             {
@@ -138,15 +140,19 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
+                DbgFuncs.AddStr($"{fnId} collision check distance (ccDistance) : {ccDistance}");
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
                 DbgFuncs.AddStr($"{fnId} rowHit: {rowHit}");
                 DbgFuncs.AddStr($"{fnId} columnHit: {columnHit}");
                 DbgFuncs.AddStr($"{fnId} collisionPointsChecked / collisionPointsTotal: {collisionPointsChecked} / {collisionPointsTotal}");
                 DbgFuncs.AddStr($"{fnId} totalCollisionChecks: {totalCollisionChecks}");
+                //DbgFuncs.AddStr($"{fnId} angleBetweenCheck (between ball and block that is hit): {angleBetweenCheck}");
+                dbgPrintAngle(fnId, "angleToCheck (angle from center of ball to center of block)", angleToCheck);
 
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
+
 
         public void Draw(Graphics g)
         {
@@ -156,6 +162,10 @@ namespace BallzForWindows01.DrawableParts
             //base.Draw(g, p, sb);            
             DrawCollisionPoints(g, p, sb);
             DrawCircle(g, p, sb);
+
+            p.Color = Color.Black;
+            p.Width = 2;
+            g.DrawLine(p, position.fX, position.fY, ccEndPoint.fX, ccEndPoint.fY);
 
             btnLaunch2.Draw(g);
             aimTraj.Draw(g);
@@ -192,7 +202,7 @@ namespace BallzForWindows01.DrawableParts
             shouldBounce = false;
             hz = HitZones.None;
 
-            
+            angleToCheck = 0;
 
         }
         public void CleanUp()
@@ -210,27 +220,28 @@ namespace BallzForWindows01.DrawableParts
         int rowHit = -1;
         int columnHit = -1;
 
-        int collisionPointsChecked = 0;     // debug check
-        int collisionPointsTotal = 0;       // debug check
-        int totalCollisionChecks = 0;       // debug check
+        int collisionPointsChecked = 0;     // debug check variable
+        int collisionPointsTotal = 0;       // debug check variable
+        int totalCollisionChecks = 0;       // debug check variable
+
+        double ccDistance = 0;      // collision check distance
+        PointD ccEndPoint = new PointD();
+
+        double angleToCheck = 0;
 
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
         // CollisionPoint rectangle.
         public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
-            collisionPointsChecked = 0;     // debug check
-            collisionPointsTotal = blockCpList.Count;   // debug check
-            totalCollisionChecks = 0;   // debug check
+            collisionPointsChecked = 0;     // debug check variable
+            collisionPointsTotal = blockCpList.Count;   // debug check variable
+            totalCollisionChecks = 0;   // debug check variable
 
             for (int i = 0; i < blockCpList.Count; i++)
             {
 
-                if (position.DistanceTo(blockCpList[i].Pos) > radius * 3) 
-                {
-                    blockCpList[i].Collision = false;
-                    continue; 
-                }
+                if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) { blockCpList[i].Collision = false; continue; }
                 collisionPointsChecked++;
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
@@ -239,6 +250,7 @@ namespace BallzForWindows01.DrawableParts
                     {
                         CollisionPointList[j].PointHit = true;
                         hz = bc.SetHitZone(position, blockCpList[i].Rect);
+                        angleToCheck = position.AngleTo(blockCpList[i].Rect.Center);
                         return;
                     }
                     CollisionPointList[j].PointHit = false;

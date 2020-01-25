@@ -47,6 +47,7 @@ namespace BallzForWindows01.GamePhysicsParts
             return tmp;
         }
         public void Set(double rotation) { this.rot = rotation; }
+
         // Not tested in this location yet, but this is code from Trajectory03
         public void Set(PointD startPoint, PointD endPoint)
         {
