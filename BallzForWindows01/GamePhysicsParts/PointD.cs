@@ -46,7 +46,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public PointD HalfWayTo(double endx, double endy) { return _HalfWayTo(endx, endy); }
         public PointD HalfWayTo(PointD endp) { return _HalfWayTo(endp.X, endp.Y); }
 
-        public PointD PointFrom(double rotation, double distance)
+        public PointD PointAt(double rotation, double distance)
         {
             PointD tmp = new PointD();
             tmp.X = x + distance * Math.Cos(rotation);

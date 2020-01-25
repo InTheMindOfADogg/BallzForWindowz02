@@ -68,7 +68,7 @@ namespace BallzForWindows01.GamePhysicsParts
             }
             //DebugTextCollisionCircle();
         }
-
+        protected void ResetPointsHit() { for (int i = 0; i < CollisionPointList.Count; i++) { CollisionPointList[i].PointHit = false; } }
         protected void DrawCollisionPoints(Graphics g, Pen p, SolidBrush sb)
         {
             for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }            
