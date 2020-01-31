@@ -146,7 +146,7 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
                 DbgFuncs.AddStr($"{fnId} rowHit: {rowHitInt}");
                 DbgFuncs.AddStr($"{fnId} columnHit: {columnHitInt}");
-                DbgFuncs.AddStr($"{fnId} ballCollisionPointsChecked / totalBlockCollisionPoints: {ballCollisionPointsChecked} / {totalBlockCollisionPoints}");
+                DbgFuncs.AddStr($"{fnId} blocksToCheck / totalBlockCount: {blocksToCheck} / {totalBlockCount}");
                 DbgFuncs.AddStr($"{fnId} blockCollisionPointsChecked: {blockCollisionPointsChecked}");
                 //DbgFuncs.AddStr($"{fnId} angleBetweenCheck (between ball and block that is hit): {angleBetweenCheck}");
                 dbgPrintAngle(fnId, "angleToCheck (angle from center of ball to center of block)", angleToCheck);
@@ -229,8 +229,8 @@ namespace BallzForWindows01.DrawableParts
         int rowHitInt = -1;
         int columnHitInt = -1;
 
-        int ballCollisionPointsChecked = 0;     // debug check variable
-        int totalBlockCollisionPoints = 0;       // debug check variable
+        int blocksToCheck = 0;     // debug check variable
+        int totalBlockCount = 0;       // debug check variable
         int blockCollisionPointsChecked = 0;       // debug check variable
 
         double ccDistance = 0;      // collision check distance
@@ -245,8 +245,8 @@ namespace BallzForWindows01.DrawableParts
         public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
             
-            ballCollisionPointsChecked = 0;     // debug check variable
-            totalBlockCollisionPoints = blockCpList.Count;   // debug check variable
+            blocksToCheck = 0;     // debug check variable
+            totalBlockCount = blockCpList.Count;   // debug check variable
             blockCollisionPointsChecked = 0;   // debug check variable
 
             
@@ -255,11 +255,11 @@ namespace BallzForWindows01.DrawableParts
                 
                 if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) 
                 { 
-                    blockCpList[i].Collision = false;
-                    ballCollisionPointsChecked++;
+                    blockCpList[i].Collision = false;                    
                     continue; 
                 }
-                
+                blocksToCheck++;
+
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
                     blockCollisionPointsChecked++;
