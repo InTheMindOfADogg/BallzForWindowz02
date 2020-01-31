@@ -100,6 +100,7 @@ namespace BallzForWindows01.DrawableParts
                 CalculateInitialDriftPerSecond();
             }
 
+
             CheckForBlockCollision(blockCpList);
 
             ApplyDriftPerSecond(gtimer.TotalSeconds);
@@ -107,7 +108,8 @@ namespace BallzForWindows01.DrawableParts
             if (launched)
             {
                 gtimer.Update();
-                // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
+
+                // 2020-01-01 Going to try applying bounce logic here. 
                 CalculateBounceAngle();
 
 
@@ -144,8 +146,8 @@ namespace BallzForWindows01.DrawableParts
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
                 DbgFuncs.AddStr($"{fnId} rowHit: {rowHitInt}");
                 DbgFuncs.AddStr($"{fnId} columnHit: {columnHitInt}");
-                DbgFuncs.AddStr($"{fnId} collisionPointsChecked / collisionPointsTotal: {collisionPointsChecked} / {collisionPointsTotal}");
-                DbgFuncs.AddStr($"{fnId} totalCollisionChecks: {totalCollisionChecks}");
+                DbgFuncs.AddStr($"{fnId} ballCollisionPointsChecked / totalBlockCollisionPoints: {ballCollisionPointsChecked} / {totalBlockCollisionPoints}");
+                DbgFuncs.AddStr($"{fnId} blockCollisionPointsChecked: {blockCollisionPointsChecked}");
                 //DbgFuncs.AddStr($"{fnId} angleBetweenCheck (between ball and block that is hit): {angleBetweenCheck}");
                 dbgPrintAngle(fnId, "angleToCheck (angle from center of ball to center of block)", angleToCheck);
 
@@ -227,32 +229,40 @@ namespace BallzForWindows01.DrawableParts
         int rowHitInt = -1;
         int columnHitInt = -1;
 
-        int collisionPointsChecked = 0;     // debug check variable
-        int collisionPointsTotal = 0;       // debug check variable
-        int totalCollisionChecks = 0;       // debug check variable
+        int ballCollisionPointsChecked = 0;     // debug check variable
+        int totalBlockCollisionPoints = 0;       // debug check variable
+        int blockCollisionPointsChecked = 0;       // debug check variable
 
         double ccDistance = 0;      // collision check distance
         PointD ccEndPoint = new PointD();
 
         double angleToCheck = 0;
-
+        
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
         // CollisionPoint rectangle.
+
         public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
         {
-            collisionPointsChecked = 0;     // debug check variable
-            collisionPointsTotal = blockCpList.Count;   // debug check variable
-            totalCollisionChecks = 0;   // debug check variable
+            
+            ballCollisionPointsChecked = 0;     // debug check variable
+            totalBlockCollisionPoints = blockCpList.Count;   // debug check variable
+            blockCollisionPointsChecked = 0;   // debug check variable
 
+            
             for (int i = 0; i < blockCpList.Count; i++)
             {
-
-                if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) { blockCpList[i].Collision = false; continue; }
-                collisionPointsChecked++;
+                
+                if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) 
+                { 
+                    blockCpList[i].Collision = false;
+                    ballCollisionPointsChecked++;
+                    continue; 
+                }
+                
                 for (int j = 0; j < CollisionPointList.Count; j++)
                 {
-                    totalCollisionChecks++;
+                    blockCollisionPointsChecked++;
                     if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
                     {
                         CollisionPointList[j].PointHit = true;
@@ -265,6 +275,7 @@ namespace BallzForWindows01.DrawableParts
             }
         }
 
+
         // TODO: build CalculateBounceAngle. I am planning for this to be the location where the bounce angle
         //       will be calculated if collision is detected in CheckForBlockCollision
         void CalculateBounceAngle()
@@ -276,9 +287,6 @@ namespace BallzForWindows01.DrawableParts
                 if (CollisionPointList[i].PointHit)
                 {
                     shouldBounce = true;
-                    // Only sets the first point hit if there is no other point hit at the time. -1 is value I am using for no point hit. // commented out atm 2020-01-25
-                    // This is current the trigger in update to indicate the ball has hit something.
-                    //if (firstPointHit < 0) { firstPointHit = i; }
                     firstPointHit = i;
 
                     rowHitInt = (int)bc.RowHit(hz);
@@ -292,35 +300,43 @@ namespace BallzForWindows01.DrawableParts
         double testBountLineLength = 40;
         void Bounce01(AboveMiddleBelow rowHit, LeftMiddleRight columnHit)
         {
-
+            // Heading south
             if (rotation == Math.PI / 2)
             {
                 testBounceResult = position.PointAt((testBounceAngle = (3 * Math.PI / 2)), testBountLineLength);
                 return;
             }
+
+            // Heading west
             if (rotation == Math.PI)
             {
                 testBounceResult = position.PointAt(testBounceAngle = 0, testBountLineLength);
                 return;
             }
-            if (rotation < Math.PI / 2)
+
+            // Heading between south and east
+            if (rotation < Math.PI / 2 && rotation < 0)
             {
                 // bounce if hit top side of block
                 if (rowHit == AboveMiddleBelow.Above)
-                {                    
+                {
                     testBounceResult = position.PointAt(testBounceAngle = ((2 * Math.PI) - rotation), testBountLineLength);
                     return;
                 }
-                
+
                 // bounce if hit left side of block
                 testBounceResult = position.PointAt(testBounceAngle = (Math.PI / 2) + ((Math.PI / 2) - rotation), testBountLineLength);
                 return;
             }
+
+            // Heading between west and south
             if (rotation < Math.PI)
             {
                 testBounceResult = position.PointAt(testBounceAngle = (Math.PI + (Math.PI - rotation)), testBountLineLength);
                 return;
             }
+
+            // Heading between north and west
             if (rotation < (3 * Math.PI / 2))
             {
                 //testBounceAngle = 3 * Math.PI / 2 + ((3 * Math.PI / 2) - rotation);
@@ -330,6 +346,21 @@ namespace BallzForWindows01.DrawableParts
                 testBounceResult = position.PointAt(testBounceAngle = ((3 * Math.PI / 2) + ((3 * Math.PI / 2) - rotation)), testBountLineLength);
                 return;
             }
+
+            // Heading between north and west
+            if (rotation < 2 * Math.PI)
+            {
+                if (rowHit == AboveMiddleBelow.Below)
+                {
+                    testBounceResult = position.PointAt(testBounceAngle = ((2 * Math.PI) + ((2 * Math.PI) - rotation)), testBountLineLength);
+                }
+
+
+
+
+            }
+
+
 
 
 
