@@ -27,20 +27,18 @@ namespace BallzForWindows01.MainGameParts
         {
             gscreens.Add(new TestGameScreen01(size.Width, size.Height));
         }
-
-        public void Load()
+        public void AddGameScreen(BaseGameScreen01 gs)
         {
-            for(int i = 0; i < gscreens.Count; i++)
-            {
-                gscreens[i].Load();
-            }
+            gscreens.Add(gs);
         }
 
-        public void Update(MouseControls mcontrols, KeyboardControls01 kcontrols) 
+        public void Load() { for (int i = 0; i < gscreens.Count; i++) { gscreens[i].Load(); } }
+
+        public void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             for (int i = 0; i < gscreens.Count; i++)
             {
-                if (gscreens[i].Active) 
+                if (gscreens[i].Active)
                 {
                     gscreens[i].Update(mcontrols, kcontrols);
                 }
@@ -50,44 +48,22 @@ namespace BallzForWindows01.MainGameParts
         {
             backbuffer = new Bitmap(size.Width, size.Height);
             Graphics g = Graphics.FromImage(backbuffer);
-            for (int i = 0; i < gscreens.Count; i++)
-            {
-                if(gscreens[i].Active)
-                {
-                    gscreens[i].Draw(g);
-                }
-                
-            }
-
+            for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { gscreens[i].Draw(g); } }
             DbgFuncs.DrawDbgStrList(g);
             g.Dispose();
         }
-        public void Draw(Graphics g) 
+        public void Draw(Graphics g)
         {
             g.DrawImage(backbuffer, new Point(0, 0));
             backbuffer.Dispose();
         }
-        public void Reset() 
-        {
-            for (int i = 0; i < gscreens.Count; i++)
-            {
-                if (gscreens[i].Active) 
-                { 
-                    gscreens[i].Reset(); 
-                }
-            }
-        }
+        public void Reset() { for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { gscreens[i].Reset(); } } }
 
-        public void CleanUp() 
+        public void CleanUp()
         {
-            for (int i = 0; i < gscreens.Count; i++)
-            {
-                if(gscreens[i].Active)
-                {
-                    gscreens[i].CleanUp();
-                }
-            }
-            if(backbuffer != null)
+            for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { gscreens[i].CleanUp(); } }
+
+            if (backbuffer != null)
             {
                 backbuffer.Dispose();
                 backbuffer = null;
