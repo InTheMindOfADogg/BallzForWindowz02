@@ -101,20 +101,20 @@ namespace BallzForWindows01.DrawableParts
             }
 
 
-            CheckForBlockCollision(blockCpList);
+            CheckForBlockCollision02(blockCpList);
 
-            ApplyDriftPerSecond(gtimer.TotalSeconds);
-            // Added blocksHitCount == 0 condition 2020-01-31. working on bounce logic.
-            if (launched && blocksHitCount == 0)
+            if (launched)
             {
                 gtimer.Update();
 
-                // 2020-01-01 Going to try applying bounce logic here. 
-                CalculateBounceAngle();
+                
+                if (collisionDetected)
+                {
+                    CalculateBounceAngle();
+                    rotation += bounceAngle;
+                }
 
-
-                rotation += bounceAngle;
-
+                ApplyDriftPerSecond(gtimer.TotalSeconds);
                 position.Move(speed, rotation);
 
                 if (bounceAngle != 0)
@@ -138,20 +138,16 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
                 DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
                 DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
-                DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
+                DbgFuncs.AddStr($"{fnId} shouldBounce: {collisionDetected}");
                 DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
                 dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
                 DbgFuncs.AddStr($"{fnId} collision check distance (ccDistance) : {ccDistance}");
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                DbgFuncs.AddStr($"{fnId} rowHit: {rowHitInt}");
-                DbgFuncs.AddStr($"{fnId} columnHit: {columnHitInt}");
-                DbgFuncs.AddStr($"{fnId} blocksToCheck / totalBlockCount: {blocksToCheck} / {totalBlockCount}");
-                DbgFuncs.AddStr($"{fnId} blockCollisionPointsChecked: {blockCollisionPointsChecked}");
-                //DbgFuncs.AddStr($"{fnId} angleBetweenCheck (between ball and block that is hit): {angleBetweenCheck}");
-                dbgPrintAngle(fnId, "angleToCheck (angle from center of ball to center of block)", angleToBlockCenter);
-                DbgFuncs.AddStr($"{fnId} ballCollisionPointsHit: {CollisionPointsHit()}");
+                DbgFuncs.AddStr($"{fnId} ballCollisionPointsHit: {CollisionPointsHitCount()}");
+                DbgFuncs.AddStr($"{fnId} ball collision points hit: {HitIndexList.Count}");
+
 
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
@@ -206,15 +202,9 @@ namespace BallzForWindows01.DrawableParts
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
-            rowHitInt = -1;
-            columnHitInt = -1;
-            shouldBounce = false;
+            collisionDetected = false;
             hz = HitZones.None;
             testBounceResult.Zero();
-
-            angleToBlockCenter = 0;
-
-            blocksHitCount = 0;
 
         }
         public void CleanUp()
@@ -226,56 +216,85 @@ namespace BallzForWindows01.DrawableParts
         double bounceAngle = 0;
         double lastBounceAngle = 0;
         double testBounceAngle = 0;
-        bool shouldBounce = false;
+        bool collisionDetected = false;
         int firstPointHit = -1;
         HitZones hz = HitZones.None;
-        int rowHitInt = -1;
-        int columnHitInt = -1;
 
-        int blocksToCheck = 0;     // debug check variable
-        int totalBlockCount = 0;       // debug check variable
-        int blockCollisionPointsChecked = 0;       // debug check variable
 
         double ccDistance = 0;      // collision check distance
         PointD ccEndPoint = new PointD();
 
-        double angleToBlockCenter = 0;
 
-        int blocksHitCount = 0;
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
         // CollisionPoint rectangle.
+        /// <summary>
+        /// Version 1
+        /// </summary>
+        /// <param name="blockCpList"></param>
+        //public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
+        //{
 
-        public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
+        //    for (int i = 0; i < blockCpList.Count; i++)
+        //    {
+        //        // If the block is not within set distance of ball, do not check for collision with that block. 2020-01-31
+        //        if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) { blockCpList[i].Collision = false; continue; }
+
+        //        // Checking for ball collision points intersecting with blocks within set distance (ccDistance as of 2020-01-31)
+        //        for (int j = 0; j < CircleCPList.Count; j++)
+        //        {
+        //            if (blockCpList[i].CheckForCollision(CircleCPList[j].Pos))
+        //            {
+        //                //collisionDetected = true;
+        //                //CollisionPointList[j].PointHit = true;
+        //                return;
+        //            }
+        //            //CollisionPointList[j].PointHit = false;
+        //        }
+
+        //    }
+        //}
+        public void CheckForBlockCollision02(List<CollisionPoint> blockCpList)
         {
 
-            blocksToCheck = 0;     // debug check variable
-            totalBlockCount = blockCpList.Count;   // debug check variable
-            blockCollisionPointsChecked = 0;   // debug check variable
+            for(int i = 0; i < CircleCPList.Count; i++)
+            {
+                /// Not sure if this could happen, but going to put in for now in case I need to use it later.
+                /// This will skip checking for collision if the circle cp has already detected collision.
+                if(CircleCPList[i].PointHit) { continue; }
+
+                for(int j = 0; j < blockCpList.Count; j++)
+                {
+                    if(position.DistanceTo(blockCpList[j].Pos) > ccDistance) { blockCpList[j].Collision = false; continue; }
+                    //if(CircleCPList[i].CheckForCollision(blockCpList[i].Pos))
+                    //{
+                    //    AddPointHitIndex(i);
+                    //}
+                    if(blockCpList[j].CheckForCollision(CircleCPList[i].Pos))
+                    {
+                        AddPointHitIndex(i);
+                    }
+
+                }
+            }
 
 
+            return;
             for (int i = 0; i < blockCpList.Count; i++)
             {
                 // If the block is not within set distance of ball, do not check for collision with that block. 2020-01-31
                 if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) { blockCpList[i].Collision = false; continue; }
-                blocksToCheck++;
 
-                // Checking blocks within set distance (ccDistance as of 2020-01-31)
-                for (int j = 0; j < CollisionPointList.Count; j++)
+                // Checking for ball collision points intersecting with blocks within set distance (ccDistance as of 2020-01-31)
+                for (int j = 0; j < CircleCPList.Count; j++)
                 {
-                    blockCollisionPointsChecked++;
-                    if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
+                    if (blockCpList[i].CheckForCollision(CircleCPList[j].Pos))
                     {
-                        CollisionPointList[j].PointHit = true;
-                        blocksHitCount++;
-
-                        //hz = bc.SetHitZone(position, blockCpList[i].Rect);
-                        //angleToBlockCenter = position.AngleTo(blockCpList[i].Rect.Center);
-                        
-                        break;
-                        //return;
+                        //collisionDetected = true;
+                        //CollisionPointList[j].PointHit = true;
+                        return;
                     }
-                    CollisionPointList[j].PointHit = false;
+                    //CollisionPointList[j].PointHit = false;
                 }
             }
         }
@@ -285,25 +304,23 @@ namespace BallzForWindows01.DrawableParts
         //       will be calculated if collision is detected in CheckForBlockCollision
         void CalculateBounceAngle()
         {
-            //string fnId = FnId(clsName, "CheckForBounce");
-            for (int i = 0; i < CollisionPointList.Count; i++)
+            for (int i = 0; i < CircleCPList.Count; i++)
             {
                 // if a collision point on the ball registers a hit, do bounce stuff
-                if (CollisionPointList[i].PointHit)
+                if (CircleCPList[i].PointHit)
                 {
-                    shouldBounce = true;
+                    //collisionDetected = true;
                     firstPointHit = i;
 
-                    rowHitInt = (int)bc.RowHit(hz);
-                    columnHitInt = (int)bc.ColumnHit(hz);
-                    Bounce01((AboveMiddleBelow)rowHitInt, (LeftMiddleRight)columnHitInt);
+                    SetBounceAngle(bc.RowHit(hz), bc.ColumnHit(hz));
+                    return;
                 }
             }
         }
 
         PointD testBounceResult = new PointD();
         double testBountLineLength = 40;
-        void Bounce01(AboveMiddleBelow rowHit, LeftMiddleRight columnHit)
+        void SetBounceAngle(AboveMiddleBelow rowHit, LeftMiddleRight columnHit)
         {
             // Heading south
             if (rotation == Math.PI / 2)
@@ -365,11 +382,6 @@ namespace BallzForWindows01.DrawableParts
 
             }
 
-
-
-
-
-
         }
 
 
@@ -396,12 +408,7 @@ namespace BallzForWindows01.DrawableParts
         {
             if (elapsedSeconds > updatedAtSeconds)
             {
-                rotation += initialDriftPerSecond;
-
-                // Applying decay to drift per second // Possible future feature
-                //if (Math.Abs(initialDriftPerSecond) > 0) { initialDriftPerSecond = initialDriftPerSecond - (initialDriftPerSecond * 0.01); }                  
-
-                // Update updatedAtSeconds
+                rotation += initialDriftPerSecond;                            
                 updatedAtSeconds = elapsedSeconds;
             }
         }

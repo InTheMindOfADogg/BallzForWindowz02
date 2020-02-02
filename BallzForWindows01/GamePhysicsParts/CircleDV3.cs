@@ -21,6 +21,13 @@ namespace BallzForWindows01.GamePhysicsParts
             radius = 15;
             rotation = 0;
         }
+        public CircleDV3(double x, double y, double radius)
+        {
+            clsName = "CircleDV3";
+            position = new PointD(30, 30);
+            radius = 15;
+            rotation = 0;
+        }
 
         protected void Load(double x, double y, double radius, double rotation)
         {

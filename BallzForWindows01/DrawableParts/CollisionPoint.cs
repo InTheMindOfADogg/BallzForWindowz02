@@ -11,10 +11,10 @@ namespace BallzForWindows01.DrawableParts
 
     class CollisionPoint : DrawableObject
     {
-        
 
 
-        
+
+
         public PointD Pos { get { return pos; } }
         public RectangleD Rect { get { return cbox; } }
 
@@ -63,34 +63,34 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
-        public void Update() 
+        public void Update()
         {
-            
+
         }
 
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
             if (!visible) { return; }
-            
+
             p.Color = color;
             p.Width = 1;
             g.DrawRectangle(p, pos.fX - 1, pos.fY - 1, 2, 2); // center point for testing
             g.DrawRectangle(p, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-            
+
             // pointHit is trigger for any collision point on the ball
             if (pointHit)
             {
                 sb.Color = Color.Green;
-                g.FillRectangle(sb, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);            
+                g.FillRectangle(sb, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
             }
 
             // collision is trigger for a non player object (aka, anything but the ball at this time 2020-01-25)
             if (collision)
             {
-                
+
                 sb.Color = Color.FromArgb(105, 200, 10, 10);
                 g.FillRectangle(sb, cbox.fX, cbox.fY, cbox.fWidth, cbox.fHeight);
-                
+
             }
         }
 
@@ -110,6 +110,7 @@ namespace BallzForWindows01.DrawableParts
             DbgFuncs.AddStr(callingFnId, $"cpstr: {cpstr}");
         }
 
+        public bool CheckForCollision(CollisionPoint cp) { return _CheckForCollision(cp.Pos.X, cp.Pos.Y); }
         public bool CheckForCollision(PointD pos) { return _CheckForCollision(pos.X, pos.Y); }
         public bool CheckForCollision(double px, double py) { return _CheckForCollision(px, py); }
 

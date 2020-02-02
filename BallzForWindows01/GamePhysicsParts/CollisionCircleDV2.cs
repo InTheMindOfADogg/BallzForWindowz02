@@ -12,8 +12,8 @@ namespace BallzForWindows01.GamePhysicsParts
     {
 
         // Properties
-        public List<CollisionPoint> CollisionPointList { get { return cplist; } }
-
+        public List<CollisionPoint> CircleCPList { get { return cplist; } }
+        public List<int> HitIndexList { get { return hitIndexList; } }
 
         List<CollisionPoint> cplist;
         int cpCount = 5;
@@ -49,12 +49,20 @@ namespace BallzForWindows01.GamePhysicsParts
             Color cpColor = Color.Blue;
             for (int i = 0; i < cpCount; i++)
             {
-                //cplist.Add(CreateCollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
                 cplist.Add(new CollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
                 // Set the remaing collision points' color to the default color for collision points.
                 if (i == 0) { cpColor = dfltColorCollisionPoints; }
             }
         }
+
+        List<int> hitIndexList = new List<int>();
+        public void AddPointHitIndex(int idx)
+        {
+            if (idx < 0 || idx >= cplist.Count) return;
+            cplist[idx].PointHit = true;
+            hitIndexList.Add(idx);
+        }
+        public void ClearHitIndexList() { hitIndexList.RemoveRange(0, hitIndexList.Count); }
 
         protected void MoveCollisionPoints(double x, double y, double rotation)
         {
@@ -69,13 +77,13 @@ namespace BallzForWindows01.GamePhysicsParts
             //DebugTextCollisionCircle();
         }
         // 2020-01-31  Might create function to increment collisionPointsHit in circle when point hit is set to true.
-        public int CollisionPointsHit()
+        public int CollisionPointsHitCount()
         {
             int cpHit = 0;
             for (int i = 0; i < cplist.Count; i++) { if (cplist[i].PointHit) { cpHit++; } }
             return cpHit;
         }
-        protected void ResetPointsHit() { for (int i = 0; i < CollisionPointList.Count; i++) { CollisionPointList[i].PointHit = false; } }
+        protected void ResetPointsHit() { for (int i = 0; i < CircleCPList.Count; i++) { CircleCPList[i].PointHit = false; } }
         protected void DrawCollisionPoints(Graphics g, Pen p, SolidBrush sb)
         {
             for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }

@@ -54,13 +54,14 @@
     <Compile Include="DrawableParts\CollisionLine02.cs" />
     <Compile Include="DrawableParts\CollisionLineMoveable01.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
+    <Compile Include="DrawableParts\CollisionPoint02.cs" />
     <Compile Include="DrawableParts\GameBall04.cs" />
     <Compile Include="Deprecated\GameBall2.cs" />
     <Compile Include="Deprecated\GameBall3.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
-    <Compile Include="Deprecated\CircleD.cs" />
     <Compile Include="Deprecated\CircleDV2.cs" />
+    <Compile Include="GamePhysicsParts\CircleD.cs" />
     <Compile Include="GamePhysicsParts\CircleDV3.cs" />
     <Compile Include="Deprecated\CollisionCircleD.cs" />
     <Compile Include="GamePhysicsParts\CollisionCircleDV2.cs" />
@@ -88,7 +89,10 @@
     <Compile Include="Deprecated\FlightPath.cs" />
     <Compile Include="GamePhysicsParts\PointD.cs" />
     <Compile Include="Deprecated\GameParts01.cs" />
+    <Compile Include="MainGameParts\BaseGameScreen01.cs" />
+    <Compile Include="MainGameParts\GameScreenController.cs" />
     <Compile Include="MainGameParts\MainGame01.cs" />
+    <Compile Include="MainGameParts\TestGameScreen01.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structs\EnumsFile.cs" />

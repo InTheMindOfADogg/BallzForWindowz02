@@ -26,11 +26,11 @@ namespace BallzForWindows01.DrawableParts
         bool drawDbgTxt = true;
         protected bool visible = true;
 
-        protected Color color;
-        protected int alpha;
-        protected int red;
-        protected int green;
-        protected int blue;
+        protected Color color = Color.Black;
+        protected int alpha = 255;
+        protected int red = 0;
+        protected int green = 0;
+        protected int blue = 0;
 
 
 

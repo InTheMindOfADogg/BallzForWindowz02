@@ -32,6 +32,8 @@ namespace BallzForWindows01.MainGameParts
         CollisionLineMoveable01 clm;
         CollisionLineMoveable01 clm2;
 
+        CollisionPoint02 cp02;
+
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
             width = gameWindowWidth;
@@ -46,6 +48,8 @@ namespace BallzForWindows01.MainGameParts
             clm = new CollisionLineMoveable01();
             clm2 = new CollisionLineMoveable01();
 
+            cp02 = new CollisionPoint02();
+
         }
         public void Load()
         {
@@ -53,7 +57,6 @@ namespace BallzForWindows01.MainGameParts
             // Load game ball starting position
             int ballStartX, ballStartY;
 
-            //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
 
             ballStartX = 525;
             ballStartY = height / 2 - 50;
@@ -77,6 +80,8 @@ namespace BallzForWindows01.MainGameParts
             TESTLoadCollisionMoveable01();  // clm is dark red color
             
             TESTLoadCollisionMoveable02();  // clm2 is bright yellowish color
+
+            TESTLoadCollisionPoint02();
 
 
         }
@@ -140,6 +145,15 @@ namespace BallzForWindows01.MainGameParts
             cplist.AddRange(clm2.CpList);
         }
 
+        void TESTLoadCollisionPoint02()
+        {
+            double
+                x = 500,
+                y = 500,
+                detectionRadius = 10;
+            cp02.Load(x,y,detectionRadius);
+        }
+
         double lineRotationSpeed = 0; //0.005;
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
@@ -184,7 +198,7 @@ namespace BallzForWindows01.MainGameParts
             backbuffer = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(backbuffer);
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
-            //Pen p = new Pen(Color.Black);
+            Pen p = new Pen(Color.Black);
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
 
@@ -198,12 +212,15 @@ namespace BallzForWindows01.MainGameParts
             cline2.Draw(g, true);   // green
             clm.Draw(g, true);      // dark red
             clm2.Draw(g, true);     // yellowish color
-            
+
+
+            cp02.Draw(g, p, sb);
 
             DbgFuncs.DrawDbgStrList(g);
 
             sb.Dispose();            
             g.Dispose();
+            p.Dispose();
         }
 
         //void DrawCollisionPointList(Graphics g)

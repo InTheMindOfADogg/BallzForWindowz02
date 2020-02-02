@@ -22,6 +22,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public int iHeight { get { return (int)height; } }
 
         public SizeD() { Set(0, 0); }
+        public SizeD(double widthAndHeight) { Set(widthAndHeight, widthAndHeight); }
         public SizeD(double width, double height) { Set(width, height); }        
         public void Set(double width, double height) { this.width = width; this.height = height; }
 

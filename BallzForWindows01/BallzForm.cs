@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
-using BallzForWindows01.DrawableParts;
-using BallzForWindows01.MainGameParts;
-using BallzForWindows01.Structs;
 
 namespace BallzForWindows01
 {
+    using DrawableParts;
+    using MainGameParts;
+    using Structs;
+
     public enum UpDownState
     {
         Up,
@@ -26,7 +26,9 @@ namespace BallzForWindows01
     {
         MouseControls mcontrols = new MouseControls();
         KeyboardControls01 kcontrols = new KeyboardControls01();
-        MainGame01 ballzGame01;
+        //MainGame01 ballzGame01;
+
+        GameScreenController gsc;
 
         public BallzForm()
         {
@@ -90,12 +92,14 @@ namespace BallzForWindows01
         }
         public void LoadGame()
         {
-            ballzGame01 = new MainGame01(this.Width, this.Height);
-            ballzGame01.Load();
+            //ballzGame01 = new MainGame01(this.Width, this.Height);
+            //ballzGame01.Load();
+
+            gsc = new GameScreenController(this.Width, this.Height);
+            gsc.Load();
         }
         public void GameLoop()
         {
-
             while (this.Created)
             {
                 kcontrols.Update();
@@ -117,12 +121,16 @@ namespace BallzForWindows01
         }
         private void GameLogic()    //Update
         {
-            ballzGame01.Update(mcontrols, kcontrols);   // update game and draw to back buffer
+            //ballzGame01.Update(mcontrols, kcontrols);   // update game and draw to back buffer
+            gsc.Update(mcontrols, kcontrols);
+            gsc.PrepareBackbuffer();
         }
         private void RenderScene()
         {
             Graphics g = CreateGraphics();
-            ballzGame01.Draw(g);     // currently just drawing back buffer, going with this for now.            
+            //ballzGame01.Draw(g);     // currently just drawing back buffer, going with this for now.            
+
+            gsc.Draw(g);
             g.Dispose();
 
         }
@@ -130,7 +138,8 @@ namespace BallzForWindows01
 
         private void CleanUp()
         {
-            ballzGame01.CleanUp();
+            //ballzGame01.CleanUp();
+            gsc.CleanUp();
             DbgFuncs.CleanUp();
         }
 
@@ -236,8 +245,6 @@ namespace BallzForWindows01
 //[DllImport("user32.dll")]
 //private static extern int PeekMessage(out NativeMessage message, IntPtr window, uint filterMin, uint filterMax, uint remove);
 #endregion Old update logic from BallzForm, no longer used, but keeping for reference
-
-
 
 #region MyTimer - moved to own file 2019-10-05
 //public class MyTimer

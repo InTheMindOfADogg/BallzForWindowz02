@@ -33,7 +33,6 @@ namespace BallzForWindows01.GamePhysicsParts
             y = startPoint.y + distance * Math.Sin(rotation);
         }
 
-
         public void Move(double distance, double rotation)
         {
             x = x + distance * Math.Cos(rotation);
