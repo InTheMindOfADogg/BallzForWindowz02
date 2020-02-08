@@ -16,12 +16,14 @@ namespace BallzForWindows01.MainGameParts
         public PointD Center { get { return gameWindowRect.Center; } }
         public SizeD ScreenSize { get { return size; } }
         public bool Active { get { return active; } set { active = value; } }
+        public bool ResetOnDeactivate { get { return resetOnDeactivate; } }
 
 
         protected string clsName = "BaseGameScreen01";
         protected SizeD size = new SizeD(100, 100);
         protected RectangleD gameWindowRect;
         protected bool active = false;
+        protected bool resetOnDeactivate = false;
 
         protected SolidBrush sb;
         protected Pen p;
@@ -61,7 +63,23 @@ namespace BallzForWindows01.MainGameParts
             if (sb != null) { sb.Dispose(); sb = null; }
             if (p != null) { p.Dispose(); p = null; }
         }
-        
+
+        /// <summary>
+        /// Sets active flag to true, can override to do more.
+        /// </summary>
+        public virtual void Activate(){active = true;}
+
+        /// <summary>
+        /// Created 2020-02-08<br/>
+        /// Sets active flat to false and calls Reset if resetOnDeactivate is true (set in class).
+        /// Default value for resetOnDeactivate is false.
+        /// Can pass in a true bool to force reset on deactivate.
+        /// </summary>
+        public virtual void Deactivate(bool forceReset = false)
+        {
+            active = false;
+            if (forceReset || resetOnDeactivate) { Reset(); }
+        }
 
         protected void DrawBackground(Graphics g)
         {

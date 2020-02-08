@@ -24,7 +24,7 @@ namespace BallzForWindows01.MainGameParts
         }
         public override void Load()
         {
-
+            base.Load();
             PointD pos = new PointD(gameWindowRect.Center);
             AddButton("test", pos.X, pos.Y);
 
@@ -44,6 +44,7 @@ namespace BallzForWindows01.MainGameParts
         }
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
+            base.Update(mcontrols, kcontrols);
             for (int i = 0; i < btnList.Count; i++)
             {
                 btnList[i].Update();
@@ -63,6 +64,7 @@ namespace BallzForWindows01.MainGameParts
         }
         public override void Reset()
         {
+            base.Reset();
             for (int i = 0; i < btnList.Count; i++)
             {
 
@@ -70,6 +72,7 @@ namespace BallzForWindows01.MainGameParts
         }
         public override void CleanUp()
         {
+            base.CleanUp();
             for (int i = 0; i < btnList.Count; i++)
             {
                 btnList[i].CleanUp();
