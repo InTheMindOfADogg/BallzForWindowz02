@@ -13,7 +13,7 @@ namespace BallzForWindows01.MainGameParts
     class BaseGameScreen01
     {
         public string ClsName { get { return clsName; } }
-        public PointD Center { get { return gameWindowRect.Center; } }
+        public PointD Center { get { return gameScreenRect.Center; } }
         public SizeD ScreenSize { get { return size; } }
         public bool Active { get { return active; } set { active = value; } }
         public bool ResetOnDeactivate { get { return resetOnDeactivate; } }
@@ -21,7 +21,7 @@ namespace BallzForWindows01.MainGameParts
 
         protected string clsName = "BaseGameScreen01";
         protected SizeD size = new SizeD(100, 100);
-        protected RectangleD gameWindowRect;
+        protected RectangleD gameScreenRect;
         protected bool active = false;
         protected bool resetOnDeactivate = false;
 
@@ -35,7 +35,7 @@ namespace BallzForWindows01.MainGameParts
             clsName = "BaseGameScreen01";
             this.active = active;
             size = new SizeD(gameWindowWidth, gameWindowHeight);
-            gameWindowRect = new RectangleD(0, 0, size.Width, size.Height);
+            gameScreenRect = new RectangleD(0, 0, size.Width, size.Height);
 
         }
         public virtual void Load() { }
@@ -71,8 +71,8 @@ namespace BallzForWindows01.MainGameParts
 
         /// <summary>
         /// Created 2020-02-08<br/>
-        /// Sets active flat to false and calls Reset if resetOnDeactivate is true (set in class).
-        /// Default value for resetOnDeactivate is false.
+        /// Sets active flat to false and calls Reset if resetOnDeactivate is true (set in class).<br/>
+        /// Default value for resetOnDeactivate is false.<br/>
         /// Can pass in a true bool to force reset on deactivate.
         /// </summary>
         public virtual void Deactivate(bool forceReset = false)
@@ -94,7 +94,7 @@ namespace BallzForWindows01.MainGameParts
         protected void DrawCenterMarker(Graphics g)
         {
             // Test drawing center point
-            Point pnt = gameWindowRect.Center.ToPoint(); int pntWidth = 10;
+            Point pnt = gameScreenRect.Center.ToPoint(); int pntWidth = 10;
             g.FillRectangle(Brushes.Black, pnt.X - (pntWidth / 2), pnt.Y - (pntWidth / 2), pntWidth, pntWidth);
         }
     }

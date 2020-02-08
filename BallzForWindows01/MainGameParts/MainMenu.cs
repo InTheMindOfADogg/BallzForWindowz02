@@ -25,7 +25,7 @@ namespace BallzForWindows01.MainGameParts
         public override void Load()
         {
             base.Load();
-            PointD pos = new PointD(gameWindowRect.Center);
+            PointD pos = new PointD(gameScreenRect.Center);
             AddButton("test", pos.X, pos.Y);
 
 

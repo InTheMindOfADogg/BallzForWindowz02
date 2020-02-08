@@ -49,19 +49,7 @@ namespace BallzForWindows01.DrawableParts
             else { rect.SetSize(btnRect.Width, btnRect.Height); }
             text = buttonText;
         }
-        public void CenterOnPos(bool cop)
-        {
-            string fnId = AssistFunctions.FnId(clsName, "CenterOnPos");
-            if (rect.Width == 0 || rect.Height == 0) { throw new Exception($"{fnId} Can not center because width or height of button is zero."); }
-            if (centeredOnPos == cop) { return; }    // already set to bool passed in
-
-            centeredOnPos = cop;
-            if (centeredOnPos) { rect.CenterOnXY(rect.X, rect.Y); return; }
-            // un center if already centered (and cop == false)
-            rect.X -= rect.Width / 2;
-            rect.Y -= rect.Height / 2;
-
-        }
+        
 
         public void Update() { }
         public void Draw(Graphics g)
@@ -82,6 +70,24 @@ namespace BallzForWindows01.DrawableParts
 
         public void CleanUp() { if (font != null) { font.Dispose(); } }
 
+        /// <summary>
+        /// Centers button on rectangle position if true passed in.<br/>
+        /// Otherwise, the top left corner is set to the rectnagle position.
+        /// </summary>
+        /// <param name="cop"></param>
+        public void CenterOnPos(bool cop)
+        {
+            string fnId = AssistFunctions.FnId(clsName, "CenterOnPos");
+            if (rect.Width == 0 || rect.Height == 0) { throw new Exception($"{fnId} Can not center because width or height of button is zero."); }
+            if (centeredOnPos == cop) { return; }    // already set to bool passed in
+
+            centeredOnPos = cop;
+            if (centeredOnPos) { rect.CenterOnXY(rect.X, rect.Y); return; }
+            // un center if already centered (and cop == false)
+            rect.X -= rect.Width / 2;
+            rect.Y -= rect.Height / 2;
+
+        }
         public bool InBox(PointD p) { return rect.InBox(p.X, p.Y); }
 
         void SetSizeFromText(string btnText)
