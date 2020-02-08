@@ -11,6 +11,8 @@ namespace BallzForWindows01.DrawableParts
 
     class Button02 : DrawableObject
     {
+        public bool IsCenteredOnPos { get { return centeredOnPos; } }
+
         RectangleD rect;
         string text;
 
@@ -18,6 +20,9 @@ namespace BallzForWindows01.DrawableParts
         Color fontColor;
         int fontSize = 20;
         string fontFamily = "Arial";
+
+        bool centeredOnPos = false;
+        
 
         public Button02()
         {
@@ -36,6 +41,28 @@ namespace BallzForWindows01.DrawableParts
             else { rect.SetSize(width, height); }
             text = buttonText;
         }
+        public void Load(string buttonText, RectangleD btnRect)
+        {
+
+            rect.SetPosition(btnRect.X, btnRect.Y);
+            if ((btnRect.Width == 0 || btnRect.Height == 0) && (!AssistFunctions.inows(buttonText))) { SetSizeFromText(buttonText); }
+            else { rect.SetSize(btnRect.Width, btnRect.Height); }
+            text = buttonText;
+        }
+        public void CenterOnPos(bool cop)
+        {
+            string fnId = AssistFunctions.FnId(clsName, "CenterOnPos");
+            if (rect.Width == 0 || rect.Height == 0) { throw new Exception($"{fnId} Can not center because width or height of button is zero."); }
+            if (centeredOnPos == cop) { return; }    // already set to bool passed in
+
+            centeredOnPos = cop;
+            if (centeredOnPos) { rect.CenterOnXY(rect.X, rect.Y); return; }
+            // un center if already centered (and cop == false)
+            rect.X -= rect.Width / 2;
+            rect.Y -= rect.Height / 2;
+
+        }
+
         public void Update() { }
         public void Draw(Graphics g)
         {

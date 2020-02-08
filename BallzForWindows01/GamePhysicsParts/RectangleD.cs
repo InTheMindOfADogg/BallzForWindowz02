@@ -46,6 +46,9 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public RectangleD() { Set(0, 0, 0, 0); }
         public RectangleD(double x, double y, double width, double height) { Set(x, y, width, height); }
+        //public RectangleD(RectangleD rectD){Set(rectD.Position, rectD.Size);}
+        //public RectangleD(RectangleF rectF) { Set(rectF.X, rectF.Y, rectF.Width, rectF.Height); }
+        //public RectangleD(Rectangle rect) { Set(rect.X, rect.Y, rect.Width, rect.Height); }
         public void Set(double x, double y, double width, double height)
         {
             this.x = x; this.y = y; this.width = width; this.height = height;

@@ -7,14 +7,15 @@ using System.Drawing;
 
 namespace BallzForWindows01.MainGameParts
 {
-
+    
     using Structs;
 
     class GameScreenController
     {
         string clsName = "GameScreenController";
         List<BaseGameScreen01> gscreens;
-        int activeScreenIdx = 0;
+        int activeScreenIdx = -1;
+        int newActiveScreenIdx = -1;
         Size size;
         Bitmap backbuffer;
 
@@ -28,26 +29,39 @@ namespace BallzForWindows01.MainGameParts
 
         void InitGameScreens()
         {
-            gscreens.Add(new TestGameScreen01(size.Width, size.Height, true));
+            gscreens.Add(new MainMenu(size.Width, size.Height, true));
+            gscreens.Add(new TestGameScreen01(size.Width, size.Height, false));
+
         }
-        public void AddGameScreen(BaseGameScreen01 gs)
-        {
-            gscreens.Add(gs);
-        }
+        public void AddGameScreen(BaseGameScreen01 gs) { gscreens.Add(gs); }
 
 
         public void Load()
         {
-            SetActiveScreenIdx();
+            SetActiveScreen();
             // Load all screens to have them ready. I have it set up now so that
             for (int i = 0; i < gscreens.Count; i++) { gscreens[i].Load(); }
         }
-        private void SetActiveScreenIdx()
+
+        /// <summary>
+        /// Sets the active screen index to the first screen that has active flag set to true. Sets
+        /// all other screens active flag to false.
+        /// </summary>
+        private void SetActiveScreen()
         {
             // First screen with active flag set as active screen
             for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { activeScreenIdx = i; break; } }
             // Set all screens except active screen index to false (in case 2 screens got set as active)
             for (int i = 0; i < gscreens.Count; i++) { if (i == activeScreenIdx) { continue; } gscreens[i].Active = false; }
+        }
+
+
+        public void SetNewActiveScreen(string screenClassName)
+        {
+            for (int i = 0; i < gscreens.Count; i++)
+            {
+                if (streql(screenClassName, gscreens[i].ClsName)) { newActiveScreenIdx = i; return; }
+            }
         }
         public void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
@@ -57,7 +71,9 @@ namespace BallzForWindows01.MainGameParts
         {
             backbuffer = new Bitmap(size.Width, size.Height);
             Graphics g = Graphics.FromImage(backbuffer);
+            gscreens[activeScreenIdx].PrepareDrawingTools();
             gscreens[activeScreenIdx].Draw(g);
+            gscreens[activeScreenIdx].DisposeOfDrawingTools();
             DbgFuncs.DrawDbgStrList(g);
             g.Dispose();
         }
@@ -82,5 +98,12 @@ namespace BallzForWindows01.MainGameParts
             }
         }
 
+
+
+        private bool streql(string str1, string str2) { return AssistFunctions.streql(str1, str2); }
+
     }
+
+
+
 }

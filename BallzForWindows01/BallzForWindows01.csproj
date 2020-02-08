@@ -90,7 +90,6 @@
     <Compile Include="GamePhysicsParts\PointD.cs" />
     <Compile Include="Deprecated\GameParts01.cs" />
     <Compile Include="MainGameParts\BaseGameScreen01.cs" />
-    <Compile Include="MainGameParts\BaseScreenBluePrint.cs" />
     <Compile Include="MainGameParts\GameScreenController.cs" />
     <Compile Include="MainGameParts\MainGame01.cs" />
     <Compile Include="MainGameParts\MainMenu.cs" />

@@ -31,6 +31,9 @@ namespace BallzForWindows01.MainGameParts
             : base(gameWindowWidth, gameWindowHeight, active)
         {
             clsName = "TestGameScreen01";
+            backgroundColor = Color.CornflowerBlue;
+
+
             blockList = new List<BasicBlock01>();
 
             ball4 = new GameBall04(size.ToSize());
@@ -136,9 +139,12 @@ namespace BallzForWindows01.MainGameParts
         }
         public override void Draw(Graphics g)
         {
-            SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
-            Pen p = new Pen(Color.Black);
-            g.FillRectangle(sb, 0, 0, size.iWidth, size.iHeight);
+            //SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
+            //Pen p = new Pen(Color.Black);            
+            //g.FillRectangle(sb, 0, 0, size.iWidth, size.iHeight);
+            base.Draw(g);
+            
+            
             //DrawBlockList(g);
 
             if (ball4 != null) { ball4.Draw(g); }
