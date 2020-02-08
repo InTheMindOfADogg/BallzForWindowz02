@@ -22,6 +22,8 @@ namespace BallzForWindows01.DrawableParts
         public bool IsCenteredOnPos { get { return centeredOnPos; } }
         public bool Clicked { get { return clicked; } }
 
+        public string Text { get { return text; } }
+
         RectangleD rect;
         string text;
 
@@ -35,7 +37,8 @@ namespace BallzForWindows01.DrawableParts
         bool clicked = false;
 
         Color hoverBackgroundColor;
-
+        
+        public void ClickHandled() { clicked = false; }
         public Button03()
         {
             clsName = "Button03";
@@ -66,9 +69,11 @@ namespace BallzForWindows01.DrawableParts
             text = buttonText;
         }
         
+        // TODO create function to let MainMenu (or any BaseGameScreen) know that a button was clicked.
         public void Update(MouseControls mc)
         {
             string fnId = AssistFunctions.FnId(clsName, "Update");
+            if (mc.RightButtonClicked()) { Reset(); }
 
             mouseOver = InBox(mc.Position);
 

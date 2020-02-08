@@ -26,7 +26,7 @@ namespace BallzForWindows01.MainGameParts
         {
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
-            AddButton("test", pos.X, pos.Y,true,300, 50);
+            AddButton("TestGameScreen01", pos.X, pos.Y,true,300, 50);
         }
         private void AddButton(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
         {
@@ -39,10 +39,9 @@ namespace BallzForWindows01.MainGameParts
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             base.Update(mcontrols, kcontrols);
-            for (int i = 0; i < btnList.Count; i++)
-            {
-                btnList[i].Update(mcontrols);
-            }
+            for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}
+
+            
         }
         public override void Draw(Graphics g)
         {
