@@ -60,7 +60,8 @@ namespace BallzForWindows01.MainGameParts
         {
             string fnId = AssistFunctions.FnId(clsName, "Update");
             DbgFuncs.AddStr(fnId, $"starting active screen index: [startingActScrnIdx: {startingActScrnIdx}]");
-            DbgFuncs.AddStr(fnId, $"current active screen index: [actScrnIdx: {actScrnIdx}]");
+            //DbgFuncs.AddStr(fnId, $"current active screen index: [actScrnIdx: {actScrnIdx}]");
+            DbgFuncs.AddStr(fnId, $"current active screen: [{gscreens[actScrnIdx].ClsName}] [actScrnIdx: {actScrnIdx}]");
 
             gscreens[actScrnIdx].Update(mcontrols, kcontrols);
 

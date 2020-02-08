@@ -12,32 +12,26 @@ namespace BallzForWindows01.MainGameParts
     using Structs;
     class MainMenu : BaseGameScreen01
     {
-        List<Button02> btnList;
+        List<Button03> btnList;
         public MainMenu(int gameWindowWidth, int gameWindowHeight, bool active = false)
             : base(gameWindowWidth, gameWindowHeight, active)
         {
             clsName = "MainMenu";
             backgroundColor = Color.CornflowerBlue;
 
-            btnList = new List<Button02>();
+            btnList = new List<Button03>();
 
         }
         public override void Load()
         {
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
-            AddButton("test", pos.X, pos.Y);
-
-
-
-
+            AddButton("test", pos.X, pos.Y,true,300, 50);
         }
         private void AddButton(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
         {
-
             RectangleD r = new RectangleD(x, y, width, height);
-
-            Button02 b = new Button02();
+            Button03 b = new Button03();
             b.Load(btnText, x, y, width, height);
             b.CenterOnPos(centerOnPos);
             btnList.Add(b);
@@ -47,19 +41,16 @@ namespace BallzForWindows01.MainGameParts
             base.Update(mcontrols, kcontrols);
             for (int i = 0; i < btnList.Count; i++)
             {
-                btnList[i].Update();
+                btnList[i].Update(mcontrols);
             }
         }
         public override void Draw(Graphics g)
         {
             base.Draw(g);
-            string fnId = AssistFunctions.FnId(clsName, "Draw");
-            DbgFuncs.AddStr(fnId, $"Active game screen");
             for (int i = 0; i < btnList.Count; i++)
             {
                 btnList[i].Draw(g);
             }
-
             
         }
         public override void Reset()
@@ -78,6 +69,8 @@ namespace BallzForWindows01.MainGameParts
                 btnList[i].CleanUp();
             }
         }
+
+
 
 
 

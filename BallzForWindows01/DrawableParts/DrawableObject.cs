@@ -13,9 +13,6 @@ namespace BallzForWindows01.DrawableParts
         public bool DrawDbgTxt { get { return drawDbgTxt; } set { drawDbgTxt = value; } }
         public bool Visible { get { return visible; } set { visible = value; } }
 
-        
-        
-
         //public int Alpha { get { return alpha; } }
         //public int Red { get { return red; } }
         //public int Green { get { return green; } }
