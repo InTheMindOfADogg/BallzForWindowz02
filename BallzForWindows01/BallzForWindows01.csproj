@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="DebugParts\DbgPath.cs" />
     <Compile Include="DrawableParts\Button02.cs" />
+    <Compile Include="DrawableParts\Button03.cs" />
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionLine02.cs" />
     <Compile Include="DrawableParts\CollisionLineMoveable01.cs" />

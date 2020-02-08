@@ -7,9 +7,12 @@ using System.Drawing;
 
 namespace BallzForWindows01.DrawableParts
 {
-    using GamePhysicsParts;
 
-    class Button02 : DrawableObject
+    // Created 2020-02-08
+
+    using GamePhysicsParts;
+    using Structs;
+    class Button03 : DrawableObject
     {
         public bool IsCenteredOnPos { get { return centeredOnPos; } }
 
@@ -22,11 +25,11 @@ namespace BallzForWindows01.DrawableParts
         string fontFamily = "Arial";
 
         bool centeredOnPos = false;
-        
 
-        public Button02()
+
+        public Button03()
         {
-            clsName = "Button02";
+            clsName = "Button03";
             rect = new RectangleD();
             text = clsName;
             fontColor = Color.Black;
@@ -49,9 +52,9 @@ namespace BallzForWindows01.DrawableParts
             else { rect.SetSize(btnRect.Width, btnRect.Height); }
             text = buttonText;
         }
-        public void Update() 
-        { 
-        
+        public void Update()
+        {
+
         }
         public void Draw(Graphics g)
         {
