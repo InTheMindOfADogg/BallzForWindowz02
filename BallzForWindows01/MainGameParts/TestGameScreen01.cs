@@ -9,6 +9,7 @@ using System.Drawing;
 namespace BallzForWindows01.MainGameParts
 {
     using DrawableParts;
+    using GamePhysicsParts;
     using Structs;
 
     class TestGameScreen01 : BaseGameScreen01
@@ -26,15 +27,13 @@ namespace BallzForWindows01.MainGameParts
 
         CollisionPoint02 cp02;
 
-        public TestGameScreen01(int gameWindowWidth, int gameWindowHeight)
+        public TestGameScreen01(int gameWindowWidth, int gameWindowHeight, bool active = false)
+            : base(gameWindowWidth, gameWindowHeight, active)
         {
-            active = true;
-            size = new Size(gameWindowWidth, gameWindowHeight);
-            
-
+            clsName = "TestGameScreen01";
             blockList = new List<BasicBlock01>();
 
-            ball4 = new GameBall04(size);
+            ball4 = new GameBall04(size.ToSize());
             if (ball4 != null) { ball4.DrawDbgTxt = true; }
 
             //cline = new CollisionLine();
@@ -52,7 +51,7 @@ namespace BallzForWindows01.MainGameParts
 
 
             ballStartX = 525;
-            ballStartY = size.Height / 2 - 50;
+            ballStartY = size.iHeight / 2 - 50;
 
             if (ball4 != null)
             {
@@ -139,14 +138,12 @@ namespace BallzForWindows01.MainGameParts
         {
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
             Pen p = new Pen(Color.Black);
-            g.FillRectangle(sb, 0, 0, size.Width, size.Height);
+            g.FillRectangle(sb, 0, 0, size.iWidth, size.iHeight);
             //DrawBlockList(g);
 
             if (ball4 != null) { ball4.Draw(g); }
 
             //DrawCollisionPointList(g);
-
-
 
             //cline.Draw(g, false);
             cline2.Draw(g, true);   // green
@@ -159,15 +156,16 @@ namespace BallzForWindows01.MainGameParts
             sb.Dispose();
             p.Dispose();
         }
+        public override void Reset()
+        {
+
+        }
         public override void CleanUp()
         {
             if (ball4 != null) { ball4.CleanUp(); }
             //CleanUpBlockList();
         }
-        public override void Reset()
-        {
-            
-        }
+
 
     }
 }

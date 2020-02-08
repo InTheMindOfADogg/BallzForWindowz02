@@ -28,8 +28,9 @@ namespace BallzForWindows01.DrawableParts
             SetColor(255, 255, 0, 0);   // button border color
             ConfigureFont();
         }
-        public void Load(double x, double y, double width, double height, string buttonText)
+        public void Load(string buttonText, double x, double y, double width = 0, double height = 0)
         {
+
             rect.SetPosition(x, y);
             if ((width == 0 || height == 0) && (!AssistFunctions.inows(buttonText))) { SetSizeFromText(buttonText); }
             else { rect.SetSize(width, height); }

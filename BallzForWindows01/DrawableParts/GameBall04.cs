@@ -488,7 +488,8 @@ namespace BallzForWindows01.DrawableParts
             size.Height = 40;
             position.X = gameScreenSize.Width / 2 - size.Width / 2;
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
-            btnLaunch2.Load(position.X, position.Y, size.Width, size.Height, "Launch");
+            
+            btnLaunch2.Load("Launch", position.X, position.Y, size.Width, size.Height);
         }
 
         void StopAdjusting() { adjustingAim = adjustingSpin = adjustingPosition = false; }

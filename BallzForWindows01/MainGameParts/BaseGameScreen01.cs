@@ -10,19 +10,28 @@ namespace BallzForWindows01.MainGameParts
 {
     using GamePhysicsParts;
     using Structs;
-    abstract class BaseGameScreen01
+    class BaseGameScreen01 : BaseScreenBluePrint
     {
-        public Size ScreenSize { get { return size; } }
-        public bool Active { get { return active; } }
 
+        public PointD Center { get { return gameWindowRect.Center; } }
 
-        protected Size size = new Size(100,100);
-        protected bool active = false;
+        protected RectangleD gameWindowRect;
+
+        public BaseGameScreen01(int gameWindowWidth, int gameWindowHeight, bool active = false) 
+        { 
+            clsName = "BaseGameScreen01";
+            this.active = active;
+            size = new SizeD(gameWindowWidth, gameWindowHeight);
+            gameWindowRect = new RectangleD(0, 0, size.Width, size.Height);
+            
+        }
+        public override void Load() { }
+        public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols) { }
+        public override void Draw(Graphics g) { }
+        public override void Reset() { }
+        public override void CleanUp() { }
+
         
-        public abstract void Load();
-        public abstract void Update(MouseControls mcontrols, KeyboardControls01 kcontrols);
-        public abstract void Draw(Graphics g);
-        public abstract void CleanUp();
-        public abstract void Reset();
+
     }
 }

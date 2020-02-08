@@ -12,9 +12,12 @@ namespace BallzForWindows01.MainGameParts
 
     class GameScreenController
     {
+        string clsName = "GameScreenController";
         List<BaseGameScreen01> gscreens;
+        int activeScreenIdx = 0;
         Size size;
         Bitmap backbuffer;
+
 
         public GameScreenController(int width, int height)
         {
@@ -25,30 +28,36 @@ namespace BallzForWindows01.MainGameParts
 
         void InitGameScreens()
         {
-            gscreens.Add(new TestGameScreen01(size.Width, size.Height));
+            gscreens.Add(new TestGameScreen01(size.Width, size.Height, true));
         }
         public void AddGameScreen(BaseGameScreen01 gs)
         {
             gscreens.Add(gs);
         }
 
-        public void Load() { for (int i = 0; i < gscreens.Count; i++) { gscreens[i].Load(); } }
 
+        public void Load()
+        {
+            SetActiveScreenIdx();
+            // Load all screens to have them ready. I have it set up now so that
+            for (int i = 0; i < gscreens.Count; i++) { gscreens[i].Load(); }
+        }
+        private void SetActiveScreenIdx()
+        {
+            // First screen with active flag set as active screen
+            for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { activeScreenIdx = i; break; } }
+            // Set all screens except active screen index to false (in case 2 screens got set as active)
+            for (int i = 0; i < gscreens.Count; i++) { if (i == activeScreenIdx) { continue; } gscreens[i].Active = false; }
+        }
         public void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
-            for (int i = 0; i < gscreens.Count; i++)
-            {
-                if (gscreens[i].Active)
-                {
-                    gscreens[i].Update(mcontrols, kcontrols);
-                }
-            }
+            gscreens[activeScreenIdx].Update(mcontrols, kcontrols);
         }
         public void PrepareBackbuffer()
         {
             backbuffer = new Bitmap(size.Width, size.Height);
             Graphics g = Graphics.FromImage(backbuffer);
-            for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { gscreens[i].Draw(g); } }
+            gscreens[activeScreenIdx].Draw(g);
             DbgFuncs.DrawDbgStrList(g);
             g.Dispose();
         }
@@ -57,11 +66,14 @@ namespace BallzForWindows01.MainGameParts
             g.DrawImage(backbuffer, new Point(0, 0));
             backbuffer.Dispose();
         }
-        public void Reset() { for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { gscreens[i].Reset(); } } }
+        public void Reset()
+        {
+            gscreens[activeScreenIdx].Reset();
+        }
 
         public void CleanUp()
         {
-            for (int i = 0; i < gscreens.Count; i++) { if (gscreens[i].Active) { gscreens[i].CleanUp(); } }
+            for (int i = 0; i < gscreens.Count; i++) { gscreens[i].CleanUp(); }
 
             if (backbuffer != null)
             {
