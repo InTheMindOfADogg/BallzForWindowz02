@@ -61,6 +61,11 @@ namespace BallzForWindows01.MainGameParts
 
             gscreens[actScrnIdx].Update(mcontrols, kcontrols);
 
+            if(gscreens[actScrnIdx].ChangeScreenRequest)
+            {
+
+            }
+
         }
         public void PrepareBackbuffer()
         {

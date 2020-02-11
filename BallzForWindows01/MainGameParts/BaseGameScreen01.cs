@@ -17,6 +17,8 @@ namespace BallzForWindows01.MainGameParts
         public SizeD ScreenSize { get { return size; } }
         public bool Active { get { return active; } set { active = value; } }
         public bool ResetOnDeactivate { get { return resetOnDeactivate; } }
+        public bool ChangeScreenRequest { get { return changeScreenRequest; } }
+        
 
 
         protected string clsName = "BaseGameScreen01";
@@ -24,10 +26,11 @@ namespace BallzForWindows01.MainGameParts
         protected RectangleD gameScreenRect;
         protected bool active = false;
         protected bool resetOnDeactivate = false;
+        protected bool changeScreenRequest = false;
+
 
         protected SolidBrush sb;
         protected Pen p;
-
         protected Color backgroundColor = Color.CornflowerBlue;
 
         public BaseGameScreen01(int gameWindowWidth, int gameWindowHeight, bool active = false)

@@ -23,7 +23,7 @@ namespace BallzForWindows01.DrawableParts
         public bool Clicked { get { return clicked; } }
 
         public string Text { get { return text; } }
-        public string StrClickValue { get { return strClickValue; } set { strClickValue = value; } }
+        public string ClickValue { get { return clickValue; } set { clickValue = value; } }
 
         RectangleD rect;
         string text;
@@ -32,7 +32,7 @@ namespace BallzForWindows01.DrawableParts
         Color fontColor;
         int fontSize = 20;
         string fontFamily = "Arial";
-        string strClickValue = "";
+        string clickValue = "";
 
         bool centeredOnPos = false;
         bool mouseOver = false;
@@ -54,19 +54,14 @@ namespace BallzForWindows01.DrawableParts
         
         public void Load(string buttonText, double x, double y, double width = 0, double height = 0)
         {
-            pvtLoad(buttonText, x, y, width, height);
-        }
-        public void Load(string buttonText, RectangleD btnRect)
-        {
-            pvtLoad(buttonText, btnRect.X, btnRect.Y, btnRect.Width, btnRect.Height);
-        }
-        private void pvtLoad(string buttonText, double x, double y, double width = 0, double height = 0)
-        {
+            //pvtLoad(buttonText, x, y, width, height);
             rect.SetPosition(x, y);
             if ((width == 0 || height == 0) && (!AssistFunctions.inows(buttonText))) { SetSizeFromText(buttonText); }
             else { rect.SetSize(width, height); }
             text = buttonText;
-        }
+            clickValue = buttonText;
+        }        
+
         
         // TODO create function to let MainMenu (or any BaseGameScreen) know that a button was clicked.
         public void Update(MouseControls mc)

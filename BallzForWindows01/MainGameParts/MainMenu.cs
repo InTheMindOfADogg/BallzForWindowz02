@@ -12,7 +12,12 @@ namespace BallzForWindows01.MainGameParts
     using Structs;
     class MainMenu : BaseGameScreen01
     {
+
+
+        
         List<Button03> btnList;
+
+        
         public MainMenu(int gameWindowWidth, int gameWindowHeight, bool active = false)
             : base(gameWindowWidth, gameWindowHeight, active)
         {
@@ -34,13 +39,19 @@ namespace BallzForWindows01.MainGameParts
             Button03 b = new Button03();
             b.Load(btnText, x, y, width, height);
             b.CenterOnPos(centerOnPos);
+            
             btnList.Add(b);
         }
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             base.Update(mcontrols, kcontrols);
-            for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}            
+            for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}
+            
+
         }
+
+        
+
         public override void Draw(Graphics g)
         {
             base.Draw(g);
