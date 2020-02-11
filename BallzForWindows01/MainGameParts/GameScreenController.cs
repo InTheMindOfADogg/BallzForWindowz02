@@ -40,13 +40,9 @@ namespace BallzForWindows01.MainGameParts
         public void Load()
         {
             SetStartingActiveScreen();
-            // Load all screens to have them ready. I have it set up now so that
+            // Load all screens to have them ready.
             for (int i = 0; i < gscreens.Count; i++) { gscreens[i].Load(); }
         }
-
-        
-
-
 
         public void SetNewActiveScreen(string newScreenName)
         {
@@ -82,7 +78,6 @@ namespace BallzForWindows01.MainGameParts
             backbuffer.Dispose();
 
             if (newActScrnIdx > 0) { ChangeActiveScreen(); }
-
 
         }
         public void Reset()
@@ -128,6 +123,13 @@ namespace BallzForWindows01.MainGameParts
             newActScrnIdx = -1;
         }
 
+        /// <summary>
+        /// Compares lowercase version of both strings and returns true if match.<br/>
+        /// Actual call is to AssistFunctions.streql
+        /// </summary>
+        /// <param name="str1"></param>
+        /// <param name="str2"></param>
+        /// <returns></returns>
         private bool streql(string str1, string str2) { return AssistFunctions.streql(str1, str2); }
 
     }

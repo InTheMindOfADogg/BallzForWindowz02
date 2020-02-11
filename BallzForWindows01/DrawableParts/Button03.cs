@@ -23,6 +23,7 @@ namespace BallzForWindows01.DrawableParts
         public bool Clicked { get { return clicked; } }
 
         public string Text { get { return text; } }
+        public string StrClickValue { get { return strClickValue; } set { strClickValue = value; } }
 
         RectangleD rect;
         string text;
@@ -31,6 +32,7 @@ namespace BallzForWindows01.DrawableParts
         Color fontColor;
         int fontSize = 20;
         string fontFamily = "Arial";
+        string strClickValue = "";
 
         bool centeredOnPos = false;
         bool mouseOver = false;
@@ -38,7 +40,7 @@ namespace BallzForWindows01.DrawableParts
 
         Color hoverBackgroundColor;
         
-        public void ClickHandled() { clicked = false; }
+        
         public Button03()
         {
             clsName = "Button03";
@@ -49,10 +51,7 @@ namespace BallzForWindows01.DrawableParts
             ConfigureFont();
             ConfigureColors();
         }
-        private void ConfigureColors()
-        {
-            hoverBackgroundColor = Color.FromArgb(255, 200, 150, 100);
-        }
+        
         public void Load(string buttonText, double x, double y, double width = 0, double height = 0)
         {
             pvtLoad(buttonText, x, y, width, height);
@@ -100,15 +99,7 @@ namespace BallzForWindows01.DrawableParts
             sb.Dispose();
         }
 
-        private void DrawHoverEffect(Graphics g, SolidBrush sb, Pen p)
-        {
-            Color origSbColor = sb.Color;
-            Color origPColor = p.Color;
-            sb.Color = hoverBackgroundColor;
-            g.FillRectangle(sb, rect.fX, rect.fY, rect.fWidth, rect.fHeight);
-            sb.Color = origSbColor;
-            p.Color = origPColor;
-        }
+        
 
         public void Reset()
         {
@@ -116,7 +107,8 @@ namespace BallzForWindows01.DrawableParts
             clicked = false;
         }
 
-        public void CleanUp() { if (font != null) { font.Dispose(); } }
+        public void CleanUp() { if (font != null) { font.Dispose(); } }        
+        public void ClickHandled() { clicked = false; }
 
         /// <summary>
         /// Centers button on rectangle position if true passed in.<br/>
@@ -137,7 +129,9 @@ namespace BallzForWindows01.DrawableParts
 
         }
         public bool InBox(PointD p) { return rect.InBox(p.X, p.Y); }
-        void SetSizeFromText(string btnText)
+
+
+        private void SetSizeFromText(string btnText)
         {
             Bitmap bmp = new Bitmap(100, 100);
             Graphics g = Graphics.FromImage(bmp);
@@ -147,10 +141,25 @@ namespace BallzForWindows01.DrawableParts
             g.Dispose();
             bmp.Dispose();
         }
-        void ConfigureFont()
+
+        private void ConfigureColors()
+        {
+            hoverBackgroundColor = Color.FromArgb(255, 200, 150, 100);
+        }
+        private void ConfigureFont()
         {
             font = new Font(fontFamily, fontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             fontColor = Color.Black;
+        }
+
+        private void DrawHoverEffect(Graphics g, SolidBrush sb, Pen p)
+        {
+            Color origSbColor = sb.Color;
+            Color origPColor = p.Color;
+            sb.Color = hoverBackgroundColor;
+            g.FillRectangle(sb, rect.fX, rect.fY, rect.fWidth, rect.fHeight);
+            sb.Color = origSbColor;
+            p.Color = origPColor;
         }
     }
 }

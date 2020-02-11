@@ -39,9 +39,7 @@ namespace BallzForWindows01.MainGameParts
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             base.Update(mcontrols, kcontrols);
-            for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}
-
-            
+            for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}            
         }
         public override void Draw(Graphics g)
         {
@@ -57,7 +55,7 @@ namespace BallzForWindows01.MainGameParts
             base.Reset();
             for (int i = 0; i < btnList.Count; i++)
             {
-
+                btnList[i].Reset();
             }
         }
         public override void CleanUp()
