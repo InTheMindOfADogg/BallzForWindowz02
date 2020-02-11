@@ -32,19 +32,17 @@ namespace BallzForWindows01.MainGameParts
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
             AddButton("TestGameScreen01", pos.X, pos.Y,true,300, 50);
-        }
-        private void AddButton(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
-        {
-            RectangleD r = new RectangleD(x, y, width, height);
-            Button03 b = new Button03();
-            b.Load(btnText, x, y, width, height);
-            b.CenterOnPos(centerOnPos);            
-            btnList.Add(b);
-        }
+            btnList[btnList.Count-1]
+        }        
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             base.Update(mcontrols, kcontrols);
-            for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}
+            for (int i = 0; i < btnList.Count; i++)
+            {
+                btnList[i].Update(mcontrols);
+            }
+
+
         }
 
         
@@ -73,6 +71,16 @@ namespace BallzForWindows01.MainGameParts
             {
                 btnList[i].CleanUp();
             }
+        }
+
+
+        private void AddButton(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
+        {
+            RectangleD r = new RectangleD(x, y, width, height);
+            Button03 b = new Button03();
+            b.Load(btnText, x, y, width, height);
+            b.CenterOnPos(centerOnPos);
+            btnList.Add(b);
         }
 
 

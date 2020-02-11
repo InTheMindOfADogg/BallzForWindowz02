@@ -19,6 +19,11 @@ namespace BallzForWindows01.DrawableParts
     /// </summary>
     class Button03 : DrawableObject
     {
+
+        #region delegate functions
+        public delegate void ButtonActionDel();
+        #endregion delegate functions
+
         public bool IsCenteredOnPos { get { return centeredOnPos; } }
         public bool Clicked { get { return clicked; } }
 
@@ -37,10 +42,11 @@ namespace BallzForWindows01.DrawableParts
         bool centeredOnPos = false;
         bool mouseOver = false;
         bool clicked = false;
+        ButtonActionDel btnAction;
 
         Color hoverBackgroundColor;
-        
-        
+
+
         public Button03()
         {
             clsName = "Button03";
@@ -51,7 +57,7 @@ namespace BallzForWindows01.DrawableParts
             ConfigureFont();
             ConfigureColors();
         }
-        
+
         public void Load(string buttonText, double x, double y, double width = 0, double height = 0)
         {
             //pvtLoad(buttonText, x, y, width, height);
@@ -60,9 +66,9 @@ namespace BallzForWindows01.DrawableParts
             else { rect.SetSize(width, height); }
             text = buttonText;
             clickValue = buttonText;
-        }        
+        }
+        public void SetButtonClickAction(ButtonActionDel ba) { btnAction = ba; }
 
-        
         // TODO create function to let MainMenu (or any BaseGameScreen) know that a button was clicked.
         public void Update(MouseControls mc)
         {
@@ -94,7 +100,7 @@ namespace BallzForWindows01.DrawableParts
             sb.Dispose();
         }
 
-        
+
 
         public void Reset()
         {
@@ -102,7 +108,7 @@ namespace BallzForWindows01.DrawableParts
             clicked = false;
         }
 
-        public void CleanUp() { if (font != null) { font.Dispose(); } }        
+        public void CleanUp() { if (font != null) { font.Dispose(); } }
         public void ClickHandled() { clicked = false; }
 
         /// <summary>
