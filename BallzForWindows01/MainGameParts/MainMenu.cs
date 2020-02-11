@@ -32,8 +32,9 @@ namespace BallzForWindows01.MainGameParts
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
             AddButton("TestGameScreen01", pos.X, pos.Y,true,300, 50);
-            btnList[btnList.Count-1]
-        }        
+        }
+        
+
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             base.Update(mcontrols, kcontrols);

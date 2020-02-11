@@ -14,15 +14,15 @@ namespace BallzForWindows01.DrawableParts
     using GamePhysicsParts;
     using Structs;
 
+
+
     /// <summary>
     /// Currently only used in MainMenu
     /// </summary>
     class Button03 : DrawableObject
     {
 
-        #region delegate functions
-        public delegate void ButtonActionDel();
-        #endregion delegate functions
+
 
         public bool IsCenteredOnPos { get { return centeredOnPos; } }
         public bool Clicked { get { return clicked; } }
@@ -42,7 +42,7 @@ namespace BallzForWindows01.DrawableParts
         bool centeredOnPos = false;
         bool mouseOver = false;
         bool clicked = false;
-        ButtonActionDel btnAction;
+        
 
         Color hoverBackgroundColor;
 
@@ -67,7 +67,6 @@ namespace BallzForWindows01.DrawableParts
             text = buttonText;
             clickValue = buttonText;
         }
-        public void SetButtonClickAction(ButtonActionDel ba) { btnAction = ba; }
 
         // TODO create function to let MainMenu (or any BaseGameScreen) know that a button was clicked.
         public void Update(MouseControls mc)
@@ -77,7 +76,10 @@ namespace BallzForWindows01.DrawableParts
 
             mouseOver = InBox(mc.Position);
 
-            if (mouseOver && mc.LeftButtonClicked()) { clicked = true; }
+            if (mouseOver && mc.LeftButtonClicked()) 
+            { 
+                clicked = true;
+            }
 
             DbgFuncs.AddStr(fnId, $"mouseOver: {mouseOver}");
             DbgFuncs.AddStr(fnId, $"clicked: {clicked}");
