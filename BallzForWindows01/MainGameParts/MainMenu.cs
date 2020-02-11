@@ -38,16 +38,13 @@ namespace BallzForWindows01.MainGameParts
             RectangleD r = new RectangleD(x, y, width, height);
             Button03 b = new Button03();
             b.Load(btnText, x, y, width, height);
-            b.CenterOnPos(centerOnPos);
-            
+            b.CenterOnPos(centerOnPos);            
             btnList.Add(b);
         }
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             base.Update(mcontrols, kcontrols);
             for (int i = 0; i < btnList.Count; i++){btnList[i].Update(mcontrols);}
-            
-
         }
 
         
