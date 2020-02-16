@@ -35,33 +35,25 @@ namespace BallzForWindows01.Structs
                 {
                     trackedKeys[i].ReadCurrentState(keyState);
                 }
-
             }
         }
-        public void Update()
-        {
-            //DbgPrint();
-            for (int i = 0; i < trackedKeys.Count; i++)
-            {
-                if (!trackedKeys[i].DefaultState) 
-                { 
-                    trackedKeys[i].CheckForReset();                    
-                    //cwl($"state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState} [{trackedKeys[i].Action}/{trackedKeys[i].LastAction}]");     // For debugging
-                }
-
-            }
-        }
+        public void Update() { for (int i = 0; i < trackedKeys.Count; i++) { if (!trackedKeys[i].DefaultState) { trackedKeys[i].CheckForReset(); } } }
 
         public bool KeyPressed(Keys key)
         {
-            for(int i = 0; i < trackedKeys.Count; i++)
+            for (int i = 0; i < trackedKeys.Count; i++)
             {
-                if(trackedKeys[i].Key == key)
+                if (trackedKeys[i].Key == key)
                 {
                     if (trackedKeys[i].Action == KeyAction.Pressed) { return true; }
-                }                
+                }
             }
             return false;
+        }
+
+        public void Reset()
+        {
+            for(int i = 0; i < trackedKeys.Count; i++) { trackedKeys[i].Reset(); }
         }
 
 

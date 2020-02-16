@@ -19,6 +19,7 @@ namespace BallzForWindows01.MainGameParts
         int newActScrnIdx = -1; // new active screen index (for changing active screen)
         Size size;
         Bitmap backbuffer;
+        bool newScreenFirstFrame = false;
 
 
         public GameScreenController(int width, int height)
@@ -44,13 +45,7 @@ namespace BallzForWindows01.MainGameParts
             for (int i = 0; i < gscreens.Count; i++) { gscreens[i].Load(); }
         }
 
-        public void SetNewActiveScreen(string newScreenName)
-        {
-            for (int i = 0; i < gscreens.Count; i++)
-            {
-                if (streql(newScreenName, gscreens[i].ClsName)) { newActScrnIdx = (i == actScrnIdx) ? -1 : i; return; }
-            }
-        }
+
 
         public void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
@@ -58,13 +53,16 @@ namespace BallzForWindows01.MainGameParts
             DbgFuncs.AddStr(fnId, $"starting active screen index: [startingActScrnIdx: {startingActScrnIdx}]");
             //DbgFuncs.AddStr(fnId, $"current active screen index: [actScrnIdx: {actScrnIdx}]");
             DbgFuncs.AddStr(fnId, $"current active screen: [{gscreens[actScrnIdx].ClsName}] [actScrnIdx: {actScrnIdx}]");
-
-            gscreens[actScrnIdx].Update(mcontrols, kcontrols);
-
-            if(gscreens[actScrnIdx].ChangeScreenRequest)
-            {
-
+            DbgFuncs.AddStr(fnId, $"changeScreenRequest: [{gscreens[actScrnIdx].ChangeScreenRequest}]");
+            DbgFuncs.AddStr(fnId, $"requestedScreen: [{gscreens[actScrnIdx].RequestedScreen}]");
+            if (newScreenFirstFrame) 
+            { 
+                gscreens[actScrnIdx].Reset();
+                mcontrols.Reset();
+                kcontrols.Reset();
+                newScreenFirstFrame = false; 
             }
+            gscreens[actScrnIdx].Update(mcontrols, kcontrols);
 
         }
         public void PrepareBackbuffer()
@@ -82,7 +80,11 @@ namespace BallzForWindows01.MainGameParts
             g.DrawImage(backbuffer, new Point(0, 0));
             backbuffer.Dispose();
 
-            if (newActScrnIdx > 0) { ChangeActiveScreen(); }
+            //if (newActScrnIdx > 0) { ChangeActiveScreen(); }
+            if (gscreens[actScrnIdx].ChangeScreenRequest)
+            {
+                ChangeActiveScreen(gscreens[actScrnIdx].RequestedScreen);
+            }
 
         }
         public void Reset()
@@ -116,26 +118,33 @@ namespace BallzForWindows01.MainGameParts
             if (startingActScrnIdx < 0) startingActScrnIdx = actScrnIdx;
         }
 
-        private void ResetActiveScreen()
+        private void ResetActiveScreen() { gscreens[actScrnIdx].Reset(); }
+        
+        private int GetScreenIndex(string screenName)
         {
-            gscreens[actScrnIdx].Reset();
+            for (int i = 0; i < gscreens.Count; i++) { if (streql(gscreens[i].ClsName, screenName)) { return i; } }
+            return -1;
         }
-        private void ChangeActiveScreen()
+        private void ChangeActiveScreen(string screenName)
         {
+            newActScrnIdx = GetScreenIndex(screenName);
+            gscreens[actScrnIdx].ClearChangeScreenRequest();
+            if (newActScrnIdx < 0) { return; } // Did not find screen.
             gscreens[actScrnIdx].Deactivate();
             actScrnIdx = newActScrnIdx;
             gscreens[actScrnIdx].Activate();
+            newScreenFirstFrame = true;
             newActScrnIdx = -1;
         }
 
-        /// <summary>
-        /// Compares lowercase version of both strings and returns true if match.<br/>
-        /// Actual call is to AssistFunctions.streql
-        /// </summary>
-        /// <param name="str1"></param>
-        /// <param name="str2"></param>
-        /// <returns></returns>
         private bool streql(string str1, string str2) { return AssistFunctions.streql(str1, str2); }
+
+
+
+        //public void SetNewActiveScreen(string newScreenName)
+        //{
+        //    for (int i = 0; i < gscreens.Count; i++) { if (streql(newScreenName, gscreens[i].ClsName)) { newActScrnIdx = (i == actScrnIdx) ? -1 : i; return; } }
+        //}
 
     }
 

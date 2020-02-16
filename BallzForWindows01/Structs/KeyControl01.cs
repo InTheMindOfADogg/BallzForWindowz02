@@ -87,8 +87,12 @@ namespace BallzForWindows01.Structs
                 return;
             }
         }
+        public void Reset()
+        {
+            state = lastState = KeyState.Up;
+        }
 
-        
+
 
         void _Init(Keys key, int idx)
         {
@@ -109,6 +113,8 @@ namespace BallzForWindows01.Structs
             if (state == KeyState.Down && lastState == KeyState.Down) { action = KeyAction.Held; return; }
             if (state == KeyState.Up && lastState == KeyState.Down) { action = KeyAction.Released; return; }
         }
+
+        
 
     }
 }

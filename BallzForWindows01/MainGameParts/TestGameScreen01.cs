@@ -126,6 +126,7 @@ namespace BallzForWindows01.MainGameParts
         double lineRotationSpeed = 0; //0.005;
         public override void Update(MouseControls mc, KeyboardControls01 kc)
         {
+            base.Update(mc, kc);
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
@@ -164,7 +165,7 @@ namespace BallzForWindows01.MainGameParts
         }
         public override void Reset()
         {
-
+            ball4.Reset();
         }
         public override void CleanUp()
         {

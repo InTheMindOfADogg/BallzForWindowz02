@@ -16,6 +16,7 @@ namespace BallzForWindows01.MainGameParts
 
         
         List<Button03> btnList;
+        string testMsg = "";
 
         
         public MainMenu(int gameWindowWidth, int gameWindowHeight, bool active = false)
@@ -31,17 +32,21 @@ namespace BallzForWindows01.MainGameParts
         {
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
+            
             AddButton("TestGameScreen01", pos.X, pos.Y,true,300, 50);
+
         }
         
 
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
+            string fnId = AssistFunctions.FnId(clsName, "Update");
             base.Update(mcontrols, kcontrols);
             for (int i = 0; i < btnList.Count; i++)
             {
                 btnList[i].Update(mcontrols);
             }
+            DbgFuncs.AddStr(fnId, $"testMsg: {testMsg}");
 
 
         }
@@ -81,6 +86,12 @@ namespace BallzForWindows01.MainGameParts
             Button03 b = new Button03();
             b.Load(btnText, x, y, width, height);
             b.CenterOnPos(centerOnPos);
+            b.BtnEvent += delegate
+            {
+                testMsg = "Delegate worked!";
+                changeScreenRequest = true;
+                requestedScreen = b.ClickValue;
+            };
             btnList.Add(b);
         }
 

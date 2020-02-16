@@ -106,6 +106,11 @@ namespace BallzForWindows01.Structs
         public bool LeftButtonReleased() { return (leftState == UpDownState.Up && lastLeftState == UpDownState.Up) ? true : false; }
         public bool LeftButtonUp() { return (leftState == UpDownState.Up && lastLeftState == UpDownState.Up) ? true : false; }
 
+        public void Reset()
+        {
+            rightState = leftState = lastRightState = lastLeftState = UpDownState.Up;
+        }
+
 
         // Might try this later
         #region Might try later - general idea here, but one function that takes the button to check in and returns if state is true

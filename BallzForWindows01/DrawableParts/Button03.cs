@@ -14,6 +14,7 @@ namespace BallzForWindows01.DrawableParts
     using GamePhysicsParts;
     using Structs;
 
+    
 
 
     /// <summary>
@@ -21,6 +22,11 @@ namespace BallzForWindows01.DrawableParts
     /// </summary>
     class Button03 : DrawableObject
     {
+
+        public delegate void delButtonEvent();
+
+        delButtonEvent btnEvent;
+        public delButtonEvent BtnEvent { get { return btnEvent; } set { btnEvent = value; } }
 
 
 
@@ -79,6 +85,7 @@ namespace BallzForWindows01.DrawableParts
             if (mouseOver && mc.LeftButtonClicked()) 
             { 
                 clicked = true;
+                btnEvent();
             }
 
             DbgFuncs.AddStr(fnId, $"mouseOver: {mouseOver}");
