@@ -15,7 +15,7 @@ namespace BallzForWindows01.GameScreensFolder
     {
         
         
-        string testMsg = "";
+        //string testMsg = "";
 
         
         public MainMenu(int gameWindowWidth, int gameWindowHeight, bool active = false)
@@ -41,38 +41,17 @@ namespace BallzForWindows01.GameScreensFolder
             pos.Y += b.Rect.Height + btnSpaceY;
 
         }
-        
-        private Button03.delButtonEvent SetBtnEventChangeScreen(Button03 b)
-        {
-            Button03.delButtonEvent evnt = delegate ()
-            {
-                changeScreenRequest = true;
-                requestedScreen = b.ClickValue;
-                testMsg = $"Request to change screen to {requestedScreen}";
-            };
-            return evnt;
-        }
-        
 
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             string fnId = AssistFunctions.FnId(clsName, "Update");
             base.Update(mcontrols, kcontrols);
-            for (int i = 0; i < btnList.Count; i++)
-            {
-                btnList[i].Update(mcontrols);
-            }
             DbgFuncs.AddStr(fnId, $"testMsg: {testMsg}");
         }
 
         public override void Draw(Graphics g)
         {
-            base.Draw(g);
-            for (int i = 0; i < btnList.Count; i++)
-            {
-                btnList[i].Draw(g);
-            }
-            
+            base.Draw(g);            
         }
         public override void Reset()
         {
@@ -122,3 +101,18 @@ namespace BallzForWindows01.GameScreensFolder
 
     }
 }
+
+
+
+#region SetBtnEventChangeScreen Moved to BaseGameScreen01
+//private Button03.delButtonEvent SetBtnEventChangeScreen(Button03 b)
+//{
+//    Button03.delButtonEvent evnt = delegate ()
+//    {
+//        changeScreenRequest = true;
+//        requestedScreen = b.ClickValue;
+//        testMsg = $"Request to change screen to {requestedScreen}";
+//    };
+//    return evnt;
+//}
+#endregion SetBtnEventChangeScreen Moved to BaseGameScreen01
