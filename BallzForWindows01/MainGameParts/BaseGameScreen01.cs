@@ -22,8 +22,6 @@ namespace BallzForWindows01.MainGameParts
         public string RequestedScreen { get { return requestedScreen; } }
 
 
-
-
         protected string clsName = "BaseGameScreen01";
         protected SizeD size = new SizeD(100, 100);
         protected RectangleD gameScreenRect;
@@ -32,7 +30,7 @@ namespace BallzForWindows01.MainGameParts
         protected bool changeScreenRequest = false;
         protected string requestedScreen = "";
 
-        protected string testMsg = "";
+        //protected string testMsg = "";
 
 
         protected SolidBrush sb;
@@ -42,6 +40,8 @@ namespace BallzForWindows01.MainGameParts
         protected List<Button03> btnList;
 
         protected Button03 btnMainMenu;
+
+        
 
         public BaseGameScreen01(int gameWindowWidth, int gameWindowHeight, bool active = false)
         {
@@ -58,7 +58,7 @@ namespace BallzForWindows01.MainGameParts
         {
             if (!active) { return; }
 
-            DbgFuncs.AddStr(clsName, $"(From BaseGameScreen01.Update) btnList.Count: {btnList.Count}");
+            //DbgFuncs.AddStr(clsName, $"(From BaseGameScreen01.Update) btnList.Count: {btnList.Count}");
             for (int i = 0; i < btnList.Count; i++)
             {
                 btnList[i].Update(mcontrols);
@@ -126,15 +126,26 @@ namespace BallzForWindows01.MainGameParts
             Point pnt = gameScreenRect.Center.ToPoint(); int pntWidth = 10;
             g.FillRectangle(Brushes.Black, pnt.X - (pntWidth / 2), pnt.Y - (pntWidth / 2), pntWidth, pntWidth);
         }
+
+
         protected Button03.delButtonEvent SetBtnEventChangeScreen(Button03 b)
         {
             Button03.delButtonEvent evnt = delegate ()
             {
                 changeScreenRequest = true;
                 requestedScreen = b.ClickValue;
-                testMsg = $"Request to change screen to {requestedScreen}";
+                //testMsg = $"Request to change screen to {requestedScreen}";
             };
             return evnt;
+        }
+
+        protected Button03 CreateButtonInList(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
+        {
+            Button03 b = new Button03();
+            b.Load(btnText, x, y, width, height);
+            b.CenterOnPos(centerOnPos);
+            btnList.Add(b);
+            return b;
         }
 
         protected void AddBackToMainMenuButton(double x, double y, double width = 0, double height = 0)

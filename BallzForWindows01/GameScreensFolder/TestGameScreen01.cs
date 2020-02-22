@@ -127,6 +127,10 @@ namespace BallzForWindows01.GameScreensFolder
         public override void Update(MouseControls mc, KeyboardControls01 kc)
         {
             base.Update(mc, kc);
+
+            // This is temp work around to prevent ball from updating if a change screen button is clicked.
+            if (changeScreenRequest) { return; }
+
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 

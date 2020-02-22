@@ -27,10 +27,10 @@ namespace BallzForWindows01.GameScreensFolder
         }
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
-            string fnId = AssistFunctions.FnId(clsName, "Update");
+            //string fnId = AssistFunctions.FnId(clsName, "Update");
             base.Update(mcontrols, kcontrols);
 
-            DbgFuncs.AddStr(fnId, "Active screen");
+            //DbgFuncs.AddStr(fnId, "Active screen");
         }
         public override void Draw(Graphics g)
         {

@@ -79,10 +79,9 @@ namespace BallzForWindows01.DrawableParts
             clickValue = buttonText;
         }
 
-        // TODO create function to let MainMenu (or any BaseGameScreen) know that a button was clicked.
         public void Update(MouseControls mc)
         {
-            string fnId = AssistFunctions.FnId(clsName, "Update");
+            //string fnId = AssistFunctions.FnId(clsName, $"({text}) Update");
             if (mc.RightButtonClicked()) { Reset(); }
 
             mouseOver = InBox(mc.Position);
@@ -93,8 +92,8 @@ namespace BallzForWindows01.DrawableParts
                 btnEvent();
             }
 
-            DbgFuncs.AddStr(fnId, $"mouseOver: {mouseOver}");
-            DbgFuncs.AddStr(fnId, $"clicked: {clicked}");
+            //DbgFuncs.AddStr(fnId, $"mouseOver: {mouseOver}");
+            //DbgFuncs.AddStr(fnId, $"clicked: {clicked}");
         }
         public void Draw(Graphics g)
         {
