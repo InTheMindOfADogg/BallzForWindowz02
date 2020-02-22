@@ -9,6 +9,7 @@ namespace BallzForWindows01.MainGameParts
 {
 
     using Structs;
+    using GameScreensFolder;
 
     class GameScreenController
     {
@@ -33,6 +34,7 @@ namespace BallzForWindows01.MainGameParts
         {
             gscreens.Add(new MainMenu(size.Width, size.Height, true));
             gscreens.Add(new TestGameScreen01(size.Width, size.Height, false));
+            gscreens.Add(new TestGameScreen02(size.Width, size.Height, false));
 
         }
         public void AddGameScreen(BaseGameScreen01 gs) { gscreens.Add(gs); }

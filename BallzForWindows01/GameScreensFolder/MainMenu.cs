@@ -5,17 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace BallzForWindows01.MainGameParts
+namespace BallzForWindows01.GameScreensFolder
 {
     using DrawableParts;
     using GamePhysicsParts;
     using Structs;
+    using MainGameParts;
     class MainMenu : BaseGameScreen01
     {
-
-
         
-        List<Button03> btnList;
+        
         string testMsg = "";
 
         
@@ -23,18 +22,35 @@ namespace BallzForWindows01.MainGameParts
             : base(gameWindowWidth, gameWindowHeight, active)
         {
             clsName = "MainMenu";
-            backgroundColor = Color.CornflowerBlue;
-
-            btnList = new List<Button03>();
 
         }
         public override void Load()
         {
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
-            
-            AddButton("TestGameScreen01", pos.X, pos.Y,true,300, 50);
 
+            //AddButton("TestGameScreen01", pos.X, pos.Y,true,300, 50);
+            Button03 b;            
+            double btnSpaceY = 10;
+            b = CreateButtonInList("TestGameScreen01", pos.X, pos.Y, true, 300, 50);
+            b.BtnEvent += SetBtnEventChangeScreen(b);      
+            pos.Y += b.Rect.Height + btnSpaceY;
+
+            b = CreateButtonInList("TestGameScreen02", pos.X, pos.Y, true, 300, 50);
+            b.BtnEvent += SetBtnEventChangeScreen(b);
+            pos.Y += b.Rect.Height + btnSpaceY;
+
+        }
+        
+        private Button03.delButtonEvent SetBtnEventChangeScreen(Button03 b)
+        {
+            Button03.delButtonEvent evnt = delegate ()
+            {
+                changeScreenRequest = true;
+                requestedScreen = b.ClickValue;
+                testMsg = $"Request to change screen to {requestedScreen}";
+            };
+            return evnt;
         }
         
 
@@ -47,11 +63,7 @@ namespace BallzForWindows01.MainGameParts
                 btnList[i].Update(mcontrols);
             }
             DbgFuncs.AddStr(fnId, $"testMsg: {testMsg}");
-
-
         }
-
-        
 
         public override void Draw(Graphics g)
         {
@@ -79,10 +91,16 @@ namespace BallzForWindows01.MainGameParts
             }
         }
 
-
+        private Button03 CreateButtonInList(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
+        {
+            Button03 b = new Button03();
+            b.Load(btnText, x, y, width, height);
+            b.CenterOnPos(centerOnPos);
+            btnList.Add(b);
+            return b;
+        }
         private void AddButton(string btnText, double x, double y, bool centerOnPos = true, double width = 0, double height = 0)
         {
-            RectangleD r = new RectangleD(x, y, width, height);
             Button03 b = new Button03();
             b.Load(btnText, x, y, width, height);
             b.CenterOnPos(centerOnPos);
@@ -94,6 +112,9 @@ namespace BallzForWindows01.MainGameParts
             };
             btnList.Add(b);
         }
+
+        
+
 
 
 

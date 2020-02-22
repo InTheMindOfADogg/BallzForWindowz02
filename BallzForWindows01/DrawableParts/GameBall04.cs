@@ -24,6 +24,7 @@ namespace BallzForWindows01.DrawableParts
         Trajectory03 spinTraj;
         BounceController bc;
         Button02 btnLaunch2;
+        Button03 btnLaunch3;
 
         PointD startPosition;
         PointD mousePos;
@@ -50,6 +51,7 @@ namespace BallzForWindows01.DrawableParts
             clsName = "GameBall04";
             this.gameScreenSize = gameScreenSize;
             btnLaunch2 = new Button02();
+            btnLaunch3 = new Button03();
 
             startPosition = new PointD();
             mousePos = new PointD();

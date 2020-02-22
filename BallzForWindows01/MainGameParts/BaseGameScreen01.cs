@@ -9,6 +9,7 @@ using System.Drawing;
 namespace BallzForWindows01.MainGameParts
 {
     using GamePhysicsParts;
+    using DrawableParts;
     using Structs;
     class BaseGameScreen01
     {
@@ -36,15 +37,21 @@ namespace BallzForWindows01.MainGameParts
         protected Pen p;
         protected Color backgroundColor = Color.CornflowerBlue;
 
+        protected List<Button03> btnList;
+
         public BaseGameScreen01(int gameWindowWidth, int gameWindowHeight, bool active = false)
         {
             clsName = "BaseGameScreen01";
             this.active = active;
             size = new SizeD(gameWindowWidth, gameWindowHeight);
             gameScreenRect = new RectangleD(0, 0, size.Width, size.Height);
+            btnList = new List<Button03>();
         }
         public virtual void Load() { }
-        public virtual void Update(MouseControls mcontrols, KeyboardControls01 kcontrols) { if (!active) { return; } }        
+        public virtual void Update(MouseControls mcontrols, KeyboardControls01 kcontrols) 
+        { 
+            if (!active) { return; } 
+        }
         public virtual void Draw(Graphics g){DrawBackground(g);}        
         public virtual void Reset() { }
         public virtual void CleanUp() {DisposeOfDrawingTools();}

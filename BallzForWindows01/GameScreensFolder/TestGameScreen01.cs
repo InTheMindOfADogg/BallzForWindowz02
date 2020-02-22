@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 
-namespace BallzForWindows01.MainGameParts
+namespace BallzForWindows01.GameScreensFolder
 {
     using DrawableParts;
     using GamePhysicsParts;
     using Structs;
+    using MainGameParts;
 
     class TestGameScreen01 : BaseGameScreen01
     {
@@ -31,7 +32,6 @@ namespace BallzForWindows01.MainGameParts
             : base(gameWindowWidth, gameWindowHeight, active)
         {
             clsName = "TestGameScreen01";
-            backgroundColor = Color.CornflowerBlue;
 
 
             blockList = new List<BasicBlock01>();
@@ -82,7 +82,7 @@ namespace BallzForWindows01.MainGameParts
 
             cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
             cplist.AddRange(cline2.CpList);
-        }
+        } // cline2
         void TESTLoadCollisionMoveable01()
         {
             double
@@ -97,7 +97,7 @@ namespace BallzForWindows01.MainGameParts
             clm.Load(startx, starty, length, rotation, thickness, spaceBtCp);
 
             cplist.AddRange(clm.CpList);
-        }
+        } // clm
         void TESTLoadCollisionMoveable02()
         {
             double
@@ -113,7 +113,7 @@ namespace BallzForWindows01.MainGameParts
             clm2.Color = Color.FromArgb(255, 250, 200, 150);
 
             cplist.AddRange(clm2.CpList);
-        }
+        } // clm2
         void TESTLoadCollisionPoint02()
         {
             double

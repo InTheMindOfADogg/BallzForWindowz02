@@ -24,6 +24,7 @@ namespace BallzForWindows01.DrawableParts
     {
 
         public delegate void delButtonEvent();
+        
 
         delButtonEvent btnEvent;
         public delButtonEvent BtnEvent { get { return btnEvent; } set { btnEvent = value; } }
@@ -35,6 +36,10 @@ namespace BallzForWindows01.DrawableParts
 
         public string Text { get { return text; } }
         public string ClickValue { get { return clickValue; } set { clickValue = value; } }
+
+
+
+        public RectangleD Rect { get { return rect; } }
 
         RectangleD rect;
         string text;
