@@ -115,7 +115,6 @@ namespace BallzForWindows01.DrawableParts
         }
 
 
-
         public void Reset()
         {
             mouseOver = false;

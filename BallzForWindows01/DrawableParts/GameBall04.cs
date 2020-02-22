@@ -23,7 +23,7 @@ namespace BallzForWindows01.DrawableParts
         Trajectory03 aimTraj;
         Trajectory03 spinTraj;
         BounceController bc;
-        Button02 btnLaunch2;
+        //Button02 btnLaunch2;
         Button03 btnLaunch3;
 
         PointD startPosition;
@@ -50,7 +50,7 @@ namespace BallzForWindows01.DrawableParts
         {
             clsName = "GameBall04";
             this.gameScreenSize = gameScreenSize;
-            btnLaunch2 = new Button02();
+            //btnLaunch2 = new Button02();
             btnLaunch3 = new Button03();
 
             startPosition = new PointD();
@@ -174,7 +174,8 @@ namespace BallzForWindows01.DrawableParts
             }
 
 
-            btnLaunch2.Draw(g);
+            //btnLaunch2.Draw(g);
+            btnLaunch3.Draw(g);
             aimTraj.Draw(g);
             spinTraj.Draw(g);
 
@@ -201,6 +202,8 @@ namespace BallzForWindows01.DrawableParts
 
             ResetPointsHit();
 
+            btnLaunch3.Reset();
+
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
@@ -211,7 +214,8 @@ namespace BallzForWindows01.DrawableParts
         }
         public void CleanUp()
         {
-            btnLaunch2.CleanUp();
+            //btnLaunch2.CleanUp();
+            btnLaunch3.CleanUp();
         }
 
         #region building bounce logic. Started 2020-01-01
@@ -463,7 +467,8 @@ namespace BallzForWindows01.DrawableParts
                 #endregion 2020-01-19 might not need this. going to try commenting it out
 
                 // Launch the ball and start the timer (when launch button is clicked)
-                if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch2.InBox(mc.Position)) { LaunchBall(); }
+                //if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch2.InBox(mc.Position)) { LaunchBall(); }
+                if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch3.InBox(mc.Position)) { LaunchBall(); }
             }
 
         }
@@ -491,7 +496,8 @@ namespace BallzForWindows01.DrawableParts
             position.X = gameScreenSize.Width / 2 - size.Width / 2;
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
             
-            btnLaunch2.Load("Launch", position.X, position.Y, size.Width, size.Height);
+            //btnLaunch2.Load("Launch", position.X, position.Y, size.Width, size.Height);
+            btnLaunch3.Load("Launch", position.X, position.Y, size.Width, size.Height);
         }
 
         void StopAdjusting() { adjustingAim = adjustingSpin = adjustingPosition = false; }
