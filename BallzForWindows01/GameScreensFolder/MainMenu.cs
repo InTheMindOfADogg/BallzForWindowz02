@@ -35,6 +35,10 @@ namespace BallzForWindows01.GameScreensFolder
 
             AddBtnTestGameScreen02(ref pos, btnSpaceY);
 
+            /// 2020-02-22 probably should not put this here, but doing it for now. I have a feeling I will regret putting this here later.
+            /// This is a quick fix for hiding the btnMainMenu when on the main menu.
+            btnMainMenu.Visible = false;
+
         }
         private void AddBtnTestGameScreen01(ref PointD pos, double btnSpaceY)
         {
@@ -81,7 +85,18 @@ namespace BallzForWindows01.GameScreensFolder
             }
         }
 
-        
+        public override void Activate()
+        {
+            base.Activate();
+            btnMainMenu.Visible = false;
+        }
+        public override void Deactivate(bool forceReset = false)
+        {
+            base.Deactivate(forceReset);
+            btnMainMenu.Visible = true;
+        }
+
+
 
 
 

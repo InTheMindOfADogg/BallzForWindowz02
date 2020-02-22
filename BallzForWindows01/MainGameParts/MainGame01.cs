@@ -184,6 +184,7 @@ namespace BallzForWindows01.MainGameParts
             CleanUpBlockList();
         }
 
+        
 
         void AddCollisionPoint(double x, double y, double sideLength)
         {
