@@ -11,19 +11,17 @@ namespace BallzForWindows01.DrawableParts
 
     class Square01 : DrawableObject
     {
-        PointD position;
-        SizeD size;
+        RectangleD rect;
 
         public Square01()
         {
-            position = new PointD(30,30);
-            size = new SizeD(20, 20);
+            rect = new RectangleD(30, 30, 20, 20);
             color = Color.Beige;
         }
-        public void Load(double x, double y, double width, double height)
+        public void Load(double x, double y, double width, double height, bool centerOnpoint = true)
         {
-            position.Set(x, y);
-            size.Set(width, height);
+            rect.Set(x, y, width, height);
+            if (centerOnpoint) { rect.CenterOnXY(x,y); }
         }
         public void Update()
         {

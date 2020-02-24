@@ -42,23 +42,31 @@ namespace BallzForWindows01.GamePhysicsParts
 
 
         double x, y, width, height;
+        double startX = 0, startY = 0, startWidth = 0, startHeight = 0;
 
 
         public RectangleD() { Set(0, 0, 0, 0); }
         public RectangleD(double x, double y, double width, double height) { Set(x, y, width, height); }
-        //public RectangleD(RectangleD rectD){Set(rectD.Position, rectD.Size);}
-        //public RectangleD(RectangleF rectF) { Set(rectF.X, rectF.Y, rectF.Width, rectF.Height); }
-        //public RectangleD(Rectangle rect) { Set(rect.X, rect.Y, rect.Width, rect.Height); }
-        public void Set(double x, double y, double width, double height)
+        public void Set(double x, double y, double width, double height, bool centerOnpoint = false)
+        {
+            
+            _Set(x, y, width, height, centerOnpoint);
+        }
+        public void Set(PointD p, SizeD s, bool centerOnPoint = false)
+        {
+            _Set(p.X, p.Y, s.Width, s.Height, centerOnPoint);
+        }
+        private void _Set(double x, double y, double width, double height, bool centerOnpoint = false)
         {
             this.x = x; this.y = y; this.width = width; this.height = height;
+            if (centerOnpoint) { CenterOnXY(x, y); }
         }
-        public void Set(PointD p, SizeD s)
+        public void SetStartingRect(double x, double y, double width, double height)
         {
-            x = p.X;
-            y = p.Y;
-            width = s.Width;
-            height = s.Height;
+            startX = x;
+            startY = y;
+            startWidth = width;
+            startHeight = height;
         }
 
         public void SetPosition(double x, double y) { this.x = x; this.y = y; }
@@ -72,16 +80,13 @@ namespace BallzForWindows01.GamePhysicsParts
         }
 
         public bool InBox(double dx, double dy) { return (dx > x && dx < x + width && dy > y && dy < y + height); }
-        //public PointD Center() { return new PointD(CenterX, CenterY); }
-        //public PointD TopLeft() { return new PointD(x, y); }
-        //public PointD TopRight() { return new PointD(x + width, y); }
-        //public PointD BottomLeft() { return new PointD(x, y + height); }
-        //public PointD BottomRight() { return new PointD(x + width, y + height); }
 
         public override string ToString() { return $"{{X={x}, Y={y}, Width={width}, Height={height}}}"; }
         public Rectangle ToRectangle() { return new Rectangle((int)x, (int)y, (int)width, (int)height); }
         public RectangleF ToRectangleF() { return new RectangleF((float)x, (float)y, (float)width, (float)height); }
 
+
+        public void Reset() { x = startX; y = startY; width = startWidth; height = startHeight; }
 
     }
 }
