@@ -49,6 +49,7 @@ namespace BallzForWindows01.Structs
 
         bool eventThisFrame = false;
         bool defaultState = false;
+        bool resetNextFrame = false;
 
         public KeyControl01(int keyValue, int idx) { _Init((Keys)keyValue, idx); }
         public KeyControl01(Keys key, int idx) { _Init(key, idx); }
@@ -64,25 +65,22 @@ namespace BallzForWindows01.Structs
         }
 
 
-        bool resetNextFrame = false;
+        
         public void CheckForReset()
         {            
             if (state == KeyState.Up && lastState != KeyState.Up)
             {     
                 
                 if (!resetNextFrame) { resetNextFrame = true; return; }
-                eventThisFrame = false;
-                // At this point this is [Up/Down], [Released/[Held or Pressed]]                
-                lastState = state;
-                // At this point this is [Up/Up] [None/Released].
-                SetKeyAction();
+                eventThisFrame = false;                
+                lastState = state; // At this point this is [Up/Down], [Released/[Held or Pressed]]                
+                SetKeyAction(); // At this point this is [Up/Up] [None/Released].
                 //AssistFunctions.cwl($"state/lastState: [{state}/{lastState}] action/lastAction: [{action}/{lastAction}]");
                 return;
             }
             if (state == KeyState.Up && lastState == KeyState.Up)
             {
                 defaultState = true;
-                //lastAction = action;
                 SetKeyAction();
                 return;
             }

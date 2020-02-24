@@ -14,16 +14,18 @@ namespace BallzForWindows01.GameScreensFolder
 
     class TestGameScreen02 : BaseGameScreen01
     {
+        CircleDV4 circle;
         public TestGameScreen02(int gameWindowWidth, int gameWindowHeight, bool active = false)
             : base(gameWindowWidth, gameWindowHeight, active)
         {
             clsName = "TestGameScreen02";
-            
+            circle = new CircleDV4();
         }
 
         public override void Load()
         {
             base.Load();
+            circle.Load(400, 500, 15, 0);
         }
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
@@ -35,6 +37,7 @@ namespace BallzForWindows01.GameScreensFolder
         public override void Draw(Graphics g)
         {
             base.Draw(g);
+            circle.Draw(g, p, sb);
         }
         public override void Reset()
         {

@@ -15,6 +15,8 @@ namespace BallzForWindows01.GamePhysicsParts
         public List<CollisionPoint> CircleCPList { get { return cplist; } }
         public List<int> HitIndexList { get { return hitIndexList; } }
 
+        List<int> hitIndexList = new List<int>();
+
         List<CollisionPoint> cplist;
         int cpCount = 5;
         double cpBoxSideLength = 2;
@@ -55,7 +57,7 @@ namespace BallzForWindows01.GamePhysicsParts
             }
         }
 
-        List<int> hitIndexList = new List<int>();
+        
         public void AddPointHitIndex(int idx)
         {
             if (idx < 0 || idx >= cplist.Count) return;

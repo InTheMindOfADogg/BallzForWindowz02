@@ -51,14 +51,17 @@
     <Compile Include="DebugParts\DbgPath.cs" />
     <Compile Include="DrawableParts\Button02.cs" />
     <Compile Include="DrawableParts\Button03.cs" />
+    <Compile Include="DrawableParts\CircleDV4.cs" />
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionLine02.cs" />
     <Compile Include="DrawableParts\CollisionLineMoveable01.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
     <Compile Include="DrawableParts\CollisionPoint02.cs" />
+    <Compile Include="DrawableParts\ControllableBall01.cs" />
     <Compile Include="DrawableParts\GameBall04.cs" />
     <Compile Include="Deprecated\GameBall2.cs" />
     <Compile Include="Deprecated\GameBall3.cs" />
+    <Compile Include="DrawableParts\Square01.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
     <Compile Include="Deprecated\CircleDV2.cs" />

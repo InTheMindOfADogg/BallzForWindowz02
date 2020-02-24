@@ -9,7 +9,7 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     class PointD
     {
-        double x, y;
+        
 
         public double X { get { return x; } set { x = value; } }
         public double Y { get { return y; } set { y = value; } }
@@ -19,6 +19,10 @@ namespace BallzForWindows01.GamePhysicsParts
 
         public float iX { get { return (int)x; } }
         public float iY { get { return (int)y; } }
+
+
+        double x = 0, y = 0;
+        double startingX = 0, startingY = 0;
 
         public PointD() { Set(0, 0); }
         public PointD(PointD pos) { Set(pos.X, pos.Y); }
@@ -32,7 +36,11 @@ namespace BallzForWindows01.GamePhysicsParts
             x = startPoint.x + distance * Math.Cos(rotation);
             y = startPoint.y + distance * Math.Sin(rotation);
         }
-
+        public void SetStartingPosition(double startAtx, double startAty)
+        {
+            startingX = startAtx;
+            startingY = startAty;
+        }
         public void Move(double distance, double rotation)
         {
             x = x + distance * Math.Cos(rotation);
@@ -91,6 +99,12 @@ namespace BallzForWindows01.GamePhysicsParts
         public Point ToPoint() { return new Point((int)x, (int)y); }
         public PointF ToPointF() { return new PointF((float)x, (float)y); }
 
+        public void Reset()
+        {
+            x = startingX;
+            y = startingY;
+        }
+
         private PointD _HalfWayTo(double endx, double endy)
         {
             PointD midp = new PointD();
@@ -98,7 +112,7 @@ namespace BallzForWindows01.GamePhysicsParts
             midp.Y = y + ((endy - y) / 2);
             return midp;
         }
-        double _DistanceTo(double toPointX, double toPointY)
+        private double _DistanceTo(double toPointX, double toPointY)
         {
             double xdiff = x - toPointX;
             double ydiff = y - toPointY;

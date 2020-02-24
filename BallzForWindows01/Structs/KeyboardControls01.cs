@@ -24,6 +24,11 @@ namespace BallzForWindows01.Structs
         {
             AddTrackedKey(Keys.Space);
             AddTrackedKey(Keys.Escape);
+
+            AddTrackedKey(Keys.Up);
+            AddTrackedKey(Keys.Down);
+            AddTrackedKey(Keys.Left);
+            AddTrackedKey(Keys.Right);
         }
 
 
@@ -53,7 +58,7 @@ namespace BallzForWindows01.Structs
 
         public void Reset()
         {
-            for(int i = 0; i < trackedKeys.Count; i++) { trackedKeys[i].Reset(); }
+            for (int i = 0; i < trackedKeys.Count; i++) { trackedKeys[i].Reset(); }
         }
 
 
@@ -74,6 +79,7 @@ namespace BallzForWindows01.Structs
 
         public void AddTrackedKey(int keyValue) { _AddTrackedKey(keyValue); }
         public void AddTrackedKey(Keys key) { _AddTrackedKey((int)key); }
+        public void ClearTrackedKeys() { trackedKeys.RemoveRange(0, trackedKeys.Count); }
 
         void _AddTrackedKey(int keyValue)
         {

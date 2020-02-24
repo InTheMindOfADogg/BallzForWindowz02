@@ -134,8 +134,6 @@ namespace BallzForWindows01.GameScreensFolder
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
-            //cline.Update(lineRotationSpeed);
-            //cline.Update();
             //cline2.Update();
 
 
