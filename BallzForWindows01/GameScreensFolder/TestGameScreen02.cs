@@ -15,11 +15,13 @@ namespace BallzForWindows01.GameScreensFolder
     class TestGameScreen02 : BaseGameScreen01
     {
         CircleDV4 circle;
+        Square01 square;
         public TestGameScreen02(int gameWindowWidth, int gameWindowHeight, bool active = false)
             : base(gameWindowWidth, gameWindowHeight, active)
         {
             clsName = "TestGameScreen02";
             circle = new CircleDV4();
+            square = new Square01();
         }
 
         public override void Load()

@@ -20,8 +20,8 @@ namespace BallzForWindows01.DrawableParts
         }
         public void Load(double x, double y, double width, double height, bool centerOnpoint = true)
         {
-            rect.Set(x, y, width, height);
-            if (centerOnpoint) { rect.CenterOnXY(x,y); }
+            rect.Set(x, y, width, height,centerOnpoint);
+            rect.SetStartingRect(x, y, width, height);
         }
         public void Update()
         {
@@ -29,11 +29,11 @@ namespace BallzForWindows01.DrawableParts
         }
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
-
+            g.FillRectangle(sb, rect.fX, rect.fY, rect.fWidth, rect.fHeight);
         }
         public void Reset()
         {
-
+            rect.Reset();
         }
         public void CleanUp()
         {

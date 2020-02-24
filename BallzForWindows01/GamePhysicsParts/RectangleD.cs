@@ -43,24 +43,27 @@ namespace BallzForWindows01.GamePhysicsParts
 
         double x, y, width, height;
         double startX = 0, startY = 0, startWidth = 0, startHeight = 0;
+        bool shouldCenter = false;
 
 
         public RectangleD() { Set(0, 0, 0, 0); }
         public RectangleD(double x, double y, double width, double height) { Set(x, y, width, height); }
-        public void Set(double x, double y, double width, double height, bool centerOnpoint = false)
-        {
-            
-            _Set(x, y, width, height, centerOnpoint);
-        }
-        public void Set(PointD p, SizeD s, bool centerOnPoint = false)
-        {
-            _Set(p.X, p.Y, s.Width, s.Height, centerOnPoint);
-        }
+        public void Set(double x, double y, double width, double height, bool centerOnpoint = false) { _Set(x, y, width, height, centerOnpoint); }
+        public void Set(PointD p, SizeD s, bool centerOnPoint = false) { _Set(p.X, p.Y, s.Width, s.Height, centerOnPoint); }
         private void _Set(double x, double y, double width, double height, bool centerOnpoint = false)
         {
             this.x = x; this.y = y; this.width = width; this.height = height;
+            shouldCenter = centerOnpoint;
             if (centerOnpoint) { CenterOnXY(x, y); }
         }
+
+        /// <summary>
+        /// Sets the position of the rect when Reset() is called. If the rect centers on the point is determined by what was set using Set call.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         public void SetStartingRect(double x, double y, double width, double height)
         {
             startX = x;
@@ -86,7 +89,7 @@ namespace BallzForWindows01.GamePhysicsParts
         public RectangleF ToRectangleF() { return new RectangleF((float)x, (float)y, (float)width, (float)height); }
 
 
-        public void Reset() { x = startX; y = startY; width = startWidth; height = startHeight; }
+        public void Reset() { _Set(startX, startY, startWidth, startHeight, shouldCenter); }
 
     }
 }
