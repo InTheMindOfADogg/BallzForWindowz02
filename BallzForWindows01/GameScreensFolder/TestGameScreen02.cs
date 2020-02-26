@@ -28,18 +28,22 @@ namespace BallzForWindows01.GameScreensFolder
         {
             base.Load();
             circle.Load(400, 500, 15, 0);
+            square.Load(500, 500, 20, 20, true);
         }
         public override void Update(MouseControls mcontrols, KeyboardControls01 kcontrols)
         {
             //string fnId = AssistFunctions.FnId(clsName, "Update");
             base.Update(mcontrols, kcontrols);
 
+            // TODO: test rotation indicator more.
+            circle.Update(mcontrols, kcontrols);
             //DbgFuncs.AddStr(fnId, "Active screen");
         }
         public override void Draw(Graphics g)
         {
             base.Draw(g);
             circle.Draw(g, p, sb);
+            square.Draw(g, p, sb);
         }
         public override void Reset()
         {

@@ -8,27 +8,27 @@ namespace BallzForWindows01.GamePhysicsParts
 {
     // Created 2020-01-01
 
-    // TODO in this class:
-    // add Heading (from EnumsFile)
-    // functions to set heading
-    // function(s) to adjust rotation
-    // other stuff probably....
-    // Plan with this class:
-    // Create Trajectory04 and replace the double rotation with this class
 
     class RotationD
     {
         public double AsDegrees { get { return (rot * 180 / Math.PI); } }
-        public double Rotation { get { return rot; } }
+        public double Value { get { return rot; } }
         public double StartingRotation { get { return startingRotation; } }
 
         double rot = 0;
         double startingRotation = 0;
 
+        
 
-
-        public RotationD() { rot = 0; }
-        public RotationD(double rotation) { this.rot = rotation; }
+        public RotationD() 
+        { 
+            rot = 0;
+        }
+        public RotationD(double rotation) 
+        { 
+            this.rot = rotation;
+            
+        }
 
         /// <summary>
         /// Adds adjustRotation amount to current rotation
@@ -85,10 +85,8 @@ namespace BallzForWindows01.GamePhysicsParts
             //if (endPoint.X < startPoint.X && south) { rot = Math.PI - anglePreRotation; return; }
             #endregion placed this is function to reuse to set starting rotation the same way. 2020-02-24
         }
-        public void SetStartingRotation(PointD startPoint, PointD endPoint)
-        {
-            startingRotation = _RotationFromPoints(startPoint, endPoint);
-        }
+        public void SetStartingRotation(PointD startPoint, PointD endPoint) { startingRotation = _RotationFromPoints(startPoint, endPoint); }
+
         // Might rename this face point.. that seems more descriptive of the action.
         private double _RotationFromPoints(PointD startPoint, PointD endPoint)
         {
@@ -103,26 +101,26 @@ namespace BallzForWindows01.GamePhysicsParts
             if (endPoint.Y > startPoint.Y) { south = true; }
             anglePreRotation = Math.Asin(oppLen / hypLen);
             // north
-            if (endPoint.X == startPoint.X && north) { return (3 * Math.PI) / 2;  }
+            if (endPoint.X == startPoint.X && north) { return (3 * Math.PI) / 2; }
             // south
-            if (endPoint.X == startPoint.X && south) { return (Math.PI) / 2;  }
+            if (endPoint.X == startPoint.X && south) { return (Math.PI) / 2; }
             // east
-            if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { return 0;  }
+            if (endPoint.X > startPoint.X && endPoint.Y == startPoint.Y) { return 0; }
             // west
-            if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { return Math.PI;  }
+            if (endPoint.X < startPoint.X && endPoint.Y == startPoint.Y) { return Math.PI; }
             // northwest
-            if (endPoint.X > startPoint.X && north) { return Math.PI * 2 - anglePreRotation;  }
+            if (endPoint.X > startPoint.X && north) { return Math.PI * 2 - anglePreRotation; }
             //northeast
-            if (endPoint.X < startPoint.X && north) { return Math.PI + anglePreRotation;  }
+            if (endPoint.X < startPoint.X && north) { return Math.PI + anglePreRotation; }
             // southwest
-            if (endPoint.X > startPoint.X && south) { return anglePreRotation;  }
+            if (endPoint.X > startPoint.X && south) { return anglePreRotation; }
             // southeast
-            if (endPoint.X < startPoint.X && south) { return Math.PI - anglePreRotation;  }
+            if (endPoint.X < startPoint.X && south) { return Math.PI - anglePreRotation; }
             return 0;
         }
 
-        public void SetStartingRotation(double startingRotation){this.startingRotation = startingRotation;}
-        public void Reset(){rot = startingRotation;}
+        public void SetStartingRotation(double startingRotation) { this.startingRotation = startingRotation; }
+        public void Reset() { rot = startingRotation; }
 
     }
 }

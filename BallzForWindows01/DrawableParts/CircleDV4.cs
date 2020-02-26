@@ -19,7 +19,7 @@ namespace BallzForWindows01.DrawableParts
 
         PointD position;
         double radius;
-        RotationD rotation;
+        RotationIndicator01 rotInd;
 
         Color fillColor = Color.Green;
         Color outlineColor = Color.Green;
@@ -30,30 +30,35 @@ namespace BallzForWindows01.DrawableParts
             clsName = "CircleDV4";
             position = new PointD(30, 30);
             radius = 15;
-            rotation = new RotationD();
+            rotInd = new RotationIndicator01();
         }
         public void Load(double x, double y, double radius, double rotation)
         {
             position.Set(x, y);
             this.radius = radius;
-            this.rotation.Set(rotation);
             position.SetStartingPosition(x, y);
-            this.rotation.SetStartingRotation(rotation);
+
+            rotInd.Load(position, radius * 2, rotation);
         }
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
+            double rotChange = 0;
+            // Handle keyboard controls
 
+
+            rotInd.Update(position, rotChange);
         }
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
             FillCircle(g, sb);
             DrawOutline(g, p);
+            rotInd.Draw(g, p, sb);
         }
         
         public void Reset()
         {
             position.Reset();
-            rotation.Reset();
+            rotInd.Reset();
         }
         public void CleanUp()
         {

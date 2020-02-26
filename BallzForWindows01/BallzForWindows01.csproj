@@ -73,6 +73,7 @@
     <Compile Include="GamePhysicsParts\GameTimer.cs" />
     <Compile Include="GamePhysicsParts\RectangleD.cs" />
     <Compile Include="GamePhysicsParts\RotationD.cs" />
+    <Compile Include="GamePhysicsParts\RotationIndicator01.cs" />
     <Compile Include="GamePhysicsParts\SizeD.cs" />
     <Compile Include="Deprecated\Trajectory.cs" />
     <Compile Include="GamePhysicsParts\Trajectory03.cs" />
