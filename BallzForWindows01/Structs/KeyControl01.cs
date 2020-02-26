@@ -27,7 +27,7 @@ namespace BallzForWindows01.Structs
 
         public int Index { get { return idx; } }
         public Keys Key { get { return key; } }
-        public int Value { get { return val; } }
+        public int KeyIntValue { get { return val; } }
         public KeyState State { get { return state; } }
         public KeyState LastState { get { return lastState; } }
         public KeyAction Action { get { return action; } }
@@ -42,6 +42,7 @@ namespace BallzForWindows01.Structs
         int idx = 0;
         int val = 0;
         Keys key;
+        KbKeys kbkey;
         KeyState state = KeyState.Up;
         KeyState lastState = KeyState.Up;
         KeyAction action = KeyAction.None;
@@ -51,8 +52,21 @@ namespace BallzForWindows01.Structs
         bool defaultState = false;
         bool resetNextFrame = false;
 
-        public KeyControl01(int keyValue, int idx) { _Init((Keys)keyValue, idx); }
-        public KeyControl01(Keys key, int idx) { _Init(key, idx); }
+        public KeyControl01(int keyValue, int idx) { _Init(keyValue, idx); }
+        public KeyControl01(Keys key, int idx) { _Init((int)key, idx); }
+        public KeyControl01(KbKeys key, int idx) { _Init((int)key, idx); }
+
+        void _Init(int keyValue, int idx)
+        {
+            this.idx = idx;
+            this.key = (Keys)keyValue;
+            this.val = keyValue;
+            state = KeyState.Up;
+            lastState = KeyState.Up;
+            action = KeyAction.None;
+            lastAction = KeyAction.None;
+        }
+
 
         public void ReadCurrentState(KeyState currentState)
         {
@@ -88,20 +102,7 @@ namespace BallzForWindows01.Structs
         public void Reset()
         {
             state = lastState = KeyState.Up;
-        }
-
-
-
-        void _Init(Keys key, int idx)
-        {
-            this.idx = idx;
-            this.key = key;
-            this.val = (int)key;
-            state = KeyState.Up;
-            lastState = KeyState.Up;
-            action = KeyAction.None;
-            lastAction = KeyAction.None;
-        }
+        }        
 
         void SetKeyAction()
         {

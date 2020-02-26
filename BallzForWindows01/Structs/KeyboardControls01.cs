@@ -22,13 +22,13 @@ namespace BallzForWindows01.Structs
 
         public KeyboardControls01()
         {
-            AddTrackedKey(Keys.Space);
-            AddTrackedKey(Keys.Escape);
+            AddTrackedKey(KbKeys.Space);
+            AddTrackedKey(KbKeys.Escape);
 
-            AddTrackedKey(Keys.Up);
-            AddTrackedKey(Keys.Down);
-            AddTrackedKey(Keys.Left);
-            AddTrackedKey(Keys.Right);
+            AddTrackedKey(KbKeys.Up);
+            AddTrackedKey(KbKeys.Down);
+            AddTrackedKey(KbKeys.Left);
+            AddTrackedKey(KbKeys.Right);
         }
 
 
@@ -36,7 +36,7 @@ namespace BallzForWindows01.Structs
         {
             for (int i = 0; i < trackedKeys.Count; i++)
             {
-                if (trackedKeys[i].Value == e.KeyValue)
+                if (trackedKeys[i].KeyIntValue == e.KeyValue)
                 {
                     trackedKeys[i].ReadCurrentState(keyState);
                 }
@@ -44,11 +44,13 @@ namespace BallzForWindows01.Structs
         }
         public void Update() { for (int i = 0; i < trackedKeys.Count; i++) { if (!trackedKeys[i].DefaultState) { trackedKeys[i].CheckForReset(); } } }
 
-        public bool KeyPressed(Keys key)
+        public bool KeyPressed(KbKeys key) { return _KeyPressed((int)key); }
+        public bool KeyPressed(Keys key) { return _KeyPressed((int)key); }
+        private bool _KeyPressed(int keyval)
         {
             for (int i = 0; i < trackedKeys.Count; i++)
             {
-                if (trackedKeys[i].Key == key)
+                if (trackedKeys[i].KeyIntValue == keyval)
                 {
                     if (trackedKeys[i].Action == KeyAction.Pressed) { return true; }
                 }
@@ -67,7 +69,7 @@ namespace BallzForWindows01.Structs
             string fnId = FnId(clsName, "DbgPrint");
             for (int i = 0; i < trackedKeys.Count; i++)
             {
-                DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].Value})");
+                DbgFuncs.AddStr($"{fnId} {trackedKeys[i].Key}({trackedKeys[i].KeyIntValue})");
                 DbgFuncs.AddStr($"{fnId} state/lastState: {trackedKeys[i].State}/{trackedKeys[i].LastState}");
                 DbgFuncs.AddStr($"{fnId} action/lastAction: {trackedKeys[i].Action}/{trackedKeys[i].LastAction}");
                 DbgFuncs.AddStr($"{fnId} EventThisFrame: {trackedKeys[i].EventThisFrame}");
@@ -79,6 +81,7 @@ namespace BallzForWindows01.Structs
 
         public void AddTrackedKey(int keyValue) { _AddTrackedKey(keyValue); }
         public void AddTrackedKey(Keys key) { _AddTrackedKey((int)key); }
+        public void AddTrackedKey(KbKeys key) { _AddTrackedKey((int)key); }
         public void ClearTrackedKeys() { trackedKeys.RemoveRange(0, trackedKeys.Count); }
 
         void _AddTrackedKey(int keyValue)
@@ -90,7 +93,7 @@ namespace BallzForWindows01.Structs
         {
             for (int i = 0; i < trackedKeys.Count; i++)
             {
-                if (trackedKeys[i].Value == keyValue) { return true; }
+                if (trackedKeys[i].KeyIntValue == keyValue) { return true; }
             }
             return false;
         }
