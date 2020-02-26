@@ -8,12 +8,14 @@ using System.Windows.Forms;
 namespace BallzForWindows01.Structs
 {
     using static AssistFunctions;
-    public enum KeyboardEventType
-    {
-        KeyDown,
-        KeyUp
-    }
 
+    #region KeyboardEventType - Moved to EnumFiles. 2020-02-26
+    //public enum KeyboardEventType
+    //{
+    //    KeyDown,
+    //    KeyUp
+    //}
+    #endregion KeyboardEventType - Moved to EnumFiles. 2020-02-26
     class KeyboardControls01
     {
         string clsName = "KeyboardControls01";
@@ -46,17 +48,7 @@ namespace BallzForWindows01.Structs
 
         public bool KeyPressed(KbKeys key) { return _KeyPressed((int)key); }
         public bool KeyPressed(Keys key) { return _KeyPressed((int)key); }
-        private bool _KeyPressed(int keyval)
-        {
-            for (int i = 0; i < trackedKeys.Count; i++)
-            {
-                if (trackedKeys[i].KeyIntValue == keyval)
-                {
-                    if (trackedKeys[i].Action == KeyAction.Pressed) { return true; }
-                }
-            }
-            return false;
-        }
+        
 
         public void Reset()
         {
@@ -84,12 +76,25 @@ namespace BallzForWindows01.Structs
         public void AddTrackedKey(KbKeys key) { _AddTrackedKey((int)key); }
         public void ClearTrackedKeys() { trackedKeys.RemoveRange(0, trackedKeys.Count); }
 
-        void _AddTrackedKey(int keyValue)
+
+
+        private bool _KeyPressed(int keyval)
+        {
+            for (int i = 0; i < trackedKeys.Count; i++)
+            {
+                if (trackedKeys[i].KeyIntValue == keyval)
+                {
+                    if (trackedKeys[i].Action == KeyAction.Pressed) { return true; }
+                }
+            }
+            return false;
+        }
+        private void _AddTrackedKey(int keyValue)
         {
             if (CheckIfKeyTracked(keyValue)) { return; }     // prevent adding key twice
             trackedKeys.Add(new KeyControl01(keyValue, trackedKeys.Count));
         }
-        bool CheckIfKeyTracked(int keyValue)
+        private bool CheckIfKeyTracked(int keyValue)
         {
             for (int i = 0; i < trackedKeys.Count; i++)
             {

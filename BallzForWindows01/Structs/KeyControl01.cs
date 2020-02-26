@@ -8,25 +8,28 @@ using System.Windows.Forms;
 
 namespace BallzForWindows01.Structs
 {
-    public enum KeyState
-    {
-        Up,
-        Down
-    }
-    public enum KeyAction
-    {
-        None,
-        Pressed,
-        Held,
-        Released,
+    #region [KeyState and KeyAction] Moved to EnumeFiles. 2020-02-26
+    //public enum KeyState
+    //{
+    //    Up,
+    //    Down
+    //}
+    //public enum KeyAction
+    //{
+    //    None,
+    //    Pressed,
+    //    Held,
+    //    Released,
+    //}
+    #endregion [KeyState and KeyAction] Moved to EnumeFiles. 2020-02-26
 
-    }
     class KeyControl01
     {
         string clsName = "KeyControl01";
 
         public int Index { get { return idx; } }
         public Keys Key { get { return key; } }
+        public KbKeys KbKey { get { return kbkey; } }
         public int KeyIntValue { get { return val; } }
         public KeyState State { get { return state; } }
         public KeyState LastState { get { return lastState; } }
@@ -56,11 +59,12 @@ namespace BallzForWindows01.Structs
         public KeyControl01(Keys key, int idx) { _Init((int)key, idx); }
         public KeyControl01(KbKeys key, int idx) { _Init((int)key, idx); }
 
-        void _Init(int keyValue, int idx)
+        private void _Init(int keyValue, int idx)
         {
             this.idx = idx;
-            this.key = (Keys)keyValue;
-            this.val = keyValue;
+            key = (Keys)keyValue;
+            kbkey = (KbKeys)keyValue;
+            val = keyValue;
             state = KeyState.Up;
             lastState = KeyState.Up;
             action = KeyAction.None;
@@ -83,8 +87,7 @@ namespace BallzForWindows01.Structs
         public void CheckForReset()
         {            
             if (state == KeyState.Up && lastState != KeyState.Up)
-            {     
-                
+            {                
                 if (!resetNextFrame) { resetNextFrame = true; return; }
                 eventThisFrame = false;                
                 lastState = state; // At this point this is [Up/Down], [Released/[Held or Pressed]]                
@@ -104,7 +107,7 @@ namespace BallzForWindows01.Structs
             state = lastState = KeyState.Up;
         }        
 
-        void SetKeyAction()
+        private void SetKeyAction()
         {
             lastAction = action;
             if (state == KeyState.Up && lastState == KeyState.Up) { action = KeyAction.None; return; }
