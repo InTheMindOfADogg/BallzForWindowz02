@@ -8,20 +8,7 @@ using System.Windows.Forms;
 
 namespace BallzForWindows01.Structs
 {
-    #region [KeyState and KeyAction] Moved to EnumeFiles. 2020-02-26
-    //public enum KeyState
-    //{
-    //    Up,
-    //    Down
-    //}
-    //public enum KeyAction
-    //{
-    //    None,
-    //    Pressed,
-    //    Held,
-    //    Released,
-    //}
-    #endregion [KeyState and KeyAction] Moved to EnumeFiles. 2020-02-26
+    
 
     class KeyControl01
     {
@@ -35,9 +22,7 @@ namespace BallzForWindows01.Structs
         public KeyState LastState { get { return lastState; } }
         public KeyAction Action { get { return action; } }
         public KeyAction LastAction { get { return lastAction; } }
-
         
-
         public bool EventThisFrame { get { return eventThisFrame; } }
         public bool DefaultState { get { return defaultState; } }
 
@@ -121,6 +106,20 @@ namespace BallzForWindows01.Structs
     }
 }
 
+#region [KeyState and KeyAction] Moved to EnumeFiles. 2020-02-26
+//public enum KeyState
+//{
+//    Up,
+//    Down
+//}
+//public enum KeyAction
+//{
+//    None,
+//    Pressed,
+//    Held,
+//    Released,
+//}
+#endregion [KeyState and KeyAction] Moved to EnumeFiles. 2020-02-26
 
 #region CheckForReset previous version
 //public void CheckForReset()

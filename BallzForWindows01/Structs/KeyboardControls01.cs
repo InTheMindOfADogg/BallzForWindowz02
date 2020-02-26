@@ -9,13 +9,7 @@ namespace BallzForWindows01.Structs
 {
     using static AssistFunctions;
 
-    #region KeyboardEventType - Moved to EnumFiles. 2020-02-26
-    //public enum KeyboardEventType
-    //{
-    //    KeyDown,
-    //    KeyUp
-    //}
-    #endregion KeyboardEventType - Moved to EnumFiles. 2020-02-26
+    
     class KeyboardControls01
     {
         string clsName = "KeyboardControls01";
@@ -105,3 +99,12 @@ namespace BallzForWindows01.Structs
 
     }
 }
+
+
+#region KeyboardEventType - Moved to EnumFiles. 2020-02-26
+//public enum KeyboardEventType
+//{
+//    KeyDown,
+//    KeyUp
+//}
+#endregion KeyboardEventType - Moved to EnumFiles. 2020-02-26
