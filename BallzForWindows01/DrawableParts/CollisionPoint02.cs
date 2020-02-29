@@ -19,8 +19,6 @@ namespace BallzForWindows01.DrawableParts
         public bool PointHit { get { return pointHit; } set { pointHit = value; } }
         public bool Collision { get { return collision; } set { collision = value; } }
 
-
-
         PointD pos;
         CircleD cCircle;
 
@@ -28,8 +26,6 @@ namespace BallzForWindows01.DrawableParts
 
         bool collision = false;
         bool pointHit = false;
-
-
 
         public CollisionPoint02()
         {

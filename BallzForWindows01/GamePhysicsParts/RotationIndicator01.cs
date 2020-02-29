@@ -10,7 +10,7 @@ namespace BallzForWindows01.GamePhysicsParts
     using DrawableParts;
     class RotationIndicator01 : DrawableObject
     {
-        
+        public double Rotation { get { return rotation.Value; } }
 
         // Might move rotation indicator to own class.
         double length = 10;

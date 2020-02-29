@@ -65,8 +65,8 @@
     <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
     <Compile Include="Deprecated\CircleDV2.cs" />
-    <Compile Include="GamePhysicsParts\CircleD.cs" />
-    <Compile Include="GamePhysicsParts\CircleDV3.cs" />
+    <Compile Include="DrawableParts\CircleD.cs" />
+    <Compile Include="DrawableParts\CircleDV3.cs" />
     <Compile Include="Deprecated\CollisionCircleD.cs" />
     <Compile Include="GamePhysicsParts\CollisionCircleDV2.cs" />
     <Compile Include="Deprecated\FlightPath2.cs" />

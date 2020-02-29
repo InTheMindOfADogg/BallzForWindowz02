@@ -15,6 +15,7 @@ namespace BallzForWindows01.DrawableParts
     class CircleDV4 : DrawableObject
     {
 
+        public double Rotation { get { return rotInd.Rotation; } }
 
 
         PointD position;
@@ -32,7 +33,7 @@ namespace BallzForWindows01.DrawableParts
             radius = 15;
             rotInd = new RotationIndicator01();
         }
-        public void Load(double x, double y, double radius, double rotation)
+        public void Load(double x, double y, double radius, double rotation = 0)
         {
             position.Set(x, y);
             this.radius = radius;
@@ -40,6 +41,8 @@ namespace BallzForWindows01.DrawableParts
 
             rotInd.Load(position, radius * 2, rotation);
         }
+
+
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
             double rotChange = 0;
