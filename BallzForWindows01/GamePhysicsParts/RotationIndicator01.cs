@@ -15,47 +15,74 @@ namespace BallzForWindows01.GamePhysicsParts
         // Might move rotation indicator to own class.
         double length = 10;
         //Color color = Color.Black;
+        Color indicatorLineColor = Color.Red;
         PointD position;
+        PointD indicatorPoint;
+        PointD tetherPoint;
         RotationD rotation;
-        PointD endPoint;
+        
 
 
         public RotationIndicator01()
             :base()
         {
             position = new PointD(30, 30);
-            endPoint = new PointD();
+            indicatorPoint = new PointD();
+            tetherPoint = new PointD();
             rotation = new RotationD();
             length = 15;
             color = Color.Black;
             
         }
-        public void Load(PointD position, double length, double rotation)
+        public void Load(PointD pos, double len, double rot)
         {
-            this.position.Set(position);
-            this.length = length;
-            this.rotation.Set(rotation);
-            this.rotation.SetStartingRotation(rotation);
+            position.Set(pos);
+            position.SetStartingPosition(pos);
+            length = len;
+            rotation.Set(rot);
+            rotation.SetStartingRotation(rot);
+            indicatorPoint.Set(rotation.PointDFrom(pos, len));
+            indicatorPoint.SetStartingPosition(rotation.PointDFrom(pos, len));
+            tetherPoint.Set(rotation.PointDFrom(pos, len));
         }
-        public void Update(PointD position, double rotChange)
+        public void Update(double speed, double rotChange)
         {
-            this.position.Set(position);
-            this.rotation.Set(rotChange);
-            endPoint.Set(rotation.PointDFrom(position, length));
+            //string fnId = AssistFunctions.FnId(clsName, "Update");
+            //rotation.Set(rot);
+            rotation.Adjust(rotChange);
+            position.Move(speed, rotation.Value);
+            //indicatorPoint.Move(speed, rot);
+            indicatorPoint.Set(rotation.PointDFrom(position, length));
+
+            //DbgFuncs.AddStr(fnId, $"speed: {speed}");
+            //DbgFuncs.AddStr(fnId, $"rotation: {rotation.Value}");
+
+
+            
         }
+        
+        
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
             p.Color = color;
-            g.DrawLine(p, position.fX, position.fY, endPoint.fX, endPoint.fY);
+            p.Width = 3;
+            g.DrawLine(p, position.fX, position.fY, tetherPoint.fX, tetherPoint.fY);
+
+            p.Color = indicatorLineColor;
+            p.Width = 1;
+            g.DrawLine(p, position.fX, position.fY, indicatorPoint.fX, indicatorPoint.fY);
+
+            
         }
         public void Reset()
         {
             position.Reset();
             rotation.Reset();
+            indicatorPoint.Reset();
         }
         public void CleanUp()
         {
-
+            
         }
         public void SetStartingPosRot(double x, double y, double rot)
         {

@@ -30,6 +30,16 @@ namespace BallzForWindows01.GamePhysicsParts
             
         }
 
+        
+
+        public PointD PointDFrom(PointD startPoint, double distance)
+        {
+            PointD tmp = new PointD();
+            tmp.X = startPoint.X + distance * Math.Cos(rot);
+            tmp.Y = startPoint.Y + distance * Math.Sin(rot);
+            return tmp;
+        }
+
         /// <summary>
         /// Adds adjustRotation amount to current rotation
         /// </summary>
@@ -39,14 +49,6 @@ namespace BallzForWindows01.GamePhysicsParts
             rot += adjustRotation;
             rot = rot % (2 * Math.PI);
             if (rot < 0) { rot += (2 * Math.PI); }
-        }
-
-        public PointD PointDFrom(PointD startPoint, double distance)
-        {
-            PointD tmp = new PointD();
-            tmp.X = startPoint.X + distance * Math.Cos(rot);
-            tmp.Y = startPoint.Y + distance * Math.Sin(rot);
-            return tmp;
         }
         public void Set(double rotation) { this.rot = rotation; }
 

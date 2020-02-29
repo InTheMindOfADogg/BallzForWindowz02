@@ -105,7 +105,9 @@
     <Compile Include="Structs\DelegatesFile.cs" />
     <Compile Include="Structs\EnumsFile.cs" />
     <Compile Include="Structs\KeyboardControls01.cs" />
+    <Compile Include="Structs\KeyboardControls02.cs" />
     <Compile Include="Structs\KeyControl01.cs" />
+    <Compile Include="Structs\KeyControl02.cs" />
     <Compile Include="Structs\MouseControls.cs" />
     <Compile Include="Deprecated\MyTimer.cs" />
     <EmbeddedResource Include="BallzForm.resx">

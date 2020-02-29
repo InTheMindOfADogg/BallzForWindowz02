@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace BallzForWindows01.DrawableParts
 {
-    
+
     using GamePhysicsParts;
     using Structs;
 
@@ -16,6 +16,7 @@ namespace BallzForWindows01.DrawableParts
     {
 
         public double Rotation { get { return rotInd.Rotation; } }
+        public PointD Position { get { return position; } }
 
 
         PointD position;
@@ -38,29 +39,94 @@ namespace BallzForWindows01.DrawableParts
             position.Set(x, y);
             this.radius = radius;
             position.SetStartingPosition(x, y);
-
             rotInd.Load(position, radius * 2, rotation);
         }
 
 
+        double speed = 0;
+        double acceleration = 0.1;
+        double deceleration = 0.1;
+
+        double rotChange = 0;
+        double turnRate = 0.01;
+        double maxSpeed = 4;
+        double slowRate = 0.01;
+        double zeroOutValue = 0.0001;   // if abs of speed is less than zeroOutValue, speed gets set to 0 (for handling double precision)
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
-            double rotChange = 0;
-            // Handle keyboard controls
-            
+            string fnId = AssistFunctions.FnId(clsName, "Update");
+
+            HandleMouseInput(mc);
+            HandleKeyboardInput(kc);
 
 
-            rotInd.Update(position, rotChange);
+
+            rotInd.Update(speed, rotChange);
+            position.Move(speed, rotInd.Rotation);
+
+
+
+
+            //rotInd.Update(position, rotChange);
+
+            DbgFuncs.AddStr(fnId, $"speed: {speed}");
+            DbgFuncs.AddStr(fnId, $"rotation: {rotInd.Rotation}");
+            DbgFuncs.AddStr(fnId, $"rotChange: {rotChange}");
+
+            rotChange = 0;
         }
+
+        public void HandleMouseInput(MouseControls mc)
+        {
+            if (mc.RightButtonClicked()) { Reset(); return; }
+        }
+
+        
+        public void HandleKeyboardInput(KeyboardControls01 kc)
+        {
+            bool rateChange = false;
+            // Handle keyboard controls
+            if (kc.KeyPressed(KbKeys.Up) || kc.KeyHeld(KbKeys.Up))
+            {
+                if (speed < maxSpeed) { speed += acceleration; }
+                // restrict positive speed to max speed
+                if(speed > maxSpeed) { speed = maxSpeed; }
+                rateChange = true;
+            }
+
+            if (kc.KeyPressed(KbKeys.Down) || kc.KeyHeld(KbKeys.Down))
+            {
+                if (speed > -maxSpeed) { speed -= deceleration; }
+                // Restrict negative speed to max speed
+                if (speed < -maxSpeed) { speed = -maxSpeed; }
+                rateChange = true;
+            }
+
+            // If no accel or decel, apply gradual speed shift toward 0
+            if(!rateChange)
+            {
+                if(speed < zeroOutValue && speed > -zeroOutValue ){speed = 0;}
+                
+                if(speed > 0){speed -= slowRate;}
+                else if(speed < 0){speed += slowRate;}
+                
+            }
+
+
+            if (kc.KeyPressed(KbKeys.Right) || kc.KeyHeld(KbKeys.Right)) { rotChange += turnRate; }
+            if (kc.KeyPressed(KbKeys.Left) || kc.KeyHeld(KbKeys.Left)) { rotChange -= turnRate; }
+        }
+
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
             FillCircle(g, sb);
             DrawOutline(g, p);
             rotInd.Draw(g, p, sb);
         }
-        
+
         public void Reset()
         {
+            speed = 0;
             position.Reset();
             rotInd.Reset();
         }

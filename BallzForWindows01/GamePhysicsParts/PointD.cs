@@ -10,7 +10,7 @@ namespace BallzForWindows01.GamePhysicsParts
     class PointD
     {
         
-
+        public PointD StartingPosition { get { return new PointD(startingX, startingY); } }
         public double X { get { return x; } set { x = value; } }
         public double Y { get { return y; } set { y = value; } }
 
@@ -36,7 +36,10 @@ namespace BallzForWindows01.GamePhysicsParts
             x = startPoint.x + distance * Math.Cos(rotation);
             y = startPoint.y + distance * Math.Sin(rotation);
         }
-        public void SetStartingPosition(double startAtx, double startAty)
+        
+        public void SetStartingPosition(double startAtx, double startAty){_SetStartingPosition(startAtx, startAty);}
+        public void SetStartingPosition(PointD startPos) { _SetStartingPosition(startPos.X, startPos.Y); }
+        private void _SetStartingPosition(double startAtx, double startAty)
         {
             startingX = startAtx;
             startingY = startAty;
@@ -46,10 +49,12 @@ namespace BallzForWindows01.GamePhysicsParts
             x = x + distance * Math.Cos(rotation);
             y = y + distance * Math.Sin(rotation);
         }
+
         public void Zero() { x = y = 0; }
 
         public double DistanceTo(double toPointX, double toPointY) { return _DistanceTo(toPointX, toPointY); }
         public double DistanceTo(PointD toPoint) { return _DistanceTo(toPoint.X, toPoint.Y); }
+        public double DistanceFromStart() { return _DistanceTo(startingX, startingY); }
         public PointD HalfWayTo(double endx, double endy) { return _HalfWayTo(endx, endy); }
         public PointD HalfWayTo(PointD endp) { return _HalfWayTo(endp.X, endp.Y); }
 
