@@ -10,43 +10,54 @@ namespace BallzForWindows01.DrawableParts
     using GamePhysicsParts;
     class CollisionLine02 : DrawableObject
     {
+
         public List<CollisionPoint> CpList { get { return cplist; } }
 
-        PointD startPoint, endPoint;
-        RotationD rot;
-        int thickness = 5;
-        double length = 0;
-        double spaceBtCp = 10;
+        public Color Color { get { return color; } set { color = value; } }
 
-        List<CollisionPoint> cplist;// = new List<CollisionPoint>();
+        protected PointD startPoint, endPoint; 
+
+        // 2020-01-21 Thinking about adding origin here that will be the point of rotation
+        //protected PointD origin;
+        
+        protected RotationD rot;
+        protected int thickness = 5;
+        protected double length = 0;
+        protected double spaceBtCp = 10;
+
+        protected List<CollisionPoint> cplist;// = new List<CollisionPoint>();
 
         public CollisionLine02()
         {
             clsName = "CollisionLine02";
             startPoint = new PointD();
             endPoint = new PointD();
+            //origin = new PointD();
             rot = new RotationD();
             SetColor(140, 150, 225, 50);    // set line color. green color
             cplist = new List<CollisionPoint>();
 
         }
 
+        /// <summary>
+        /// Negative space between (spaceBtCp) makes line extend in oppisite direction.
+        /// </summary>
+        /// <param name="startx"></param>
+        /// <param name="starty"></param>
+        /// <param name="length"></param>
+        /// <param name="rotation"></param>
+        /// <param name="thickness"></param>
+        /// <param name="spaceBtCp"></param>
         public void Load(double startx, double starty, double length, double rotation, int thickness, double spaceBtCp)
         {
-
             // make sure that the line is atleast 1 unit long
             if (length < 1) { length = 1; }
             if (spaceBtCp == 0) { spaceBtCp = length; }
-            if (spaceBtCp < 0)
-            {
-                spaceBtCp *= -1;
-                rotation += Math.PI;
-            }
+            if (spaceBtCp < 0) { spaceBtCp *= -1; rotation += Math.PI; }
             if (spaceBtCp > length / 2) { spaceBtCp = length / 2; }
 
-
-            this.startPoint.X = startx;
-            this.startPoint.Y = starty;
+            startPoint.Set(startx, starty);
+            //origin.Set(startPoint);
             this.length = length;
             this.rot.Set(rotation);
             this.endPoint = rot.PointDFrom(startPoint, this.length);
@@ -64,10 +75,7 @@ namespace BallzForWindows01.DrawableParts
             double actualSpaceBt = 0;
             numOfCp = (int)(distance / space);
             remainingLength = length - (numOfCp * space);
-            if (remainingLength > 0)
-            {
-                distributeSpacePerCp = (remainingLength / numOfCp);
-            }
+            if (remainingLength > 0){distributeSpacePerCp = (remainingLength / numOfCp);}
             actualSpaceBt = space + distributeSpacePerCp;
             PointD tmp;
             double tmpdist = 0;
@@ -76,15 +84,19 @@ namespace BallzForWindows01.DrawableParts
             for (int i = 0; i < numOfCp + 1; i++)
             {
                 tmp = rot.PointDFrom(startPoint, tmpdist);
-                //cplist.Add(new CollisionPoint(tmp.X, tmp.Y, thickness, Color.Red));
+                
+                // 2020-01-21
+                // did thickness * 2 to make collision box larger than line. Need to create function to scale with thickness probably. Need to test idea. Maybe padding of 5 for detection zone before the actual line.
                 cplist.Add(new CollisionPoint(tmp.X, tmp.Y, thickness * 2, Color.Red));
+
+                cplist[cplist.Count - 1].DistanceFromOrigin = tmpdist;
                 tmpdist += actualSpaceBt;
             }
 
         }
 
 
-        public void Update()
+        public virtual void Update()
         {
             //string fnId = AssistFunctions.FnId(clsName, "Update");
             //DbgFuncs.AddStr(fnId, $"length: {length}");

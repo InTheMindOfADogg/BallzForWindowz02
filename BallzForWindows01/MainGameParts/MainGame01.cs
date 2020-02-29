@@ -11,7 +11,7 @@ using System.Timers;
 
 namespace BallzForWindows01.MainGameParts
 {
-    using static AssistFunctions;
+    //using static AssistFunctions;
     using DrawableParts;
     using Structs;
 
@@ -29,6 +29,10 @@ namespace BallzForWindows01.MainGameParts
 
         //CollisionLine cline;
         CollisionLine02 cline2;
+        CollisionLineMoveable01 clm;
+        CollisionLineMoveable01 clm2;
+
+        CollisionPoint02 cp02;
 
         public MainGame01(int gameWindowWidth, int gameWindowHeight)
         {
@@ -41,6 +45,10 @@ namespace BallzForWindows01.MainGameParts
 
             //cline = new CollisionLine();
             cline2 = new CollisionLine02();
+            clm = new CollisionLineMoveable01();
+            clm2 = new CollisionLineMoveable01();
+
+            cp02 = new CollisionPoint02();
 
         }
         public void Load()
@@ -49,36 +57,66 @@ namespace BallzForWindows01.MainGameParts
             // Load game ball starting position
             int ballStartX, ballStartY;
 
-            //ballStartX = (width / 2) - (ball.Width / 2);ballStartY = (height - 100);    // original starting position
 
-            ballStartX = 500;
-            ballStartY = height / 2 + 50;
+            ballStartX = 525;
+            ballStartY = height / 2 - 50;
 
             if (ball4 != null)
             {
                 ball4.Load(ballStartX, ballStartY, 2, 10, 0, 7);
                 ball4.SetCircleColor(Color.FromArgb(255, 255, 50, 50));
             }
-
-
+            
             //AddCollisionPoint(300, 570, 25);
             //AddCollisionPoint(300, 370, 25);
             //AddCollisionPoint(400, 500, 25);
             //AddCollisionPoint(450, 550, 25);
             //AddCollisionPoint(333, 500, 25);
 
-            //cline.Load(550, 500, 50, 0, 5); // cline1 yellowish color
-            //cplist.AddRange(cline.CpList);
+            //TESTLoadCollisionLine01();  // cline is yellowish color
 
             TESTLoadCollisionLine02();  // cline2 is greenish color
+
+            TESTLoadCollisionMoveable01();  // clm is dark red color
             
+            TESTLoadCollisionMoveable02();  // clm2 is bright yellowish color
+
+            TESTLoadCollisionPoint02();
 
 
         }
+        //void TESTLoadCollisionLine01()
+        //{
+        //    double
+        //        startx = 550,
+        //        starty = 550,
+        //        length = 50,
+        //        rotation = 0;
+        //    int
+        //        thickness = 5;
+
+        //    cline.Load(startx, starty, length, rotation, thickness);
+        //    cplist.AddRange(cline.CpList);
+        //}
+        
+        
         void TESTLoadCollisionLine02()
         {
             double
-                startx = 550,
+                startx = 550, starty = 550,
+                length = 50,
+                rotation = 0,
+                spaceBtCp = -10;    
+            int
+                thickness = 5;
+
+            cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
+            cplist.AddRange(cline2.CpList);
+        }
+        void TESTLoadCollisionMoveable01()
+        {
+            double
+                startx = 650,
                 starty = 550,
                 length = 50,
                 rotation = 0,
@@ -86,31 +124,67 @@ namespace BallzForWindows01.MainGameParts
             int
                 thickness = 5;
 
-            cline2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
-            cplist.AddRange(cline2.CpList);
+            clm.Load(startx, starty, length, rotation, thickness, spaceBtCp);
+            
+            cplist.AddRange(clm.CpList);
+        }
+        void TESTLoadCollisionMoveable02()
+        {
+            double
+                startx = 550,
+                starty = 550,
+                length = 50,
+                rotation = 0,
+                spaceBtCp = 10;
+            int
+                thickness = 5;
+
+            clm2.Load(startx, starty, length, rotation, thickness, spaceBtCp);
+            clm2.Color = Color.FromArgb(255, 250, 200, 150);
+
+            cplist.AddRange(clm2.CpList);
         }
 
+        void TESTLoadCollisionPoint02()
+        {
+            double
+                x = 500,
+                y = 500,
+                detectionRadius = 10;
+            cp02.Load(x,y,detectionRadius);
+        }
+
+        double lineRotationSpeed = 0; //0.005;
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
             // GameBall04 ball4 has mouse controls and collision detection logic built into Update function
             if (ball4 != null) { ball4.Update(mc, kc, cplist); }
 
-            cline2.Update();
+            //cline.Update(lineRotationSpeed);
+            //cline.Update();
+            //cline2.Update();
+
+
+            clm.Update(lineRotationSpeed);
+            clm2.Update(-lineRotationSpeed);
 
             DrawToBuffer();
         }
+
+        
         public void Draw(Graphics g)
         {
             // Add drawing in DrawToBuffer
             g.DrawImage(backbuffer, new PointF(0, 0));
             backbuffer.Dispose();
-        }
+        }   // Add drawing in DrawToBuffer
         public void CleanUp()
         {
             if (ball4 != null) { ball4.CleanUp(); }
             CleanUpBlockList();
         }
 
+        
 
         void AddCollisionPoint(double x, double y, double sideLength)
         {
@@ -118,12 +192,14 @@ namespace BallzForWindows01.MainGameParts
             tempcp.Load(x, y, sideLength);
             cplist.Add(tempcp);
         }
+        
+        // Add drawing in DrawToBuffer
         private void DrawToBuffer()
         {
             backbuffer = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(backbuffer);
             SolidBrush sb = new SolidBrush(Color.CornflowerBlue);
-            //Pen p = new Pen(Color.Black);
+            Pen p = new Pen(Color.Black);
             g.FillRectangle(sb, 0, 0, width, height);
             DrawBlockList(g);
 
@@ -134,13 +210,18 @@ namespace BallzForWindows01.MainGameParts
 
 
             //cline.Draw(g, false);
-            cline2.Draw(g, false);
-            
+            cline2.Draw(g, true);   // green
+            clm.Draw(g, true);      // dark red
+            clm2.Draw(g, true);     // yellowish color
+
+
+            cp02.Draw(g, p, sb);
 
             DbgFuncs.DrawDbgStrList(g);
 
             sb.Dispose();            
             g.Dispose();
+            p.Dispose();
         }
 
         //void DrawCollisionPointList(Graphics g)

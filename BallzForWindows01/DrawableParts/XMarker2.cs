@@ -14,7 +14,7 @@ namespace BallzForWindows01.DrawableParts
     {
 
         public PointD Position { get { return position; } }
-        public PointD Center { get { return box.Center(); } }
+        public PointD Center { get { return box.Center; } }
         public Color DrawColor { get { return color; } set { color = value; } }
         public bool Placed { get { return placed; } }
         public bool ShowClickRectangle { get { return showClickRect; } set { showClickRect = value; } }
@@ -72,7 +72,6 @@ namespace BallzForWindows01.DrawableParts
             SetClickRectangle(position.X, position.Y, box.Width, box.Height, true);
             placed = true;
             visible = true;
-
         }
 
         public bool InClickRect(PointD p) { return box.InBox(p.X, p.Y); }
@@ -82,8 +81,8 @@ namespace BallzForWindows01.DrawableParts
 
         private void DrawX(Graphics g, Pen p)
         {
-            g.DrawLine(p, box.TopLeft().ToPointF(), box.BottomRight().ToPointF());
-            g.DrawLine(p, box.BottomLeft().ToPoint(), box.TopRight().ToPointF());
+            g.DrawLine(p, box.TopLeft.ToPointF(), box.BottomRight.ToPointF());
+            g.DrawLine(p, box.BottomLeft.ToPoint(), box.TopRight.ToPointF());
         }
         private void DrawClickRectangle(Graphics g, Pen p)
         {

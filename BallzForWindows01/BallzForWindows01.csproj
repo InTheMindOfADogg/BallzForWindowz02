@@ -49,27 +49,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebugParts\DbgPath.cs" />
+    <Compile Include="DrawableParts\Button02.cs" />
+    <Compile Include="DrawableParts\Button03.cs" />
+    <Compile Include="DrawableParts\CircleDV4.cs" />
     <Compile Include="DrawableParts\CollisionLine.cs" />
     <Compile Include="DrawableParts\CollisionLine02.cs" />
+    <Compile Include="DrawableParts\CollisionLineMoveable01.cs" />
     <Compile Include="DrawableParts\CollisionPoint.cs" />
+    <Compile Include="DrawableParts\CollisionPoint02.cs" />
+    <Compile Include="DrawableParts\ControllableBall01.cs" />
     <Compile Include="DrawableParts\GameBall04.cs" />
     <Compile Include="Deprecated\GameBall2.cs" />
     <Compile Include="Deprecated\GameBall3.cs" />
+    <Compile Include="DrawableParts\Square01.cs" />
     <Compile Include="DrawableParts\XMarker2.cs" />
     <Compile Include="GamePhysicsParts\BounceController.cs" />
-    <Compile Include="Deprecated\CircleD.cs" />
     <Compile Include="Deprecated\CircleDV2.cs" />
-    <Compile Include="GamePhysicsParts\CircleDV3.cs" />
+    <Compile Include="DrawableParts\CircleD.cs" />
+    <Compile Include="DrawableParts\CircleDV3.cs" />
     <Compile Include="Deprecated\CollisionCircleD.cs" />
     <Compile Include="GamePhysicsParts\CollisionCircleDV2.cs" />
     <Compile Include="Deprecated\FlightPath2.cs" />
     <Compile Include="GamePhysicsParts\GameTimer.cs" />
     <Compile Include="GamePhysicsParts\RectangleD.cs" />
     <Compile Include="GamePhysicsParts\RotationD.cs" />
+    <Compile Include="GamePhysicsParts\RotationIndicator01.cs" />
     <Compile Include="GamePhysicsParts\SizeD.cs" />
     <Compile Include="Deprecated\Trajectory.cs" />
     <Compile Include="GamePhysicsParts\Trajectory03.cs" />
     <Compile Include="Deprecated\Trajectory2.cs" />
+    <Compile Include="GameScreensFolder\TestGameScreen02.cs" />
     <Compile Include="HelperClasses\AssistFunctions.cs" />
     <Compile Include="BallzForm.cs">
       <SubType>Form</SubType>
@@ -78,33 +87,31 @@
       <DependentUpon>BallzForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\DbgFuncs.cs" />
-    <Compile Include="DebugForm\DebugForm01.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DebugForm\DebugForm01.Designer.cs">
-      <DependentUpon>DebugForm01.cs</DependentUpon>
-    </Compile>
     <Compile Include="DrawableParts\BasicBlock01.cs" />
-    <Compile Include="DrawableParts\Button01.cs" />
+    <Compile Include="Deprecated\Button01.cs" />
     <Compile Include="DrawableParts\DrawableObject.cs" />
     <Compile Include="Deprecated\GameBall.cs" />
     <Compile Include="Deprecated\XMarker.cs" />
     <Compile Include="Deprecated\FlightPath.cs" />
     <Compile Include="GamePhysicsParts\PointD.cs" />
-    <Compile Include="MainGameParts\GameParts01.cs" />
+    <Compile Include="Deprecated\GameParts01.cs" />
+    <Compile Include="MainGameParts\BaseGameScreen01.cs" />
+    <Compile Include="MainGameParts\GameScreenController.cs" />
     <Compile Include="MainGameParts\MainGame01.cs" />
+    <Compile Include="GameScreensFolder\MainMenu.cs" />
+    <Compile Include="GameScreensFolder\TestGameScreen01.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\DelegatesFile.cs" />
     <Compile Include="Structs\EnumsFile.cs" />
     <Compile Include="Structs\KeyboardControls01.cs" />
+    <Compile Include="Structs\KeyboardControls02.cs" />
     <Compile Include="Structs\KeyControl01.cs" />
+    <Compile Include="Structs\KeyControl02.cs" />
     <Compile Include="Structs\MouseControls.cs" />
-    <Compile Include="Structs\MyTimer.cs" />
+    <Compile Include="Deprecated\MyTimer.cs" />
     <EmbeddedResource Include="BallzForm.resx">
       <DependentUpon>BallzForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DebugForm\DebugForm01.resx">
-      <DependentUpon>DebugForm01.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

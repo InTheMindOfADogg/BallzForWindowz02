@@ -14,12 +14,17 @@ namespace BallzForWindows01.DrawableParts
 
     class GameBall04 : CollisionCircleDV2
     {
+
+        //public bool Launched { get { return launched; } }
+
+
         Size gameScreenSize;
 
         Trajectory03 aimTraj;
         Trajectory03 spinTraj;
         BounceController bc;
-        Button01 btnLaunch;
+        //Button02 btnLaunch2;
+        Button03 btnLaunch3;
 
         PointD startPosition;
         PointD mousePos;
@@ -45,7 +50,9 @@ namespace BallzForWindows01.DrawableParts
         {
             clsName = "GameBall04";
             this.gameScreenSize = gameScreenSize;
-            btnLaunch = new Button01();
+            //btnLaunch2 = new Button02();
+            btnLaunch3 = new Button03();
+
             startPosition = new PointD();
             mousePos = new PointD();
             gtimer = new GameTimer();
@@ -66,6 +73,7 @@ namespace BallzForWindows01.DrawableParts
         {
             base.Load(x, y, hitBoxSideLength, radius, rotation, collisionPoints);
             startPosition.Set(x, y);
+            ccDistance = radius * 2;    // set collision check distance
             PositionLaunchButton();
         }
 
@@ -94,27 +102,21 @@ namespace BallzForWindows01.DrawableParts
                 CalculateInitialDriftPerSecond();
             }
 
-            CheckForBlockCollision(blockCpList);
 
-            ApplyDriftPerSecond(gtimer.TotalSeconds);
+            CheckForBlockCollision02(blockCpList);
 
             if (launched)
             {
                 gtimer.Update();
-                // 2020-01-01 Going to try applying bounce logic here. Collision is determined in the previous frame currently.
-                CalculateBounceAngle();
 
+                
+                if (collisionDetected)
+                {
+                    CalculateBounceAngle();
+                    rotation += bounceAngle;
+                }
 
-                rotation += bounceAngle;
-
-                //position.X = position.X + speed * Math.Cos(rotation);
-                //position.Y = position.Y + speed * Math.Sin(rotation);
-
-                //deltaX = speed * Math.Cos(rotation);
-                //deltaY = speed * Math.Sin(rotation);
-                //position.X = position.X + deltaX;
-                //position.Y = position.Y + deltaY;
-
+                ApplyDriftPerSecond(gtimer.TotalSeconds);
                 position.Move(speed, rotation);
 
                 if (bounceAngle != 0)
@@ -126,7 +128,9 @@ namespace BallzForWindows01.DrawableParts
 
             //MoveCollisionPoints(position.X, position.Y, radius, rotation);
             MoveCollisionPoints(position.X, position.Y, rotation);
-            
+
+            ccEndPoint = position.PointAt(rotation, ccDistance);
+
 
             if (dbgtxt && DrawDbgTxt)
             {
@@ -136,13 +140,17 @@ namespace BallzForWindows01.DrawableParts
                 dbgPrintAngle(fnId, "initialDriftPerSecond", initialDriftPerSecond);
                 DbgFuncs.AddStr($"{fnId} gtimer.TotalSeconds: {gtimer.TotalSeconds}");
                 DbgFuncs.AddStr($"{fnId} ~~~~ CHECK FOR BOUNCE DBG LOGIC ~~~");
-                DbgFuncs.AddStr($"{fnId} shouldBounce: {shouldBounce}");
+                DbgFuncs.AddStr($"{fnId} shouldBounce: {collisionDetected}");
                 DbgFuncs.AddStr($"{fnId} firstPointHit (index): {firstPointHit}");
                 dbgPrintAngle(fnId, "bounceAngle", bounceAngle);
                 dbgPrintAngle(fnId, "lastBounceAngle", lastBounceAngle);
                 dbgPrintAngle(fnId, "testBounceAngle", testBounceAngle);
+                DbgFuncs.AddStr($"{fnId} collision check distance (ccDistance) : {ccDistance}");
                 DbgFuncs.AddStr($"{fnId} hz: {hz}");
-                
+                DbgFuncs.AddStr($"{fnId} ballCollisionPointsHit: {CollisionPointsHitCount()}");
+                DbgFuncs.AddStr($"{fnId} ball collision points hit: {HitIndexList.Count}");
+
+
             }
             if (firstPointHit > -1) { launched = aimTraj.Visible = spinTraj.Visible = false; } // For testing, stopping ball and hiding aim and spin markers   
         }
@@ -156,7 +164,18 @@ namespace BallzForWindows01.DrawableParts
             DrawCollisionPoints(g, p, sb);
             DrawCircle(g, p, sb);
 
-            btnLaunch.Draw(g);
+            p.Color = Color.Black;
+            p.Width = 2;
+            g.DrawLine(p, position.fX, position.fY, ccEndPoint.fX, ccEndPoint.fY);  // debug, drawing cc distance
+            if (testBounceResult.X != 0 && testBounceResult.Y != 0)
+            {
+                p.Color = Color.FromArgb(150, 200, 20, 20);
+                g.DrawLine(p, position.fX, position.fY, testBounceResult.fX, testBounceResult.fY);  // debug, drawing test bounce angle
+            }
+
+
+            //btnLaunch2.Draw(g);
+            btnLaunch3.Draw(g);
             aimTraj.Draw(g);
             spinTraj.Draw(g);
 
@@ -181,61 +200,196 @@ namespace BallzForWindows01.DrawableParts
             aimTraj.Reset();
             spinTraj.Reset();
 
+            ResetPointsHit();
+
+            btnLaunch3.Reset();
+
             // temporary/testing resets
             bounceAngle = 0;
             firstPointHit = -1;
-            shouldBounce = false;
+            collisionDetected = false;
             hz = HitZones.None;
+            testBounceResult.Zero();
 
         }
         public void CleanUp()
         {
-            btnLaunch.CleanUp();
+            //btnLaunch2.CleanUp();
+            btnLaunch3.CleanUp();
         }
 
         #region building bounce logic. Started 2020-01-01
         double bounceAngle = 0;
         double lastBounceAngle = 0;
         double testBounceAngle = 0;
-        bool shouldBounce = false;
+        bool collisionDetected = false;
         int firstPointHit = -1;
         HitZones hz = HitZones.None;
+
+
+        double ccDistance = 0;      // collision check distance
+        PointD ccEndPoint = new PointD();
+
 
         // Checks if the ball has collided with any points passed in and sets HitZone hz.
         // HitZone hz is based off the ball position (center) relative to the sides of the
         // CollisionPoint rectangle.
-        public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
+        /// <summary>
+        /// Version 1
+        /// </summary>
+        /// <param name="blockCpList"></param>
+        //public void CheckForBlockCollision(List<CollisionPoint> blockCpList)
+        //{
+
+        //    for (int i = 0; i < blockCpList.Count; i++)
+        //    {
+        //        // If the block is not within set distance of ball, do not check for collision with that block. 2020-01-31
+        //        if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) { blockCpList[i].Collision = false; continue; }
+
+        //        // Checking for ball collision points intersecting with blocks within set distance (ccDistance as of 2020-01-31)
+        //        for (int j = 0; j < CircleCPList.Count; j++)
+        //        {
+        //            if (blockCpList[i].CheckForCollision(CircleCPList[j].Pos))
+        //            {
+        //                //collisionDetected = true;
+        //                //CollisionPointList[j].PointHit = true;
+        //                return;
+        //            }
+        //            //CollisionPointList[j].PointHit = false;
+        //        }
+
+        //    }
+        //}
+        public void CheckForBlockCollision02(List<CollisionPoint> blockCpList)
         {
+
+            for(int i = 0; i < CircleCPList.Count; i++)
+            {
+                /// Not sure if this could happen, but going to put in for now in case I need to use it later.
+                /// This will skip checking for collision if the circle cp has already detected collision.
+                if(CircleCPList[i].PointHit) { continue; }
+
+                for(int j = 0; j < blockCpList.Count; j++)
+                {
+                    if(position.DistanceTo(blockCpList[j].Pos) > ccDistance) { blockCpList[j].Collision = false; continue; }
+                    //if(CircleCPList[i].CheckForCollision(blockCpList[i].Pos))
+                    //{
+                    //    AddPointHitIndex(i);
+                    //}
+                    if(blockCpList[j].CheckForCollision(CircleCPList[i].Pos))
+                    {
+                        AddPointHitIndex(i);
+                    }
+
+                }
+            }
+
+
+            return;
             for (int i = 0; i < blockCpList.Count; i++)
             {
+                // If the block is not within set distance of ball, do not check for collision with that block. 2020-01-31
+                if (position.DistanceTo(blockCpList[i].Pos) > ccDistance) { blockCpList[i].Collision = false; continue; }
 
-                for (int j = 0; j < CollisionPointList.Count; j++)
+                // Checking for ball collision points intersecting with blocks within set distance (ccDistance as of 2020-01-31)
+                for (int j = 0; j < CircleCPList.Count; j++)
                 {
-                    if (blockCpList[i].CheckForCollision(CollisionPointList[j].Pos))
+                    if (blockCpList[i].CheckForCollision(CircleCPList[j].Pos))
                     {
-                        CollisionPointList[j].PointHit = true;
-                        hz = bc.SetHitZone(position, blockCpList[i].Rect);
+                        //collisionDetected = true;
+                        //CollisionPointList[j].PointHit = true;
                         return;
                     }
-                    CollisionPointList[j].PointHit = false;
+                    //CollisionPointList[j].PointHit = false;
                 }
             }
         }
+
 
         // TODO: build CalculateBounceAngle. I am planning for this to be the location where the bounce angle
         //       will be calculated if collision is detected in CheckForBlockCollision
         void CalculateBounceAngle()
         {
-            //string fnId = FnId(clsName, "CheckForBounce");
-            for (int i = 0; i < CollisionPointList.Count; i++)
+            for (int i = 0; i < CircleCPList.Count; i++)
             {
-                if (CollisionPointList[i].PointHit)
+                // if a collision point on the ball registers a hit, do bounce stuff
+                if (CircleCPList[i].PointHit)
                 {
-                    shouldBounce = true;
-                    if (firstPointHit < 0) { firstPointHit = i; }
+                    //collisionDetected = true;
+                    firstPointHit = i;
+
+                    SetBounceAngle(bc.RowHit(hz), bc.ColumnHit(hz));
+                    return;
                 }
             }
         }
+
+        PointD testBounceResult = new PointD();
+        double testBountLineLength = 40;
+        void SetBounceAngle(AboveMiddleBelow rowHit, LeftMiddleRight columnHit)
+        {
+            // Heading south
+            if (rotation == Math.PI / 2)
+            {
+                testBounceResult = position.PointAt((testBounceAngle = (3 * Math.PI / 2)), testBountLineLength);
+                return;
+            }
+
+            // Heading west
+            if (rotation == Math.PI)
+            {
+                testBounceResult = position.PointAt(testBounceAngle = 0, testBountLineLength);
+                return;
+            }
+
+            // Heading between south and east
+            if (rotation < Math.PI / 2 && rotation < 0)
+            {
+                // bounce if hit top side of block
+                if (rowHit == AboveMiddleBelow.Above)
+                {
+                    testBounceResult = position.PointAt(testBounceAngle = ((2 * Math.PI) - rotation), testBountLineLength);
+                    return;
+                }
+
+                // bounce if hit left side of block
+                testBounceResult = position.PointAt(testBounceAngle = (Math.PI / 2) + ((Math.PI / 2) - rotation), testBountLineLength);
+                return;
+            }
+
+            // Heading between west and south
+            if (rotation < Math.PI)
+            {
+                testBounceResult = position.PointAt(testBounceAngle = (Math.PI + (Math.PI - rotation)), testBountLineLength);
+                return;
+            }
+
+            // Heading between north and west
+            if (rotation < (3 * Math.PI / 2))
+            {
+                //testBounceAngle = 3 * Math.PI / 2 + ((3 * Math.PI / 2) - rotation);
+                //testBounceResult = position.PointAt(testBounceAngle, testBountLineLength);
+
+                //testBounceAngle = ((3 * Math.PI / 2) + ((3 * Math.PI / 2) - rotation));
+                testBounceResult = position.PointAt(testBounceAngle = ((3 * Math.PI / 2) + ((3 * Math.PI / 2) - rotation)), testBountLineLength);
+                return;
+            }
+
+            // Heading between north and west
+            if (rotation < 2 * Math.PI)
+            {
+                if (rowHit == AboveMiddleBelow.Below)
+                {
+                    testBounceResult = position.PointAt(testBounceAngle = ((2 * Math.PI) + ((2 * Math.PI) - rotation)), testBountLineLength);
+                }
+
+
+
+
+            }
+
+        }
+
 
         #endregion building bounce logic. Started 2020-01-01
 
@@ -247,12 +401,12 @@ namespace BallzForWindows01.DrawableParts
             //dbgPrintAngle(fnId, "spin", spin);
             //DbgFuncs.AddStr($"{fnId} Calculating drift factor");
             RotationDirection defautRotationDirection = (aim < spin) ? RotationDirection.Clockwise : RotationDirection.CounterClockwise;
-            double defaultDifference = (aim < spin) ? spin - aim : aim - spin;
-            double oppositeDifference = (2 * Math.PI) - defaultDifference;
-            RotationDirection oppositeRotationDirection = (aim < spin) ? RotationDirection.CounterClockwise : RotationDirection.Clockwise;
-            RotationDirection shortestRotationDirection = (defaultDifference < oppositeDifference) ? defautRotationDirection : oppositeRotationDirection;
-            double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;
-            double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));
+            double defaultDifference = (aim < spin) ? spin - aim : aim - spin;      // get positive difference
+            double oppositeDifference = (2 * Math.PI) - defaultDifference;          // find remainder of 360 - (positive difference between aim and spin)
+            RotationDirection oppositeRotationDirection = (aim < spin) ? RotationDirection.CounterClockwise : RotationDirection.Clockwise;  // set opposite direction. Might rework later.
+            RotationDirection shortestRotationDirection = (defaultDifference < oppositeDifference) ? defautRotationDirection : oppositeRotationDirection;   // set which rot direction is shortest
+            double smallestDifference = (defaultDifference < oppositeDifference) ? defaultDifference : oppositeDifference;      // set shortest rot distance number
+            double rslt = (shortestRotationDirection == RotationDirection.Clockwise) ? smallestDifference : (smallestDifference * (-1));    // calculate drift factor
             driftFactor = rslt;
         }
         void CalculateInitialDriftPerSecond() { initialDriftPerSecond = driftFactor / 100; }
@@ -260,120 +414,79 @@ namespace BallzForWindows01.DrawableParts
         {
             if (elapsedSeconds > updatedAtSeconds)
             {
-                rotation += initialDriftPerSecond;
-
-                // Applying decay to drift per second // Possible future feature
-                //if (Math.Abs(initialDriftPerSecond) > 0) { initialDriftPerSecond = initialDriftPerSecond - (initialDriftPerSecond * 0.01); }                  
-
-                // Update updatedAtSeconds
+                rotation += initialDriftPerSecond;                            
                 updatedAtSeconds = elapsedSeconds;
             }
         }
-
         void HandleKeyboardInput(KeyboardControls01 kc)
         {
-            if (kc.KeyPressed(Keys.Space))
-            {
-                if (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) { LaunchBall(); }
-            }
+            if (kc.KeyPressed(Keys.Space)) { if (ReadyForLaunch()) { LaunchBall(); return; } }
         }
         void HandleMouseInput(MouseControls mc)
         {
-            bool dbgtxt = true;
-            string fnId = $"[{clsName}.HandleMouseInput]";
-            if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LeftButtonState: {mc.LeftButtonState}");
-            if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LastLeftButtonState: {mc.LastLeftButtonState}");
+            //bool dbgtxt = true;
+            //string fnId = $"[{clsName}.HandleMouseInput]";
+            //if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LeftButtonState: {mc.LeftButtonState}");
+            //if (dbgtxt) DbgFuncs.AddStr($"{fnId} mc.LastLeftButtonState: {mc.LastLeftButtonState}");
 
             mousePos.Set(mc.X, mc.Y);
-
-            // Reset game screen
-            if (mc.RightButtonState == UpDownState.Down && mc.LastRightButtonState == UpDownState.Up)
-            {
-                Reset();
-                return;
-            }
+            if (mc.RightButtonClicked()) { Reset(); return; }
 
             // Prevents aim and spin boxes from continuing to drag if mouse is not down
-            if (mc.LeftButtonState == UpDownState.Up
-                && mc.LastLeftButtonState == UpDownState.Up
-                && (adjustingAim || adjustingSpin || adjustingPosition))
-            {
-                adjustingAim = adjustingSpin = adjustingPosition = false;
-                return;
-            }
+            if (AdjustingAimSpinOrPos() && mc.LeftButtonUp()) { StopAdjusting(); return; }
 
 
             // Setting up the shot
             if (!launched)
             {
-                // Building logic to move ball before the aim marker is placed (aimTraj.Placed)
-                if (mc.LeftButtonState == UpDownState.Down
-                    && mc.LastLeftButtonState == UpDownState.Up
-                    && !aimTraj.Placed
-                    && InCircle(mc.Position.X, mc.Position.Y))
-                {
-                    adjustingPosition = true;
-                    return;
-                }
+                // Logic to move ball before the aim marker is placed (aimTraj.Placed)
+                if (!aimTraj.Placed && mc.LeftButtonClicked() && InCircle(mc.Position)) { adjustingPosition = true; return; }
 
                 // Place aim marker
-                if (!aimTraj.Placed
-                    && mc.LeftButtonState == UpDownState.Down
-                    && mc.LastLeftButtonState == UpDownState.Up)
-                {
-                    aimTraj.SetStartPoint(position);
-                    aimTraj.SetEndPoint(mc.Position);
-
-                    spinTraj.SetStartPoint(position);
-                    PointD spinStartPos = new PointD();
-                    spinStartPos = position.HalfWayTo(mc.Position.X, mc.Position.Y);
-                    spinTraj.SetEndPoint(spinStartPos);
-
-                    return;
-                }
+                if (!aimTraj.Placed && mc.LeftButtonClicked()) { PlaceAimMarker(mc); return; }
 
                 // Adjust aim or spin
-                if (aimTraj.Placed
-                    && (!adjustingAim || !adjustingSpin)
-                    && mc.LeftButtonState == UpDownState.Down
-                    && mc.LastLeftButtonState == UpDownState.Up)
+                if (CanAdjustAimOrSpin() && mc.LeftButtonClicked())
                 {
-
                     if (aimTraj.InEndRect(mc.X, mc.Y)) { adjustingAim = true; return; }
                     if (spinTraj.InEndRect(mc.X, mc.Y)) { adjustingSpin = true; return; }
-
                 }
 
+
+                #region 2020-01-19 might not need this. going to try commenting it out. will remove later if no issued occur
+                /// I added a condition before here to stop adjusting aim, spin, and ball position if left button is up.
+                /// That condition up top should make this one no longer needed.
                 // Stop adjusting aim or spin
-                if ((adjustingAim || adjustingSpin)
-                    && mc.LeftButtonState == UpDownState.Up
-                    && mc.LastLeftButtonState == UpDownState.Down)
-                {
-                    adjustingAim = adjustingSpin = false;
-                    return;
-                }
+                //if ((adjustingAim || adjustingSpin)
+                //    && mc.LeftButtonState == UpDownState.Up
+                //    && mc.LastLeftButtonState == UpDownState.Down)
+                //{
+                //    adjustingAim = adjustingSpin = false;
+                //    return;
+                //}
+                #endregion 2020-01-19 might not need this. going to try commenting it out
 
                 // Launch the ball and start the timer (when launch button is clicked)
-                if ((!adjustingAim && !adjustingSpin)
-                    && mc.LastLeftButtonState == UpDownState.Up
-                    && mc.LeftButtonState == UpDownState.Down
-                    //&& InLaunchButtonRect(mc.X, mc.Y)
-                    && btnLaunch.InBoundingRect(mc.X, mc.Y))
-                {
-                    //launched = true;
-                    //gtimer.Start();
-                    LaunchBall();
-                }
+                //if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch2.InBox(mc.Position)) { LaunchBall(); }
+                if ((!adjustingAim && !adjustingSpin) && mc.LeftButtonClicked() && btnLaunch3.InBox(mc.Position)) { LaunchBall(); }
             }
 
         }
+        void PlaceAimMarker(MouseControls mc)
+        {
+            aimTraj.SetStartPoint(position);
+            aimTraj.SetEndPoint(mc.Position);
 
+            spinTraj.SetStartPoint(position);
+            PointD spinStartPos = new PointD();
+            spinStartPos = position.HalfWayTo(mc.Position.X, mc.Position.Y);
+            spinTraj.SetEndPoint(spinStartPos);
+        }
         void LaunchBall()
         {
             launched = true;
             gtimer.Start();
         }
-
         void PositionLaunchButton()     // after gameScreenSize is set b.c it is used to place button
         {
             Point position = new Point();
@@ -382,10 +495,22 @@ namespace BallzForWindows01.DrawableParts
             size.Height = 40;
             position.X = gameScreenSize.Width / 2 - size.Width / 2;
             position.Y = gameScreenSize.Height - size.Height * 2 - 5;
-            btnLaunch.Load(position.X, position.Y, size.Width, size.Height, "Launch");
+            
+            //btnLaunch2.Load("Launch", position.X, position.Y, size.Width, size.Height);
+            btnLaunch3.Load("Launch", position.X, position.Y, size.Width, size.Height);
         }
 
+        void StopAdjusting() { adjustingAim = adjustingSpin = adjustingPosition = false; }
+        // Condition checks
+        bool ReadyForLaunch() { return (!launched && aimTraj.Placed && (!adjustingAim || !adjustingPosition || !adjustingSpin)) ? true : false; }
+        bool CanAdjustAimOrSpin() { return (aimTraj.Placed && (!adjustingAim || !adjustingSpin)) ? true : false; }
+        bool AdjustingAimSpinOrPos() { return (adjustingAim || adjustingSpin || adjustingPosition) ? true : false; }
 
+        #region might try adding in mouse controls to condition checks later.
+        // Might try adding in mouse control later. Only thing here would be I would like to see the mouse button
+        // being used in the handle mouse controls (so I can see what mouse button triggers the action)
+        //bool CanAdjustAimOrSpin(MouseControls mc) { return ((aimTraj.Placed && (!adjustingAim || !adjustingSpin)) && mc.LeftButtonClicked()) ? true : false; }
+        #endregion might try adding in mouse controls to condition checks later.
     }
 }
 

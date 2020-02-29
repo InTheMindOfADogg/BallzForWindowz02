@@ -12,15 +12,17 @@ namespace BallzForWindows01.GamePhysicsParts
     {
 
         // Properties
-        public List<CollisionPoint> CollisionPointList { get { return cplist; } }
+        public List<CollisionPoint> CircleCPList { get { return cplist; } }
+        public List<int> HitIndexList { get { return hitIndexList; } }
 
+        List<int> hitIndexList = new List<int>();
 
         List<CollisionPoint> cplist;
         int cpCount = 5;
         double cpBoxSideLength = 2;
         Color dfltColorCollisionPoints = Color.FromArgb(255, 175, 30, 50);
 
-        double middleCpidx = 0;        
+        double middleCpidx = 0;
 
         double spaceBetween = 0;
 
@@ -40,20 +42,30 @@ namespace BallzForWindows01.GamePhysicsParts
             base.Load(x, y, radius, rotation);
             // adds 1 collision point if there is an even number (aka, makes sure there is an odd number of collision points)
             cpCount = (collisionPointCount % 2 == 0) ? collisionPointCount + 1 : collisionPointCount;
-            this.cpBoxSideLength = cpBoxSideLength;            
+            this.cpBoxSideLength = cpBoxSideLength;
             middleCpidx = (int)(((double)cpCount / 2.0) + 0.5) - 1;
             spaceBetween = (Math.PI / 2) / ((double)cpCount / 2.0);
             //tempRot = rotation - (spaceBetween * middleCpidx);   // adjusting first point so that the points line up on front of ball
 
+            // Add the collision points. The cpColor before the loop is setting the color of the first collision point added.
             Color cpColor = Color.Blue;
             for (int i = 0; i < cpCount; i++)
             {
-                //cplist.Add(CreateCollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
                 cplist.Add(new CollisionPoint(position.X, position.Y, this.cpBoxSideLength, cpColor));
+                // Set the remaing collision points' color to the default color for collision points.
                 if (i == 0) { cpColor = dfltColorCollisionPoints; }
             }
         }
-                
+
+        
+        public void AddPointHitIndex(int idx)
+        {
+            if (idx < 0 || idx >= cplist.Count) return;
+            cplist[idx].PointHit = true;
+            hitIndexList.Add(idx);
+        }
+        public void ClearHitIndexList() { hitIndexList.RemoveRange(0, hitIndexList.Count); }
+
         protected void MoveCollisionPoints(double x, double y, double rotation)
         {
             tempRot = rotation - (spaceBetween * middleCpidx);
@@ -66,10 +78,17 @@ namespace BallzForWindows01.GamePhysicsParts
             }
             //DebugTextCollisionCircle();
         }
-
+        // 2020-01-31  Might create function to increment collisionPointsHit in circle when point hit is set to true.
+        public int CollisionPointsHitCount()
+        {
+            int cpHit = 0;
+            for (int i = 0; i < cplist.Count; i++) { if (cplist[i].PointHit) { cpHit++; } }
+            return cpHit;
+        }
+        protected void ResetPointsHit() { for (int i = 0; i < CircleCPList.Count; i++) { CircleCPList[i].PointHit = false; } }
         protected void DrawCollisionPoints(Graphics g, Pen p, SolidBrush sb)
         {
-            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }            
+            for (int i = 0; i < cplist.Count; i++) { cplist[i].Draw(g, p, sb); }
         }
 
 

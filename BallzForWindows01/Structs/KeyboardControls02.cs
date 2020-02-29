@@ -8,15 +8,13 @@ using System.Windows.Forms;
 namespace BallzForWindows01.Structs
 {
     using static AssistFunctions;
-
-    
-    class KeyboardControls01
+    class KeyboardControls02
     {
-        string clsName = "KeyboardControls01";
+        string clsName = "KeyboardControls02";
 
         List<KeyControl01> trackedKeys = new List<KeyControl01>();
 
-        public KeyboardControls01()
+        public KeyboardControls02()
         {
             AddTrackedKey(KbKeys.Space);
             AddTrackedKey(KbKeys.Escape);
@@ -40,10 +38,17 @@ namespace BallzForWindows01.Structs
         }
         public void Update() { for (int i = 0; i < trackedKeys.Count; i++) { if (!trackedKeys[i].DefaultState) { trackedKeys[i].CheckForReset(); } } }
 
+        public bool KeyPressed(KbKeys key) { return _KeyPressed((int)key); }
+        public bool KeyPressed(Keys key) { return _KeyPressed((int)key); }
+
+
+
+
         public void Reset()
         {
             for (int i = 0; i < trackedKeys.Count; i++) { trackedKeys[i].Reset(); }
         }
+
 
         public void DbgPrint()
         {
@@ -60,16 +65,12 @@ namespace BallzForWindows01.Structs
         }
 
 
-
         public void AddTrackedKey(int keyValue) { _AddTrackedKey(keyValue); }
         public void AddTrackedKey(Keys key) { _AddTrackedKey((int)key); }
         public void AddTrackedKey(KbKeys key) { _AddTrackedKey((int)key); }
         public void ClearTrackedKeys() { trackedKeys.RemoveRange(0, trackedKeys.Count); }
 
-        public bool KeyPressed(KbKeys key) { return _KeyPressed((int)key); }
-        public bool KeyPressed(Keys key) { return _KeyPressed((int)key); }
 
-        public bool KeyHeld(KbKeys key) { return _KeyHeld((int)key); }
 
         private bool _KeyPressed(int keyval)
         {
@@ -82,18 +83,6 @@ namespace BallzForWindows01.Structs
             }
             return false;
         }
-        private bool _KeyHeld(int keyval)
-        {
-            for (int i = 0; i < trackedKeys.Count; i++)
-            {
-                if (trackedKeys[i].KeyIntValue == keyval)
-                {
-                    if (trackedKeys[i].Action == KeyAction.Held) { return true; }
-                }
-            }
-            return false;
-        }
-
         private void _AddTrackedKey(int keyValue)
         {
             if (CheckIfKeyTracked(keyValue)) { return; }     // prevent adding key twice
@@ -107,15 +96,5 @@ namespace BallzForWindows01.Structs
             }
             return false;
         }
-
     }
 }
-
-
-#region KeyboardEventType - Moved to EnumFiles. 2020-02-26
-//public enum KeyboardEventType
-//{
-//    KeyDown,
-//    KeyUp
-//}
-#endregion KeyboardEventType - Moved to EnumFiles. 2020-02-26

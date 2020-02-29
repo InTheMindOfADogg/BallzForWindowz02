@@ -13,27 +13,15 @@ namespace BallzForWindows01.DrawableParts
         public bool DrawDbgTxt { get { return drawDbgTxt; } set { drawDbgTxt = value; } }
         public bool Visible { get { return visible; } set { visible = value; } }
 
-        
-        
-
-        //public int Alpha { get { return alpha; } }
-        //public int Red { get { return red; } }
-        //public int Green { get { return green; } }
-        //public int Blue { get { return blue; } }
-        //public Color Color { get { return color; } }        
-
         protected string clsName = "DrawableObject";
         bool drawDbgTxt = true;
         protected bool visible = true;
 
-        protected Color color;
-        protected int alpha;
-        protected int red;
-        protected int green;
-        protected int blue;
-
-
-
+        protected Color color = Color.Black;
+        protected int alpha = 255;
+        protected int red = 0;
+        protected int green = 0;
+        protected int blue = 0;
 
         protected void SetColor(Color c) { _SetColor(c.A, c.R, c.G, c.B); }
         protected void SetColor(int alpha, int red, int green, int blue){_SetColor(alpha, red, green, blue);}
