@@ -29,30 +29,33 @@ namespace BallzForWindows01.GameScreensFolder
             base.Load();
             PointD pos = new PointD(gameScreenRect.Center);
 
+            SizeD btnSize = new SizeD(300, 50);
             Button03 b;
             double btnSpaceY = 10;
-            AddBtnTestGameScreen01(ref pos, btnSpaceY);
+            AddBtnTestGameScreen01(ref pos, btnSpaceY, btnSize);
 
-            AddBtnTestGameScreen02(ref pos, btnSpaceY);
+            AddBtnTestGameScreen02(ref pos, btnSpaceY, btnSize);
 
             /// 2020-02-22 probably should not put this here, but doing it for now. I have a feeling I will regret putting this here later.
             /// This is a quick fix for hiding the btnMainMenu when on the main menu.
             btnMainMenu.Visible = false;
 
         }
-        private void AddBtnTestGameScreen01(ref PointD pos, double btnSpaceY)
+        private void AddBtnTestGameScreen01(ref PointD pos, double btnSpaceY, SizeD btnSize)
         {
             Button03 b;
-            b = CreateButtonInList("TestGameScreen01", pos.X, pos.Y, true, 300, 50);
-            //b.ClickValue = "TestGameScreen01"; // b.ClickValue to have it be something other than the button text. (defaults to button text)
+            b = CreateButtonInList("TestGameScreen01", pos.X, pos.Y, true, btnSize.Width, btnSize.Height);
+            b.Text = "Screen: Launch ball";
+            b.ClickValue = "TestGameScreen01";  
             b.BtnEvent += SetBtnEventChangeScreen(b);
             pos.Y += b.Rect.Height + btnSpaceY;
         }
-        private void AddBtnTestGameScreen02(ref PointD pos, double btnSpaceY)
+        private void AddBtnTestGameScreen02(ref PointD pos, double btnSpaceY, SizeD btnSize)
         {
             Button03 b;
-            b = CreateButtonInList("TestGameScreen02", pos.X, pos.Y, true, 300, 50);
-            //b.ClickValue = "TestGameScreen01"; // b.ClickValue to have it be something other than the button text. (defaults to button text)
+            b = CreateButtonInList("TestGameScreen02", pos.X, pos.Y, true, btnSize.Width, btnSize.Height);
+            b.Text = "Screen: Manually moving ball";
+            b.ClickValue = "TestGameScreen02"; 
             b.BtnEvent += SetBtnEventChangeScreen(b);
             pos.Y += b.Rect.Height + btnSpaceY;
         }

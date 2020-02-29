@@ -11,6 +11,8 @@ namespace BallzForWindows01.GamePhysicsParts
     class RotationIndicator01 : DrawableObject
     {
         public double Rotation { get { return rotation.Value; } }
+        public bool DrawTether { get { return drawTether; } set { drawTether = value; } }
+        public bool DrawIndicator { get { return drawIndicator; } set { drawIndicator = value; } }
 
         // Might move rotation indicator to own class.
         double length = 10;
@@ -20,6 +22,9 @@ namespace BallzForWindows01.GamePhysicsParts
         PointD indicatorPoint;
         PointD tetherPoint;
         RotationD rotation;
+
+        bool drawTether = true;
+        bool drawIndicator = true;
         
 
 
@@ -36,37 +41,40 @@ namespace BallzForWindows01.GamePhysicsParts
         }
         public void Load(PointD pos, double len, double rot)
         {
-            position.Set(pos);
+            position = pos;
             position.SetStartingPosition(pos);
             length = len;
-            rotation.Set(rot);
-            rotation.SetStartingRotation(rot);
-            indicatorPoint.Set(rotation.PointDFrom(pos, len));
+            //rotation.Set(rot);
+            rotation.Value = rot;
+            //rotation.SetStartingRotation(rot);
+            rotation.StartingRotation = rot;
+            indicatorPoint = rotation.PointDFrom(position, length);
             indicatorPoint.SetStartingPosition(rotation.PointDFrom(pos, len));
             tetherPoint.Set(rotation.PointDFrom(pos, len));
         }
         public void Update(double speed, double rotChange)
         {
-            //string fnId = AssistFunctions.FnId(clsName, "Update");
-            //rotation.Set(rot);
+            //string fnId = AssistFunctions.FnId(clsName, "Update");            
             rotation.Adjust(rotChange);
             position.Move(speed, rotation.Value);
-            //indicatorPoint.Move(speed, rot);
             indicatorPoint.Set(rotation.PointDFrom(position, length));
-
-            //DbgFuncs.AddStr(fnId, $"speed: {speed}");
-            //DbgFuncs.AddStr(fnId, $"rotation: {rotation.Value}");
+            //indicatorPoint = rotation.PointDFrom(position, length);
 
 
-            
+
+
         }
         
         
         public void Draw(Graphics g, Pen p, SolidBrush sb)
         {
-            p.Color = color;
-            p.Width = 3;
-            g.DrawLine(p, position.fX, position.fY, tetherPoint.fX, tetherPoint.fY);
+            if(drawTether)
+            {
+                p.Color = color;
+                p.Width = 3;
+                g.DrawLine(p, position.fX, position.fY, tetherPoint.fX, tetherPoint.fY);
+            }
+            
 
             p.Color = indicatorLineColor;
             p.Width = 1;

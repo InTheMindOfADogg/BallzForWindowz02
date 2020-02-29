@@ -44,13 +44,15 @@ namespace BallzForWindows01.DrawableParts
 
 
         double speed = 0;
-        double acceleration = 0.1;
-        double deceleration = 0.1;
+        double acceleration = 0.1;  // how quickly the speed is increased using the up key (applied as positive to speed)
+        double deceleration = 0.1;  // how quickly the speed is decreased using the down key (applied as negative to speed)
+        double turnRate = 0.1;     // how quickly the ball turns using left/right arrows
+        double slowRate = 0.05;     // rate at which the speed moves toward 0 when up or down key not pressed
 
         double rotChange = 0;
-        double turnRate = 0.01;
+
         double maxSpeed = 4;
-        double slowRate = 0.01;
+
         double zeroOutValue = 0.0001;   // if abs of speed is less than zeroOutValue, speed gets set to 0 (for handling double precision)
         public void Update(MouseControls mc, KeyboardControls01 kc)
         {
@@ -81,7 +83,7 @@ namespace BallzForWindows01.DrawableParts
             if (mc.RightButtonClicked()) { Reset(); return; }
         }
 
-        
+
         public void HandleKeyboardInput(KeyboardControls01 kc)
         {
             bool rateChange = false;
@@ -90,7 +92,7 @@ namespace BallzForWindows01.DrawableParts
             {
                 if (speed < maxSpeed) { speed += acceleration; }
                 // restrict positive speed to max speed
-                if(speed > maxSpeed) { speed = maxSpeed; }
+                if (speed > maxSpeed) { speed = maxSpeed; }
                 rateChange = true;
             }
 
@@ -103,16 +105,16 @@ namespace BallzForWindows01.DrawableParts
             }
 
             // If no accel or decel, apply gradual speed shift toward 0
-            if(!rateChange)
+            if (!rateChange)
             {
-                if(speed < zeroOutValue && speed > -zeroOutValue ){speed = 0;}
-                
-                if(speed > 0){speed -= slowRate;}
-                else if(speed < 0){speed += slowRate;}
-                
+                if (speed < zeroOutValue && speed > -zeroOutValue) { speed = 0; }
+
+                if (speed > 0) { speed -= slowRate; }
+                else if (speed < 0) { speed += slowRate; }
+
             }
 
-
+            // Rotate the heading with left and right keys
             if (kc.KeyPressed(KbKeys.Right) || kc.KeyHeld(KbKeys.Right)) { rotChange += turnRate; }
             if (kc.KeyPressed(KbKeys.Left) || kc.KeyHeld(KbKeys.Left)) { rotChange -= turnRate; }
         }

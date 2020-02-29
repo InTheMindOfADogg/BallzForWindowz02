@@ -10,7 +10,8 @@ namespace BallzForWindows01.GamePhysicsParts
     class PointD
     {
         
-        public PointD StartingPosition { get { return new PointD(startingX, startingY); } }
+        public PointD StartingPosition { get { return new PointD(startingX, startingY); }  }
+        public PointD Position { get { return new PointD(x, y); } }
         public double X { get { return x; } set { x = value; } }
         public double Y { get { return y; } set { y = value; } }
 

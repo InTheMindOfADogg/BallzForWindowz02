@@ -34,7 +34,11 @@ namespace BallzForWindows01.DrawableParts
         public bool IsCenteredOnPos { get { return centeredOnPos; } }
         public bool Clicked { get { return clicked; } }
 
-        public string Text { get { return text; } }
+        public string Text { get { return text; } set { text = value; } }
+
+        /// <summary>
+        /// String that can be used in button click event
+        /// </summary>
         public string ClickValue { get { return clickValue; } set { clickValue = value; } }
 
 

@@ -12,8 +12,8 @@ namespace BallzForWindows01.GamePhysicsParts
     class RotationD
     {
         public double AsDegrees { get { return (rot * 180 / Math.PI); } }
-        public double Value { get { return rot; } }
-        public double StartingRotation { get { return startingRotation; } }
+        public double Value { get { return rot; } set { rot = value; } }
+        public double StartingRotation { get { return startingRotation; } set { startingRotation = value; } }
 
         double rot = 0;
         double startingRotation = 0;
@@ -21,13 +21,12 @@ namespace BallzForWindows01.GamePhysicsParts
         
 
         public RotationD() 
-        { 
+        {             
             rot = 0;
         }
         public RotationD(double rotation) 
         { 
-            this.rot = rotation;
-            
+            this.rot = rotation;            
         }
 
         
